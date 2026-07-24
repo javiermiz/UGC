@@ -73,3 +73,4 @@ El repo no incluye workflow de despliegue. Dos opciones cuando quieras publicar:
   `withastro/action`.
 - **Vercel / Netlify**: importa el repo, build `pnpm build`, output `dist`.
   No hace falta tocar `base`.
+ 
