@@ -1,0 +1,75 @@
+---
+import type { Servicio } from "../data/portfolio";
+
+interface Props {
+  servicio: Servicio;
+}
+
+const { servicio } = Astro.props;
+---
+
+<article class="servicio">
+  <header class="servicio-header">
+    <h3 class="servicio-titulo">{servicio.titulo}</h3>
+    {servicio.desde && <span class="servicio-precio">desde {servicio.desde}</span>}
+  </header>
+
+  <p class="servicio-descripcion">{servicio.descripcion}</p>
+
+  <ul class="servicio-entregables">
+    {servicio.entregables.map((item) => <li>{item}</li>)}
+  </ul>
+</article>
+
+<style>
+  .servicio {
+    border-top: 1px solid var(--color-border-light);
+    padding-top: var(--space-4);
+  }
+
+  .servicio-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
+  }
+
+  .servicio-titulo {
+    font-size: var(--text-base);
+    font-weight: var(--font-bold);
+    margin-bottom: 0;
+  }
+
+  .servicio-precio {
+    font-size: var(--text-xs);
+    color: var(--color-primary);
+    white-space: nowrap;
+    letter-spacing: var(--letter-spacing-wide);
+  }
+
+  .servicio-descripcion {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-3);
+  }
+
+  .servicio-entregables {
+    list-style: none;
+  }
+
+  .servicio-entregables li {
+    font-size: var(--text-sm);
+    color: var(--color-text-body);
+    padding-left: var(--space-4);
+    position: relative;
+    margin-bottom: var(--space-1);
+  }
+
+  .servicio-entregables li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--color-text-light);
+  }
+</style>

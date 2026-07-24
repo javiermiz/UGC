@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920" role="img" aria-label="Miniatura de ejemplo 04">
+  <rect width="1080" height="1920" fill="#f0ece3"/>
+  <rect x="40" y="40" width="1000" height="1840" fill="none" stroke="#d4d4d4" stroke-width="4" stroke-dasharray="24 18"/>
+  <circle cx="540" cy="880" r="110" fill="none" stroke="#bbbbbb" stroke-width="6"/>
+  <path d="M505 820 L505 940 L605 880 Z" fill="#bbbbbb"/>
+  <text x="540" y="1090" font-family="Georgia, 'Times New Roman', serif" font-size="58" fill="#737373" text-anchor="middle">Miniatura 04</text>
+  <text x="540" y="1160" font-family="Georgia, 'Times New Roman', serif" font-size="40" fill="#a3a3a3" text-anchor="middle">9:16 · 1080 x 1920</text>
+  <text x="540" y="1230" font-family="Georgia, 'Times New Roman', serif" font-size="34" fill="#dc2626" text-anchor="middle">reemplazar</text>
+</svg>

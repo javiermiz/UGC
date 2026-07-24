@@ -1,0 +1,154 @@
+---
+import type { Video } from "../data/portfolio";
+
+interface Props {
+  video: Video;
+}
+
+const { video } = Astro.props;
+const has_link = video.url !== "#" && video.url !== "";
+const Tag = has_link ? "a" : "div";
+---
+
+<Tag
+  class:list={["video-card", !has_link && "video-card--sin-link"]}
+  {...has_link ? { href: video.url, target: "_blank", rel: "noopener" } : {}}
+>
+  <div class="video-thumb">
+    <img src={video.thumbnail} alt={`Miniatura de ${video.titulo}`} loading="lazy" />
+    {video.metrica && <span class="video-metrica">{video.metrica}</span>}
+    <span class="video-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+    </span>
+  </div>
+
+  <div class="video-info">
+    <div class="video-meta">
+      <span class="video-categoria">{video.categoria}</span>
+      <span class="video-formato">{video.formato}</span>
+    </div>
+    <h3 class="video-titulo">{video.titulo}</h3>
+    <p class="video-marca">{video.marca}</p>
+    <p class="video-descripcion">{video.descripcion}</p>
+  </div>
+</Tag>
+
+<style>
+  .video-card {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    transition: transform var(--transition-elegant);
+  }
+
+  .video-card:hover {
+    transform: translateY(-3px);
+  }
+
+  .video-card--sin-link:hover {
+    transform: none;
+  }
+
+  .video-thumb {
+    position: relative;
+    aspect-ratio: 9 / 16;
+    overflow: hidden;
+    background-color: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-medium);
+  }
+
+  .video-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: filter var(--transition-elegant);
+  }
+
+  .video-card:hover .video-thumb img {
+    filter: brightness(0.92);
+  }
+
+  .video-metrica {
+    position: absolute;
+    top: var(--space-2);
+    left: var(--space-2);
+    background: rgba(250, 248, 243, 0.92);
+    color: var(--color-text-primary);
+    font-size: var(--text-2xs);
+    letter-spacing: var(--letter-spacing-wider);
+    text-transform: uppercase;
+    padding: 2px var(--space-2);
+    border: 1px solid var(--color-border-medium);
+  }
+
+  .video-play {
+    position: absolute;
+    bottom: var(--space-2);
+    right: var(--space-2);
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: #fff;
+    opacity: 0;
+    transition: opacity var(--transition-elegant);
+  }
+
+  .video-card:not(.video-card--sin-link):hover .video-play {
+    opacity: 1;
+  }
+
+  .video-play svg {
+    width: 16px;
+    height: 16px;
+    margin-left: 1px;
+  }
+
+  .video-info {
+    padding-top: var(--space-3);
+  }
+
+  .video-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0 var(--space-2);
+    margin-bottom: var(--space-1);
+  }
+
+  .video-categoria {
+    font-size: var(--text-xs);
+    color: var(--color-primary);
+    letter-spacing: var(--letter-spacing-wider);
+    font-weight: var(--font-medium);
+  }
+
+  .video-formato {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .video-titulo {
+    font-size: var(--text-base);
+    font-weight: var(--font-bold);
+    margin-bottom: 0;
+    text-wrap: balance;
+  }
+
+  .video-marca {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  .video-descripcion {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-normal);
+  }
+</style>
