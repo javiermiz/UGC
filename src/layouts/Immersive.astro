@@ -90,11 +90,37 @@ const currentYear = new Date().getFullYear();
         --accent-2: #d4441c;
 
         --maxw: 1320px;
+        /* Padding lateral único para todo el sitio */
         --pad: clamp(1.25rem, 4vw, 3.5rem);
+
+        /* ---- Escala de espaciado (una sola fuente de verdad) ----
+           Todo el ritmo vertical sale de aquí, así móvil y escritorio
+           mantienen las mismas proporciones. */
+        --sp-2xs: 0.5rem;
+        --sp-xs: 0.75rem;
+        --sp-s: 1rem;
+        --sp-m: 1.5rem;
+        --sp-l: 2rem;
+        --sp-xl: 3rem;
+
+        /* Ritmo de sección: IDÉNTICO en todas las secciones */
+        --section-y: clamp(4rem, 10vh, 7.5rem);
+        /* Separación etiqueta -> título -> contenido */
+        --gap-eyebrow: clamp(0.75rem, 2vw, 1.25rem);
+        --gap-head: clamp(1.75rem, 4.5vw, 3rem);
+
+        /* Altura del nav: se usa para que los anchors no queden debajo */
+        --nav-h: 3.5rem;
 
         --w-black: 900;
         --w-bold: 800;
         --w-med: 600;
+      }
+
+      @media (min-width: 700px) {
+        :root {
+          --nav-h: 4.25rem;
+        }
       }
 
       * {
@@ -140,6 +166,11 @@ const currentYear = new Date().getFullYear();
 
       a {
         color: inherit;
+      }
+
+      /* Los anchors nunca quedan tapados por el nav fijo */
+      section[id] {
+        scroll-margin-top: var(--nav-h);
       }
 
       ::selection {
@@ -281,7 +312,8 @@ const currentYear = new Date().getFullYear();
         position: relative;
         z-index: 2;
         border-top: 1px solid var(--line);
-        padding: var(--pad);
+        padding-block: var(--sp-l);
+        padding-inline: var(--pad);
       }
       .footer-inner {
         max-width: var(--maxw);
@@ -290,7 +322,7 @@ const currentYear = new Date().getFullYear();
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
-        gap: 1rem;
+        gap: var(--sp-s) var(--sp-m);
       }
       .footer-inner p,
       .footer-links a {
