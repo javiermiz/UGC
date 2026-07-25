@@ -33,10 +33,11 @@ const { id, fondo = "base", class: className } = Astro.props;
     scroll-margin-top: var(--space-8);
   }
 
-  /* Una franja con fondo necesita su propio aire vertical para que el
-     color se lea como un bloque intencional. */
+  /* Franja de acento brutalist: bloque amarillo con bordes negros gruesos
+     arriba y abajo. Se usa para destacar (ej: contacto). */
   .section--suave {
-    background-color: var(--color-bg-secondary);
+    background-color: var(--color-accent);
     padding-block: var(--section-space);
+    border-block: var(--border-thick) solid var(--color-border);
   }
 </style>
