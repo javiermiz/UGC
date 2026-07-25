@@ -28,6 +28,16 @@ const videos = VIDEOS.map((v) => {
 });
 
 const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
+const STATEMENT = "No hago anuncios. Hago videos que la gente termina de ver.";
+const TICKER = [
+  "Video UGC",
+  "Reels",
+  "TikTok",
+  "YouTube Shorts",
+  "Guion y hooks",
+  "Grabación",
+  "Edición",
+];
 ---
 
 <Immersive>
@@ -49,7 +59,15 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
         }
       </h1>
 
-      <p class="hero-sub" data-hero>{PERFIL.subtitular}</p>
+      <div class="hero-foot">
+        <p class="hero-sub" data-hero>{PERFIL.subtitular}</p>
+        <a class="hero-cta" href="#contacto" data-scroll data-hero>
+          <span>Trabajemos juntos</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </a>
+      </div>
     </div>
 
     <div class="hero-scroll" data-hero>
@@ -58,88 +76,117 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
     </div>
   </section>
 
+  <!-- ===================== TICKER ===================== -->
+  <section class="ticker" aria-hidden="true">
+    <div class="ticker-track" id="ticker-track">
+      {
+        [0, 1].map(() => (
+          <div class="ticker-group">
+            {TICKER.map((t) => (
+              <span class="ticker-item">
+                {t}
+                <i class="ticker-dot" />
+              </span>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
   <!-- ===================== STATEMENT ===================== -->
   <section class="statement">
-    <p class="statement-text">
-      {
-        "No hago anuncios. Hago videos que la gente termina de ver."
-          .split(" ")
-          .map((w) => (
+    <div class="wrap">
+      <p class="statement-text">
+        {
+          STATEMENT.split(" ").map((w) => (
             <span class="s-word" data-statement>
               {w}{" "}
             </span>
           ))
-      }
-    </p>
+        }
+      </p>
+    </div>
   </section>
 
-  <!-- ===================== TRABAJOS (scroll horizontal) ===================== -->
+  <!-- ===================== TRABAJOS ===================== -->
   <section class="s-trabajos" id="trabajos">
-    <div class="trabajos-pin">
-      <div class="trabajos-head">
-        <span class="eyebrow" data-reveal data-speed="0.5">01 / Trabajos</span>
-        <h2 class="trabajos-title" data-reveal data-speed="0.2">Videos UGC</h2>
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow" data-reveal>01 / Trabajos</span>
+        <h2 class="s-title" data-reveal data-speed="0.16">Videos UGC</h2>
       </div>
+    </div>
 
-      <div class="trabajos-viewport">
-        <div class="trabajos-track" id="trabajos-track">
-          {
-            videos.map((v) => (
-              <article class="vcard">
-                {v.esReal ? (
-                  v.puedeIncrustar ? (
-                    <button
-                      type="button"
-                      class="vmedia"
-                      data-embed={v.embed}
-                      aria-label={`Reproducir: ${v.titulo ?? "video"}`}
-                    >
-                      <img src={v.thumb} alt={`Miniatura de ${v.titulo ?? "video"}`} loading="lazy" />
-                      <span class="vplay" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                      </span>
-                    </button>
-                  ) : (
-                    <a class="vmedia" href={v.enlace} target="_blank" rel="noopener" aria-label={`Ver: ${v.titulo ?? "video"}`}>
-                      <img src={v.thumb} alt={`Miniatura de ${v.titulo ?? "video"}`} loading="lazy" />
-                      <span class="vplay" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                      </span>
-                    </a>
-                  )
-                ) : (
-                  <div class="vmedia vmedia--soon">
-                    <span class="vplay vplay--ghost" aria-hidden="true">
+    <div class="trabajos-viewport">
+      <div class="trabajos-track" id="trabajos-track">
+        {
+          videos.map((v, i) => (
+            <article class="vcard" data-card data-speed={String(i % 2 === 0 ? 0.1 : 0.22)}>
+              {v.esReal ? (
+                v.puedeIncrustar ? (
+                  <button
+                    type="button"
+                    class="vmedia"
+                    data-embed={v.embed}
+                    aria-label={`Reproducir: ${v.titulo ?? "video"}`}
+                  >
+                    <img src={v.thumb} alt={`Miniatura de ${v.titulo ?? "video"}`} loading="lazy" />
+                    <span class="vplay" aria-hidden="true">
                       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
                     </span>
-                    <span class="vsoon">Próximamente</span>
-                  </div>
-                )}
-                <div class="vinfo">
-                  {v.categoria && <span class="vcat">{v.categoria}</span>}
-                  {v.titulo && <h3 class="vtitle">{v.titulo}</h3>}
+                  </button>
+                ) : (
+                  <a class="vmedia" href={v.enlace} target="_blank" rel="noopener" aria-label={`Ver: ${v.titulo ?? "video"}`}>
+                    <img src={v.thumb} alt={`Miniatura de ${v.titulo ?? "video"}`} loading="lazy" />
+                    <span class="vplay" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                    </span>
+                  </a>
+                )
+              ) : (
+                <div class="vmedia vmedia--soon">
+                  <span class="vplay vplay--ghost" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                  </span>
+                  <span class="vsoon">Próximamente</span>
                 </div>
-              </article>
-            ))
-          }
-        </div>
+              )}
+              <div class="vinfo">
+                <span class="vindex">{String(i + 1).padStart(2, "0")}</span>
+                {v.categoria && <span class="vcat">{v.categoria}</span>}
+                {v.titulo && <h3 class="vtitle">{v.titulo}</h3>}
+              </div>
+            </article>
+          ))
+        }
       </div>
     </div>
   </section>
 
   <!-- ===================== PROCESO ===================== -->
   <section class="s-proceso">
-    <div class="wrap">
-      <span class="eyebrow" data-reveal data-speed="0.5">02 / Proceso</span>
-      <h2 class="s-title" data-reveal data-speed="0.2">De la idea a la entrega</h2>
+    <div class="wrap proceso-grid">
+      <div class="proceso-aside">
+        <div class="proceso-sticky">
+          <span class="eyebrow" data-reveal>02 / Proceso</span>
+          <h2 class="s-title" data-reveal>De la idea a la entrega</h2>
+          <div class="proceso-counter" aria-hidden="true">
+            <span id="proceso-num">01</span>
+            <span class="proceso-total">/ {String(PROCESO.length).padStart(2, "0")}</span>
+          </div>
+        </div>
+      </div>
+
       <ol class="proceso">
         {
           PROCESO.map((p, i) => (
-            <li class="paso" data-reveal data-speed={String(0.12 + i * 0.06)}>
-              <span class="paso-num">{String(i + 1).padStart(2, "0")}</span>
+            <li class="paso" data-paso={String(i + 1).padStart(2, "0")}>
+              <span class="paso-rule" aria-hidden="true" />
               <div class="paso-body">
-                <h3>{p.titulo}</h3>
-                <p>{p.descripcion}</p>
+                <span class="paso-num">{String(i + 1).padStart(2, "0")}</span>
+                <h3 class="line"><span class="line-inner">{p.titulo}</span></h3>
+                <p class="line"><span class="line-inner">{p.descripcion}</span></p>
               </div>
             </li>
           ))
@@ -151,9 +198,15 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
   <!-- ===================== SOBRE MÍ ===================== -->
   <section class="s-sobre" id="sobre">
     <div class="wrap wrap--narrow">
-      <span class="eyebrow" data-reveal data-speed="0.5">03 / Sobre mí</span>
+      <span class="eyebrow" data-reveal>03 / Sobre mí</span>
       <div class="sobre-text">
-        {PERFIL.sobre_mi.map((p) => <p data-reveal>{p}</p>)}
+        {
+          PERFIL.sobre_mi.map((p) => (
+            <p class="line">
+              <span class="line-inner">{p}</span>
+            </p>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -161,11 +214,23 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
   <!-- ===================== CONTACTO ===================== -->
   <section class="s-contacto" id="contacto">
     <div class="wrap">
-      <span class="eyebrow" data-reveal data-speed="0.5">04 / Contacto</span>
-      <h2 class="contacto-big" data-reveal data-speed="0.15">{CONTACTO.cierre}</h2>
-      <div class="contacto-grid">
-        <a class="contacto-mail" href={`mailto:${CONTACTO.email}`} data-reveal>{CONTACTO.email}</a>
-        <ul class="contacto-redes" data-reveal>
+      <span class="eyebrow" data-reveal>04 / Contacto</span>
+      <h2 class="contacto-big">
+        {
+          CONTACTO.cierre.split(" ").map((w) => (
+            <span class="word-mask">
+              <span class="word word--c">{w}</span>
+            </span>
+          ))
+        }
+      </h2>
+
+      <div class="contacto-grid" data-reveal>
+        <a class="contacto-mail" href={`mailto:${CONTACTO.email}`}>
+          <span>{CONTACTO.email}</span>
+          <i class="sweep" aria-hidden="true"></i>
+        </a>
+        <ul class="contacto-redes">
           <li><span>Instagram</span><a href={CONTACTO.instagram.url} target="_blank" rel="noopener">{CONTACTO.instagram.usuario}</a></li>
           <li><span>TikTok</span><a href={CONTACTO.tiktok.url} target="_blank" rel="noopener">{CONTACTO.tiktok.usuario}</a></li>
         </ul>
@@ -180,7 +245,7 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       padding-inline: var(--pad);
     }
     .wrap--narrow {
-      max-width: 900px;
+      max-width: 820px;
     }
 
     .eyebrow {
@@ -190,13 +255,36 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       letter-spacing: 0.12em;
       font-size: 0.72rem;
       color: var(--accent);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
     }
 
     .s-title {
-      font-size: clamp(2.5rem, 7vw, 5rem);
-      margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
+      font-size: clamp(2.25rem, 6vw, 4.5rem);
       text-wrap: balance;
+    }
+    .head {
+      margin-bottom: clamp(2.5rem, 6vw, 4rem);
+    }
+
+    /* Máscaras de palabra (hero y contacto) */
+    .word-mask {
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: bottom;
+      padding-right: 0.22em;
+    }
+    .word {
+      display: inline-block;
+      will-change: transform;
+    }
+
+    /* Líneas con máscara (proceso y sobre mí) */
+    .line {
+      overflow: hidden;
+    }
+    .line-inner {
+      display: block;
+      will-change: transform;
     }
 
     /* ---------- HERO ---------- */
@@ -218,7 +306,7 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       display: flex;
       flex-wrap: wrap;
       gap: 0.6rem;
-      margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+      margin-bottom: clamp(1.5rem, 4vw, 2.25rem);
     }
     .tag {
       font-family: var(--font-mono);
@@ -227,7 +315,7 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       font-size: 0.72rem;
       padding: 0.45em 0.75em;
       border: 1px solid var(--line);
-      color: var(--fg);
+      color: var(--muted);
     }
     .tag--accent {
       background: var(--accent);
@@ -235,91 +323,128 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       color: #fff;
     }
     .hero-title {
-      font-size: clamp(2.5rem, 8.2vw, 7.5rem);
-      line-height: 0.9;
+      font-size: clamp(2.5rem, 8vw, 7rem);
+      line-height: 0.92;
       letter-spacing: -0.04em;
       max-width: 15ch;
     }
-    .word-mask {
-      display: inline-block;
-      overflow: hidden;
-      vertical-align: bottom;
-      padding-right: 0.22em;
-    }
-    .word {
-      display: inline-block;
-      will-change: transform;
+    .hero-foot {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 2rem;
+      margin-top: clamp(1.75rem, 4vw, 2.75rem);
     }
     .hero-sub {
-      margin-top: clamp(1.5rem, 4vw, 2.5rem);
-      max-width: 44ch;
-      font-size: clamp(1rem, 1.6vw, 1.25rem);
+      max-width: 46ch;
+      font-size: clamp(1rem, 1.5vw, 1.15rem);
+      line-height: 1.5;
       font-weight: var(--w-med);
       color: var(--muted);
     }
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.03em;
+      text-decoration: none;
+      color: #fff;
+      background: var(--fg);
+      padding: 1em 1.5em;
+      transition: background 0.3s ease;
+      white-space: nowrap;
+    }
+    .hero-cta svg {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+    .hero-cta:hover {
+      background: var(--accent);
+    }
+    .hero-cta:hover svg {
+      transform: translateX(5px);
+    }
     .hero-scroll {
       position: absolute;
-      bottom: 1.6rem;
-      left: 50%;
-      transform: translateX(-50%);
+      bottom: 1.4rem;
+      left: var(--pad);
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 0.5rem;
-      font-family: var(--font-display);
-      font-weight: var(--w-bold);
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
+      gap: 0.75rem;
+      font-family: var(--font-mono);
+      letter-spacing: 0.18em;
       font-size: 0.6rem;
       color: var(--muted);
     }
     .hero-scroll-line {
-      width: 1px;
-      height: 42px;
-      background: linear-gradient(var(--accent), transparent);
+      width: 54px;
+      height: 1px;
+      background: var(--muted);
+      transform-origin: 0 50%;
+    }
+
+    /* ---------- TICKER ---------- */
+    .ticker {
+      border-block: 1px solid var(--line);
+      padding-block: 1.1rem;
+      overflow: hidden;
+    }
+    .ticker-track {
+      display: flex;
+      width: max-content;
+      will-change: transform;
+    }
+    .ticker-group {
+      display: flex;
+      align-items: center;
+    }
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 1.75rem;
+      padding-right: 1.75rem;
+      font-family: var(--font-display);
+      font-weight: var(--w-bold);
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      font-size: clamp(1.1rem, 2.2vw, 1.7rem);
+      color: var(--fg);
+      white-space: nowrap;
+    }
+    .ticker-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex: 0 0 auto;
     }
 
     /* ---------- STATEMENT ---------- */
     .statement {
-      padding: clamp(6rem, 18vh, 14rem) var(--pad);
-      max-width: 1100px;
-      margin: 0 auto;
+      padding-block: clamp(6rem, 16vh, 12rem);
     }
     .statement-text {
       font-family: var(--font-display);
       font-weight: var(--w-black);
       text-transform: uppercase;
-      font-size: clamp(2rem, 6vw, 4.5rem);
-      line-height: 1;
+      font-size: clamp(1.75rem, 5vw, 4rem);
+      line-height: 1.04;
       letter-spacing: -0.03em;
+      max-width: 22ch;
     }
     .s-word {
       display: inline-block;
       margin-right: 0.25em;
-      color: rgba(22, 21, 27, 0.16);
-      transition: none;
+      color: rgba(20, 19, 26, 0.18);
     }
 
     /* ---------- TRABAJOS ---------- */
     .s-trabajos {
-      position: relative;
-    }
-    .trabajos-pin {
-      min-height: 100svh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: clamp(2rem, 5vw, 3.5rem);
       padding-block: clamp(4rem, 10vh, 7rem);
-    }
-    .trabajos-head {
-      max-width: var(--maxw);
-      margin: 0 auto;
-      width: 100%;
-      padding-inline: var(--pad);
-    }
-    .trabajos-title {
-      font-size: clamp(2.5rem, 8vw, 6rem);
     }
     .trabajos-viewport {
       overflow-x: auto;
@@ -335,9 +460,10 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       gap: clamp(1rem, 2vw, 1.75rem);
       padding-inline: var(--pad);
       width: max-content;
+      will-change: transform;
     }
     .vcard {
-      width: min(74vw, 320px);
+      width: min(74vw, 300px);
       flex: 0 0 auto;
     }
     .vmedia {
@@ -374,12 +500,7 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       flex-direction: column;
       gap: 1rem;
       cursor: default;
-      background:
-        repeating-linear-gradient(
-          45deg,
-          #dcd8cf 0 12px,
-          #d2cec4 12px 24px
-        );
+      background: repeating-linear-gradient(45deg, #dedad1 0 12px, #d5d1c8 12px 24px);
     }
     .vplay {
       position: absolute;
@@ -399,8 +520,8 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       transform: scale(1.1);
     }
     .vplay svg {
-      width: 18px;
-      height: 18px;
+      width: 17px;
+      height: 17px;
       margin-left: 2px;
     }
     .vplay--ghost {
@@ -424,91 +545,127 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       background: #000;
     }
     .vinfo {
-      padding-top: 1rem;
+      padding-top: 0.9rem;
       display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem;
     }
+    .vindex,
     .vcat {
       font-family: var(--font-mono);
       font-weight: 500;
       letter-spacing: 0.04em;
       font-size: 0.68rem;
+    }
+    .vindex {
+      color: var(--muted);
+    }
+    .vcat {
       color: var(--accent);
     }
     .vtitle {
-      font-size: 1.05rem;
+      flex-basis: 100%;
+      font-size: 1rem;
       text-transform: none;
       letter-spacing: -0.01em;
-      line-height: 1.1;
+      line-height: 1.15;
     }
 
     /* ---------- PROCESO ---------- */
     .s-proceso {
-      padding-block: clamp(6rem, 14vh, 11rem);
+      padding-block: clamp(6rem, 14vh, 10rem);
+    }
+    .proceso-grid {
+      display: grid;
+      gap: clamp(2.5rem, 5vw, 4rem);
+    }
+    .proceso-sticky {
+      position: sticky;
+      top: clamp(5rem, 12vh, 7rem);
+    }
+    .proceso-counter {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      margin-top: 2rem;
+      font-family: var(--font-mono);
+    }
+    .proceso-counter #proceso-num {
+      font-family: var(--font-display);
+      font-weight: var(--w-black);
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      line-height: 1;
+      color: var(--accent);
+    }
+    .proceso-total {
+      font-size: 0.85rem;
+      color: var(--muted);
     }
     .proceso {
       list-style: none;
-      display: grid;
-      gap: 0;
     }
     .paso {
-      display: flex;
-      gap: clamp(1.5rem, 4vw, 4rem);
-      align-items: baseline;
-      padding-block: clamp(1.5rem, 3vw, 2.25rem);
-      border-top: 1px solid var(--line);
+      position: relative;
+      padding-block: clamp(1.75rem, 3.5vw, 2.75rem);
     }
-    .paso:last-child {
-      border-bottom: 1px solid var(--line);
+    .paso-rule {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: var(--line);
+      transform: scaleX(0);
+      transform-origin: 0 50%;
+      display: block;
     }
     .paso-num {
-      font-family: var(--font-display);
-      font-weight: var(--w-black);
-      font-size: clamp(1.5rem, 4vw, 3rem);
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
       color: var(--accent);
-      line-height: 1;
-      flex: 0 0 auto;
+      margin-bottom: 0.9rem;
     }
     .paso-body h3 {
-      font-size: clamp(1.3rem, 3vw, 2.25rem);
-      margin-bottom: 0.6rem;
+      font-size: clamp(1.35rem, 2.6vw, 2rem);
+      margin-bottom: 0.7rem;
     }
     .paso-body p {
       color: var(--muted);
-      font-size: 0.98rem;
-      line-height: 1.55;
-      max-width: 60ch;
+      font-size: 0.97rem;
+      line-height: 1.6;
+      max-width: 52ch;
     }
 
     /* ---------- SOBRE MÍ ---------- */
     .s-sobre {
-      padding-block: clamp(6rem, 14vh, 11rem);
+      padding-block: clamp(6rem, 14vh, 10rem);
     }
     .sobre-text p {
-      font-size: clamp(1.3rem, 3vw, 2.1rem);
+      font-size: clamp(1.15rem, 2.1vw, 1.65rem);
       font-weight: var(--w-med);
-      line-height: 1.35;
+      line-height: 1.45;
       letter-spacing: -0.01em;
       margin-bottom: 1.5rem;
     }
     .sobre-text p:last-child {
       margin-bottom: 0;
       color: var(--muted);
-      font-size: clamp(1.05rem, 2vw, 1.4rem);
+      font-size: clamp(1rem, 1.6vw, 1.2rem);
       border-left: 2px solid var(--accent);
-      padding-left: 1.25rem;
+      padding-left: 1.15rem;
     }
 
     /* ---------- CONTACTO ---------- */
     .s-contacto {
-      padding-block: clamp(6rem, 16vh, 13rem);
+      padding-block: clamp(6rem, 16vh, 12rem);
     }
     .contacto-big {
       font-size: clamp(2rem, 5.5vw, 4.5rem);
-      max-width: 20ch;
-      margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
-      text-wrap: balance;
+      max-width: 18ch;
+      margin-bottom: clamp(2.5rem, 6vw, 4rem);
     }
     .contacto-grid {
       display: flex;
@@ -517,21 +674,37 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       align-items: flex-end;
       gap: 2.5rem;
       border-top: 1px solid var(--line);
-      padding-top: 2.5rem;
+      padding-top: 2.25rem;
     }
     .contacto-mail {
+      position: relative;
       font-family: var(--font-display);
       font-weight: var(--w-bold);
       text-transform: uppercase;
-      font-size: clamp(1.1rem, 3vw, 2rem);
+      font-size: clamp(1.05rem, 2.6vw, 1.9rem);
       letter-spacing: -0.02em;
       text-decoration: none;
       color: var(--fg);
-      border-bottom: 2px solid var(--accent);
-      transition: color 0.25s ease;
+      padding-bottom: 0.25em;
+      overflow: hidden;
+    }
+    .contacto-mail .sweep {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: 0 50%;
+      transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+      display: block;
     }
     .contacto-mail:hover {
       color: var(--accent);
+    }
+    .contacto-mail:hover .sweep {
+      transform: scaleX(1);
     }
     .contacto-redes {
       list-style: none;
@@ -539,7 +712,9 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       gap: 0.75rem;
     }
     .contacto-redes li {
-      display: flex;
+      /* Grid en vez de flex: los usuarios quedan alineados entre sí */
+      display: grid;
+      grid-template-columns: 9ch auto;
       gap: 1rem;
       align-items: baseline;
     }
@@ -549,15 +724,23 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       letter-spacing: 0.06em;
       font-size: 0.66rem;
       color: var(--muted);
-      min-width: 8ch;
     }
     .contacto-redes a {
       font-weight: var(--w-bold);
       text-decoration: none;
       color: var(--fg);
+      border-bottom: 1px solid var(--line);
+      transition: color 0.25s ease, border-color 0.25s ease;
     }
     .contacto-redes a:hover {
       color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    @media (min-width: 860px) {
+      .proceso-grid {
+        grid-template-columns: 0.85fr 1.15fr;
+      }
     }
 
     /* Escritorio: el carrusel se desliza con el scroll (GSAP scrub) */
@@ -566,22 +749,20 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
         overflow: hidden;
       }
       .vcard {
-        width: 340px;
+        width: 320px;
       }
     }
 
-    /* Sin animación: todo visible y sin trucos de scroll */
-    :global(body.no-anim) .trabajos-viewport {
+    body.no-anim .trabajos-viewport {
       overflow-x: auto !important;
     }
-    :global(body.no-anim) .s-word {
-      color: var(--fg) !important;
+    body.no-anim .paso-rule {
+      transform: none !important;
     }
   </style>
 
   <Fragment slot="scripts">
     <script>
-      import { Renderer, Camera, Transform, Program, Mesh, Box, Sphere, Torus, Cylinder, Color, Vec3 } from "ogl";
       import Lenis from "lenis";
       import { gsap } from "gsap";
       import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -591,175 +772,7 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       /* ============================================================
-         1. Fondo 3D (OGL): figuras geométricas flotando que se mueven
-            con el scroll. Ligero (~12 kB gzip) en vez de Three.js.
-         ============================================================ */
-      function initBackground() {
-        const canvas = document.getElementById("bg-canvas") as HTMLCanvasElement | null;
-        if (!canvas) return;
-
-        const renderer = new Renderer({
-          canvas,
-          alpha: true,
-          antialias: true,
-          dpr: Math.min(window.devicePixelRatio, 1.5),
-        });
-        const gl = renderer.gl;
-        gl.clearColor(0, 0, 0, 0);
-
-        const camera = new Camera(gl, { fov: 35 });
-        camera.position.set(0, 0, 9);
-
-        const scene = new Transform();
-
-        const vertex = `
-          attribute vec3 position;
-          attribute vec3 normal;
-          uniform mat4 modelMatrix;
-          uniform mat4 modelViewMatrix;
-          uniform mat4 projectionMatrix;
-          uniform mat3 normalMatrix;
-          varying vec3 vNormal;
-          varying vec3 vWorld;
-          void main() {
-            vNormal = normalize(normalMatrix * normal);
-            vWorld = (modelMatrix * vec4(position, 1.0)).xyz;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-          }
-        `;
-        const fragment = `
-          precision highp float;
-          uniform vec3 uColor;
-          uniform vec3 uLight;
-          uniform vec3 uCam;
-          varying vec3 vNormal;
-          varying vec3 vWorld;
-          void main() {
-            vec3 N = normalize(vNormal);
-            vec3 L = normalize(uLight);
-            float diff = clamp(dot(N, L), 0.0, 1.0);
-            vec3 V = normalize(uCam - vWorld);
-            float fres = pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 2.2);
-            vec3 col = uColor * (0.42 + 0.72 * diff);
-            col += vec3(1.0) * fres * 0.18;
-            // Niebla por profundidad: las figuras lejanas se funden con el papel
-            float dist = length(uCam - vWorld);
-            float fog = clamp(1.0 - exp(-0.055 * max(dist - 6.0, 0.0)), 0.0, 0.92);
-            col = mix(col, vec3(0.906, 0.894, 0.867), fog);
-            gl_FragColor = vec4(col, 1.0);
-          }
-        `;
-
-        // Paleta techie/creativa para fondo claro: tonos medios que
-        // contrastan tanto con el papel como con el texto oscuro.
-        const palette = ["#2438d1", "#ff5a1f", "#38445a", "#a8a294", "#c4462a"];
-        const light = new Vec3(2.5, 4.0, 3.0);
-
-        type Shape = { mesh: Mesh; rot: Vec3; spin: number; baseY: number; depth: number };
-        const shapes: Shape[] = [];
-
-        function geom(kind: number) {
-          if (kind === 0) return new Box(gl, { width: 1.4, height: 1.4, depth: 1.4 });
-          if (kind === 1) return new Sphere(gl, { radius: 0.95, widthSegments: 2, heightSegments: 2 });
-          if (kind === 2) return new Torus(gl, { radius: 0.85, tube: 0.32, radialSegments: 8, tubularSegments: 16 });
-          if (kind === 3) return new Sphere(gl, { radius: 0.95, widthSegments: 32, heightSegments: 24 });
-          return new Cylinder(gl, { radiusTop: 0.7, radiusBottom: 0.7, height: 1.6, radialSegments: 6 });
-        }
-
-        // Distribución en la periferia y en profundidad, para enmarcar el
-        // contenido central sin taparlo.
-        const layout = [
-          { x: -6.6, y: 2.4, z: -4, s: 1.5, k: 0, c: 0 },
-          { x: 6.8, y: 2.8, z: -3, s: 1.4, k: 2, c: 2 },
-          { x: 6.4, y: -2.6, z: -5, s: 1.7, k: 4, c: 4 },
-          { x: -7.0, y: -2.6, z: -6, s: 1.8, k: 3, c: 3 },
-          { x: 8.0, y: 0.4, z: -9, s: 2.3, k: 1, c: 1 },
-          { x: -8.2, y: -0.2, z: -10, s: 2.5, k: 2, c: 2 },
-          { x: 3.6, y: 5.2, z: -12, s: 2.2, k: 0, c: 4 },
-          { x: -3.2, y: -5.6, z: -13, s: 2.4, k: 4, c: 3 },
-        ];
-
-        for (const it of layout) {
-          const program = new Program(gl, {
-            vertex,
-            fragment,
-            uniforms: {
-              uColor: { value: new Color(palette[it.c]) },
-              uLight: { value: light },
-              uCam: { value: camera.position },
-            },
-          });
-          const mesh = new Mesh(gl, { geometry: geom(it.k), program });
-          mesh.position.set(it.x, it.y, it.z);
-          mesh.scale.set(it.s, it.s, it.s);
-          mesh.setParent(scene);
-          shapes.push({
-            mesh,
-            rot: new Vec3(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI),
-            spin: 0.1 + Math.random() * 0.25,
-            baseY: it.y,
-            depth: it.z,
-          });
-        }
-
-        function resize() {
-          renderer.setSize(window.innerWidth, window.innerHeight);
-          camera.perspective({ aspect: gl.canvas.width / gl.canvas.height });
-        }
-        resize();
-        window.addEventListener("resize", resize);
-
-        // Parallax con el mouse
-        const mouse = { x: 0, y: 0 };
-        const mTarget = { x: 0, y: 0 };
-        if (!reduced) {
-          window.addEventListener("pointermove", (e) => {
-            mTarget.x = (e.clientX / window.innerWidth - 0.5) * 2;
-            mTarget.y = (e.clientY / window.innerHeight - 0.5) * 2;
-          });
-        }
-
-        let raf = 0;
-        const start = performance.now();
-        let scroll = 0;
-
-        function frame() {
-          const t = (performance.now() - start) / 1000;
-          const max = document.documentElement.scrollHeight - window.innerHeight;
-          const target = max > 0 ? window.scrollY / max : 0;
-          scroll += (target - scroll) * 0.08;
-
-          mouse.x += (mTarget.x - mouse.x) * 0.05;
-          mouse.y += (mTarget.y - mouse.y) * 0.05;
-
-          for (const s of shapes) {
-            s.mesh.rotation.x = s.rot.x + t * s.spin;
-            s.mesh.rotation.y = s.rot.y + t * s.spin * 0.8;
-            // El scroll desplaza las figuras hacia arriba (drift)
-            s.mesh.position.y = s.baseY + scroll * 6.0;
-          }
-
-          // El scroll gira y acerca la escena: sensación de volar entre las figuras
-          scene.rotation.y = scroll * 1.2 + mouse.x * 0.15;
-          scene.rotation.x = mouse.y * 0.1;
-          camera.position.z = 9 - scroll * 4.0;
-          camera.position.x = mouse.x * 0.6;
-
-          renderer.render({ scene, camera });
-          raf = requestAnimationFrame(frame);
-        }
-
-        if (reduced) {
-          renderer.render({ scene, camera });
-        } else {
-          frame();
-        }
-
-        window.addEventListener("beforeunload", () => cancelAnimationFrame(raf));
-      }
-
-      /* ============================================================
-         2. Smooth scroll (Lenis) + sync con ScrollTrigger
+         1. Smooth scroll (Lenis) sincronizado con ScrollTrigger
          ============================================================ */
       function initSmoothScroll() {
         if (reduced) return null;
@@ -771,10 +784,20 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       }
 
       /* ============================================================
-         3. Animaciones de scroll (GSAP)
+         2. Animaciones por sección
          ============================================================ */
       function initAnimations() {
-        // Progreso
+        // Nav sólido al salir del inicio (evita solapes ilegibles)
+        const nav = document.getElementById("nav");
+        if (nav) {
+          ScrollTrigger.create({
+            start: 40,
+            end: "max",
+            onToggle: (self) => nav.classList.toggle("is-scrolled", self.isActive),
+          });
+        }
+
+        // Barra de progreso
         const bar = document.getElementById("scroll-progress-bar");
         if (bar) {
           gsap.to(bar, {
@@ -786,85 +809,110 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
 
         if (reduced) return;
 
-        // Hero: palabras suben desde su máscara
-        gsap.set(".hero-title .word", { yPercent: 120 });
-        const tl = gsap.timeline({ delay: 0.15 });
-        tl.to(".hero-title .word", {
+        /* ---------- HERO: entrada por máscaras ---------- */
+        gsap.set(".hero-title .word", { yPercent: 115 });
+        const intro = gsap.timeline({ delay: 0.1 });
+        intro.to(".hero-title .word", {
           yPercent: 0,
-          duration: 1.1,
+          duration: 1.05,
           ease: "power4.out",
-          stagger: 0.06,
+          stagger: 0.055,
         });
-        tl.from("[data-hero]", { y: 24, opacity: 0, duration: 0.8, stagger: 0.12, ease: "power3.out" }, "-=0.7");
+        intro.from(
+          "[data-hero]",
+          { y: 20, opacity: 0, duration: 0.75, stagger: 0.1, ease: "power3.out" },
+          "-=0.65"
+        );
+        intro.from(".hero-scroll-line", { scaleX: 0, duration: 0.7, ease: "power2.out" }, "-=0.4");
 
-        // Statement: las palabras se "encienden" a tinta conforme pasan
+        // Hero: se aleja al scrollear
+        gsap.to(".hero-inner", {
+          yPercent: -12,
+          opacity: 0.15,
+          ease: "none",
+          scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true },
+        });
+
+        /* ---------- TICKER: loop + empuje con el scroll ---------- */
+        const track = document.getElementById("ticker-track");
+        if (track) {
+          const half = track.scrollWidth / 2;
+          if (half > 0) {
+            const loop = gsap.to(track, {
+              x: -half,
+              duration: 22,
+              ease: "none",
+              repeat: -1,
+              modifiers: { x: (x) => `${parseFloat(x) % half}px` },
+            });
+            // El scroll acelera el ticker (efecto Framer)
+            ScrollTrigger.create({
+              start: 0,
+              end: "max",
+              onUpdate: (self) => {
+                const v = gsap.utils.clamp(-6, 6, self.getVelocity() / 260);
+                loop.timeScale(1 + Math.abs(v));
+                gsap.to(loop, { timeScale: 1, duration: 0.7, overwrite: true });
+              },
+            });
+          }
+        }
+
+        /* ---------- STATEMENT: palabras entintándose ---------- */
         const sWords = gsap.utils.toArray<HTMLElement>("[data-statement]");
         if (sWords.length) {
           gsap.to(sWords, {
-            color: "rgba(22,21,27,1)",
+            color: "rgba(20,19,26,1)",
             stagger: 0.08,
             ease: "none",
             scrollTrigger: {
               trigger: ".statement",
-              start: "top 75%",
-              end: "bottom 60%",
+              start: "top 78%",
+              end: "bottom 62%",
               scrub: true,
             },
           });
         }
 
-        // Reveals: solo fundido de opacidad (el movimiento lo da el parallax)
-        gsap.set("[data-reveal]", { opacity: 0 });
+        /* ---------- Reveals genéricos (solo opacidad) ---------- */
+        gsap.set("[data-reveal]", { opacity: 0, y: 18 });
         ScrollTrigger.batch("[data-reveal]", {
-          start: "top 90%",
+          start: "top 92%",
           onEnter: (els) =>
             gsap.to(els, {
               opacity: 1,
-              duration: 0.9,
-              ease: "power2.out",
+              y: 0,
+              duration: 0.85,
+              ease: "power3.out",
               stagger: 0.08,
               overwrite: "auto",
             }),
         });
 
-        // Parallax continuo: cada elemento con data-speed se desplaza en
-        // vertical de forma sutil mientras se scrollea (no solo al aparecer).
+        /* ---------- Parallax continuo (data-speed) ---------- */
         gsap.utils.toArray<HTMLElement>("[data-speed]").forEach((el) => {
           const speed = parseFloat(el.dataset.speed || "0");
+          if (!speed) return;
           gsap.fromTo(
             el,
-            { y: speed * 70 },
+            { y: speed * 60 },
             {
-              y: -speed * 70,
+              y: -speed * 60,
               ease: "none",
-              scrollTrigger: {
-                trigger: el,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: true,
-              },
+              scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: true },
             }
           );
         });
 
-        // Hero: el contenido se aleja (parallax + fade) al empezar a bajar
-        gsap.to(".hero-inner", {
-          yPercent: -14,
-          opacity: 0.12,
-          ease: "none",
-          scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true },
-        });
-
-        // Trabajos: el carrusel se DESLIZA en horizontal conforme bajas
-        // (ligado al scroll, sin pin, para que se sienta continuo).
+        /* ---------- TRABAJOS: carrusel que se desliza al bajar ---------- */
         const mm = gsap.matchMedia();
         mm.add("(min-width: 768px)", () => {
-          const track = document.getElementById("trabajos-track");
+          const cards = document.getElementById("trabajos-track");
           const viewport = document.querySelector<HTMLElement>(".trabajos-viewport");
-          if (!track || !viewport) return;
-          const overflow = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
+          if (!cards || !viewport) return;
+          const overflow = () => Math.max(0, cards.scrollWidth - viewport.clientWidth);
           gsap.fromTo(
-            track,
+            cards,
             { x: 0 },
             {
               x: () => -overflow(),
@@ -879,10 +927,89 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
             }
           );
         });
+
+        /* ---------- PROCESO: reglas que se dibujan, líneas que suben
+                       y contador pegajoso que cambia por paso ---------- */
+        const pasos = gsap.utils.toArray<HTMLElement>(".paso");
+        const numEl = document.getElementById("proceso-num");
+        pasos.forEach((paso) => {
+          const rule = paso.querySelector(".paso-rule");
+          const lines = paso.querySelectorAll(".line-inner");
+          const num = paso.dataset.paso || "01";
+
+          gsap.set(lines, { yPercent: 105, opacity: 0 });
+
+          ScrollTrigger.create({
+            trigger: paso,
+            start: "top 85%",
+            once: true,
+            onEnter: () => {
+              if (rule) gsap.to(rule, { scaleX: 1, duration: 1, ease: "power3.out" });
+              gsap.to(lines, {
+                yPercent: 0,
+                opacity: 1,
+                duration: 0.85,
+                ease: "power3.out",
+                stagger: 0.09,
+              });
+            },
+          });
+
+          // Contador que sigue al paso activo
+          if (numEl) {
+            ScrollTrigger.create({
+              trigger: paso,
+              start: "top 55%",
+              end: "bottom 55%",
+              onToggle: (self) => {
+                if (!self.isActive) return;
+                if (numEl.textContent === num) return;
+                gsap.fromTo(
+                  numEl,
+                  { yPercent: 45, opacity: 0 },
+                  { yPercent: 0, opacity: 1, duration: 0.45, ease: "power3.out" }
+                );
+                numEl.textContent = num;
+              },
+            });
+          }
+        });
+
+        /* ---------- SOBRE MÍ: párrafos que suben por máscara ---------- */
+        const sobreLines = gsap.utils.toArray<HTMLElement>(".s-sobre .line-inner");
+        if (sobreLines.length) {
+          gsap.set(sobreLines, { yPercent: 105, opacity: 0 });
+          ScrollTrigger.create({
+            trigger: ".s-sobre",
+            start: "top 78%",
+            once: true,
+            onEnter: () =>
+              gsap.to(sobreLines, {
+                yPercent: 0,
+                opacity: 1,
+                duration: 0.95,
+                ease: "power3.out",
+                stagger: 0.12,
+              }),
+          });
+        }
+
+        /* ---------- CONTACTO: titular por máscaras ---------- */
+        const cWords = gsap.utils.toArray<HTMLElement>(".word--c");
+        if (cWords.length) {
+          gsap.set(cWords, { yPercent: 115 });
+          ScrollTrigger.create({
+            trigger: ".s-contacto",
+            start: "top 72%",
+            once: true,
+            onEnter: () =>
+              gsap.to(cWords, { yPercent: 0, duration: 1, ease: "power4.out", stagger: 0.045 }),
+          });
+        }
       }
 
       /* ============================================================
-         4. Facade de video: al hacer clic, carga el iframe
+         3. Facade de video: al hacer clic, carga el iframe
          ============================================================ */
       function initVideoFacade() {
         document.addEventListener("click", (event) => {
@@ -903,7 +1030,7 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       }
 
       /* ============================================================
-         5. Anchors con smooth scroll
+         4. Anchors con smooth scroll
          ============================================================ */
       function initAnchors(lenis: Lenis | null) {
         document.querySelectorAll<HTMLAnchorElement>("a[data-scroll]").forEach((a) => {
@@ -919,15 +1046,19 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
         });
       }
 
-      /* ---------- Arranque ---------- */
+      /* ---------- Arranque (con red de seguridad de legibilidad) ---------- */
       if (reduced) document.body.classList.add("no-anim");
-      initBackground();
-      const lenis = initSmoothScroll();
-      initAnimations();
-      initVideoFacade();
-      initAnchors(lenis);
-      // Recalcular medidas cuando todo cargó (fuentes, imágenes)
-      window.addEventListener("load", () => ScrollTrigger.refresh());
+      try {
+        const lenis = initSmoothScroll();
+        initAnimations();
+        initVideoFacade();
+        initAnchors(lenis);
+        window.addEventListener("load", () => ScrollTrigger.refresh());
+      } catch (err) {
+        // Si algo falla, el contenido nunca se queda invisible
+        document.body.classList.add("no-anim");
+        console.error(err);
+      }
     </script>
   </Fragment>
 </Immersive>
