@@ -1,0 +1,284 @@
+---
+import { PERFIL, CONTACTO } from "../data/portfolio";
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const {
+  title = `${PERFIL.nombre}, ${PERFIL.rol}`,
+  description = PERFIL.subtitular,
+  ogImage = "/og.jpg",
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://javiermiz.github.io");
+const currentYear = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <meta name="author" content={PERFIL.nombre} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(ogImage, canonicalURL)} />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+
+    <meta name="theme-color" content="#08080a" />
+  </head>
+
+  <body>
+    <!-- Fondo WebGL (Three.js) -->
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
+    <div class="grain" aria-hidden="true"></div>
+
+    <!-- Barra de progreso de scroll -->
+    <div class="scroll-progress" aria-hidden="true"><span id="scroll-progress-bar"></span></div>
+
+    <header class="nav" id="nav">
+      <a href="#top" class="nav-logo" data-scroll>{PERFIL.nombre}</a>
+      <nav class="nav-links">
+        <a href="#trabajos" data-scroll>Trabajos</a>
+        <a href="#servicios" data-scroll>Servicios</a>
+        <a href="#contacto" data-scroll>Contacto</a>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>&copy; {currentYear} {PERFIL.nombre}</p>
+        <div class="footer-links">
+          <a href={CONTACTO.instagram.url} target="_blank" rel="noopener">Instagram</a>
+          <a href={CONTACTO.tiktok.url} target="_blank" rel="noopener">TikTok</a>
+        </div>
+      </div>
+    </footer>
+
+    <style is:global>
+      :root {
+        --font-display: "Helvetica Neue", Helvetica, Arial, "Arial Black", sans-serif;
+        --font-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+        --bg: #08080a;
+        --fg: #f4f4f0;
+        --muted: #86867e;
+        --line: rgba(244, 244, 240, 0.14);
+        --accent: #ff2d1a;
+        --accent-2: #ffe500;
+
+        --maxw: 1360px;
+        --pad: clamp(1.25rem, 4vw, 3.5rem);
+
+        --w-black: 900;
+        --w-bold: 800;
+        --w-med: 600;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        font-family: var(--font-body);
+        font-size: 18px;
+        color: var(--fg);
+        background: var(--bg);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      /* Lenis smooth scroll */
+      html.lenis,
+      html.lenis body {
+        height: auto;
+      }
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+
+      body {
+        /* transparente para que se vea el canvas WebGL fijo detrás */
+        background: transparent;
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      h1, h2, h3, h4 {
+        font-family: var(--font-display);
+        font-weight: var(--w-black);
+        text-transform: uppercase;
+        line-height: 0.92;
+        letter-spacing: -0.03em;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      ::selection {
+        background: var(--accent);
+        color: #fff;
+      }
+
+      /* Fondo WebGL fijo */
+      #bg-canvas {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -2;
+        display: block;
+      }
+
+      /* Grano sutil encima del canvas */
+      .grain {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        opacity: 0.05;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+
+      /* Barra de progreso */
+      .scroll-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        z-index: 50;
+        background: transparent;
+      }
+      .scroll-progress span {
+        display: block;
+        height: 100%;
+        width: 100%;
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: 0 50%;
+      }
+
+      /* Nav */
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 40;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: clamp(1rem, 2.5vw, 1.5rem) var(--pad);
+        mix-blend-mode: difference;
+        color: #fff;
+      }
+      .nav-logo {
+        font-family: var(--font-display);
+        font-weight: var(--w-black);
+        text-transform: uppercase;
+        letter-spacing: -0.03em;
+        font-size: 1.1rem;
+        text-decoration: none;
+      }
+      .nav-links {
+        display: flex;
+        gap: clamp(1rem, 3vw, 2.5rem);
+      }
+      .nav-links a {
+        font-family: var(--font-display);
+        font-weight: var(--w-bold);
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        font-size: 0.72rem;
+        text-decoration: none;
+        opacity: 0.9;
+      }
+      .nav-links a:hover {
+        opacity: 1;
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 4px;
+      }
+      @media (max-width: 560px) {
+        .nav-links a:first-child {
+          display: none;
+        }
+      }
+
+      /* Footer */
+      .site-footer {
+        position: relative;
+        z-index: 2;
+        border-top: 1px solid var(--line);
+        padding: var(--pad);
+        background: var(--bg);
+      }
+      .footer-inner {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .footer-inner p,
+      .footer-links a {
+        font-family: var(--font-display);
+        font-weight: var(--w-bold);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        font-size: 0.72rem;
+      }
+      .footer-links {
+        display: flex;
+        gap: 1.5rem;
+      }
+      .footer-links a {
+        text-decoration: none;
+        color: var(--muted);
+      }
+      .footer-links a:hover {
+        color: var(--accent);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        #bg-canvas {
+          opacity: 0.5;
+        }
+      }
+    </style>
+
+    <slot name="scripts" />
+  </body>
+</html>
