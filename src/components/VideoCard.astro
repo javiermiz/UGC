@@ -41,7 +41,6 @@ const puedeIncrustar = embed !== "";
         aria-label={`Reproducir: ${video.titulo}`}
       >
         <img src={thumb} alt={`Miniatura de ${video.titulo}`} loading="lazy" />
-        {video.metrica && <span class="video-metrica">{video.metrica}</span>}
         <span class="video-play" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M8 5v14l11-7z" />
@@ -57,7 +56,6 @@ const puedeIncrustar = embed !== "";
         aria-label={`Ver en ${video.fuente}: ${video.titulo}`}
       >
         <img src={thumb} alt={`Miniatura de ${video.titulo}`} loading="lazy" />
-        {video.metrica && <span class="video-metrica">{video.metrica}</span>}
         <span class="video-play" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M8 5v14l11-7z" />

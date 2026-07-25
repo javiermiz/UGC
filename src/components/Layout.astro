@@ -8,7 +8,7 @@ interface Props {
 }
 
 const {
-  title = `${PERFIL.nombre} — ${PERFIL.rol}`,
+  title = `${PERFIL.nombre}, ${PERFIL.rol}`,
   description = PERFIL.subtitular,
   ogImage = "/og.jpg",
 } = Astro.props;
@@ -48,7 +48,7 @@ const currentYear = new Date().getFullYear();
       <div class="header-content">
         <a href="/" class="site-logo">{PERFIL.nombre}</a>
         <nav class="main-nav">
-          <a href="/#trabajos">Trabajos</a>
+          <!-- El link "Trabajos" se reactiva cuando la sección deje de estar oculta -->
           <a href="/#servicios">Servicios</a>
           <a href="/#contacto">Contacto</a>
         </nav>
@@ -68,9 +68,6 @@ const currentYear = new Date().getFullYear();
           </a>
           <a href={CONTACTO.tiktok.url} target="_blank" rel="noopener">
             TikTok
-          </a>
-          <a href="https://javiermiz.github.io" target="_blank" rel="noopener">
-            Blog
           </a>
         </div>
       </div>
@@ -95,7 +92,7 @@ const currentYear = new Date().getFullYear();
     font-display: swap;
   }
 
-  /* Design tokens — mismos que javiermiz.github.io */
+  /* Design tokens (mismos que javiermiz.github.io) */
   :root {
     --font-serif: "Spectral", serif;
     --font-serif-body: "Spectral", serif;
@@ -273,7 +270,7 @@ const currentYear = new Date().getFullYear();
     color: var(--color-primary);
   }
 
-  /* Main — solo maneja el ritmo vertical entre secciones.
+  /* Main: solo maneja el ritmo vertical entre secciones.
      El ancho y el padding lateral los ponen los <Container>. */
   .main-content {
     flex: 1;

@@ -2,18 +2,10 @@
 import Layout from "../components/Layout.astro";
 import Section from "../components/layout/Section.astro";
 import Container from "../components/layout/Container.astro";
-import VideoCard from "../components/VideoCard.astro";
 import ServiceCard from "../components/ServiceCard.astro";
-import {
-  PERFIL,
-  METRICAS,
-  VIDEOS,
-  MARCAS,
-  SERVICIOS,
-  PROCESO,
-  TESTIMONIOS,
-  CONTACTO,
-} from "../data/portfolio";
+// import VideoCard from "../components/VideoCard.astro"; // reactivar con la sección Trabajos
+import { PERFIL, SERVICIOS, PROCESO, CONTACTO } from "../data/portfolio";
+// import { VIDEOS } from "../data/portfolio"; // reactivar con la sección Trabajos
 ---
 
 <Layout>
@@ -27,7 +19,7 @@ import {
             <p class="hero-rol">{PERFIL.rol}</p>
           </div>
           <div class="hero-detalles">
-            <p>{PERFIL.ubicacion}</p>
+            {PERFIL.ubicacion && <p>{PERFIL.ubicacion}</p>}
             <p class="hero-disponibilidad">{PERFIL.disponibilidad}</p>
           </div>
         </div>
@@ -39,49 +31,45 @@ import {
 
         <div class="hero-acciones">
           <a class="boton" href={`mailto:${CONTACTO.email}`}>Trabajemos juntos</a>
-          <a class="boton boton--secundario" href="#trabajos">Ver trabajos</a>
         </div>
 
-        <ul class="metricas">
-          {
-            METRICAS.map((metrica) => (
-              <li class="metrica">
-                <span class="metrica-valor">{metrica.valor}</span>
-                <span class="metrica-etiqueta">{metrica.etiqueta}</span>
-              </li>
-            ))
-          }
-        </ul>
+        {/*
+          METRICAS DEL HERO (ocultas por ahora).
+          Eran números de ejemplo en ceros. Para alguien que está
+          empezando, mostrar cifras vacías resta credibilidad. Reactiva
+          este bloque cuando tengas números reales que aporten,
+          definiéndolos en una constante METRICAS en portfolio.ts.
+        */}
       </div>
     </Container>
   </Section>
 
-  <!-- Trabajos (carrusel) -->
-  <Section id="trabajos">
-    <Container>
-      <h2 class="section-title">Trabajos</h2>
-      <div class="carousel" style="--cols: 3">
-        {VIDEOS.map((video) => <VideoCard video={video} />)}
-      </div>
-    </Container>
-  </Section>
+  {/*
+    ============================================================
+    SECCIÓN "TRABAJOS" (oculta hasta tener 2-3 videos reales)
+    ============================================================
+    Cómo reactivarla cuando haya videos reales:
+      1. Descomenta los imports de VideoCard y VIDEOS arriba.
+      2. Añade objetos Video reales en portfolio.ts (VIDEOS).
+      3. Descomenta el bloque de abajo.
+      4. Vuelve a poner el link "Trabajos" en el menú (Layout.astro).
 
-  <!-- Marcas -->
-  <Section id="marcas">
-    <Container>
-      <h2 class="section-title">Marcas</h2>
-      <ul class="marcas">
-        {
-          MARCAS.map((marca) => (
-            <li class="marca">
-              <span class="marca-nombre">{marca.nombre}</span>
-              <span class="marca-categoria">{marca.categoria}</span>
-            </li>
-          ))
-        }
-      </ul>
-    </Container>
-  </Section>
+    Requisitos del diseño al reactivar:
+      - Carousel horizontal con scroll en móvil (clase .carousel, ya lista).
+      - Sin métricas inventadas (no inventes cifras de vistas ni de CTR).
+      - Cada tarjeta con link real al video (fuente + videoId reales).
+      - La descripción debe enfocarse en el objetivo que buscaba la marca
+        con el video (qué querían lograr), no solo describir la escena.
+
+    <Section id="trabajos">
+      <Container>
+        <h2 class="section-title">Trabajos</h2>
+        <div class="carousel" style="--cols: 3">
+          {VIDEOS.map((video) => <VideoCard video={video} />)}
+        </div>
+      </Container>
+    </Section>
+  */}
 
   <!-- Servicios -->
   <Section id="servicios">
@@ -117,25 +105,8 @@ import {
   <Section id="sobre-mi">
     <Container>
       <h2 class="section-title">Sobre mí</h2>
-      <p class="sobre-mi">{PERFIL.sobre_mi}</p>
-    </Container>
-  </Section>
-
-  <!-- Testimonios (carrusel) -->
-  <Section id="testimonios">
-    <Container>
-      <h2 class="section-title">Lo que dicen</h2>
-      <div class="carousel testimonios" style="--cols: 2; --card: 85%">
-        {
-          TESTIMONIOS.map((testimonio) => (
-            <blockquote class="testimonio">
-              <p class="testimonio-texto">{testimonio.texto}</p>
-              <footer class="testimonio-autor">
-                {testimonio.autor} <span>· {testimonio.cargo}</span>
-              </footer>
-            </blockquote>
-          ))
-        }
+      <div class="sobre-mi">
+        {PERFIL.sobre_mi.map((parrafo) => <p>{parrafo}</p>)}
       </div>
     </Container>
   </Section>
@@ -254,74 +225,6 @@ import {
     border-color: var(--color-primary-hover);
   }
 
-  .boton--secundario {
-    background-color: transparent;
-    color: var(--color-text-primary);
-    border-color: var(--color-border-light);
-  }
-
-  .boton--secundario:hover {
-    background-color: transparent;
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-  }
-
-  /* Métricas */
-  .metricas {
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-5) var(--space-4);
-    margin-top: var(--space-2);
-  }
-
-  .metrica {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .metrica-valor {
-    font-family: var(--font-serif);
-    font-size: var(--text-xl);
-    font-weight: var(--font-bold);
-    color: var(--color-text-primary);
-    line-height: var(--line-height-tight);
-  }
-
-  .metrica-etiqueta {
-    font-size: var(--text-xs);
-    color: var(--color-text-muted);
-    letter-spacing: var(--letter-spacing-wide);
-  }
-
-  /* ------------------------------------------------------------------ */
-  /* Marcas                                                             */
-  /* ------------------------------------------------------------------ */
-  .marcas {
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-4);
-  }
-
-  .marca {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .marca-nombre {
-    font-family: var(--font-serif);
-    font-size: var(--text-base);
-    font-weight: var(--font-bold);
-    color: var(--color-text-primary);
-  }
-
-  .marca-categoria {
-    font-size: var(--text-xs);
-    color: var(--color-text-muted);
-  }
-
   /* ------------------------------------------------------------------ */
   /* Servicios                                                          */
   /* ------------------------------------------------------------------ */
@@ -369,35 +272,17 @@ import {
   /* Sobre mí                                                           */
   /* ------------------------------------------------------------------ */
   .sobre-mi {
-    font-size: var(--text-base);
-    color: var(--color-text-body);
     max-width: 65ch;
   }
 
-  /* ------------------------------------------------------------------ */
-  /* Testimonios                                                        */
-  /* ------------------------------------------------------------------ */
-  .testimonio {
-    border-left: 2px solid var(--color-primary);
-    padding-left: var(--space-4);
-  }
-
-  .testimonio-texto {
+  .sobre-mi p {
     font-size: var(--text-base);
-    font-style: italic;
     color: var(--color-text-body);
-    margin-bottom: var(--space-2);
+    margin-bottom: var(--space-4);
   }
 
-  .testimonio-autor {
-    font-size: var(--text-xs);
-    color: var(--color-text-primary);
-    font-weight: var(--font-medium);
-  }
-
-  .testimonio-autor span {
-    color: var(--color-text-muted);
-    font-weight: var(--font-normal);
+  .sobre-mi p:last-child {
+    margin-bottom: 0;
   }
 
   /* ------------------------------------------------------------------ */
@@ -464,19 +349,11 @@ import {
     .hero-titular h2 {
       font-size: var(--text-3xl);
     }
-
-    .metricas {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .marcas {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
   }
 
   @media (min-width: 640px) {
     .servicios {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--space-5);
     }
   }

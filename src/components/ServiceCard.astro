@@ -11,7 +11,7 @@ const { servicio } = Astro.props;
 <article class="servicio">
   <header class="servicio-header">
     <h3 class="servicio-titulo">{servicio.titulo}</h3>
-    {servicio.desde && <span class="servicio-precio">desde {servicio.desde}</span>}
+    <span class="servicio-precio">{servicio.precio}</span>
   </header>
 
   <p class="servicio-descripcion">{servicio.descripcion}</p>
@@ -19,10 +19,14 @@ const { servicio } = Astro.props;
   <ul class="servicio-entregables">
     {servicio.entregables.map((item) => <li>{item}</li>)}
   </ul>
+
+  <a class="servicio-cta" href="#contacto">Pedir cotización</a>
 </article>
 
 <style>
   .servicio {
+    display: flex;
+    flex-direction: column;
     padding: var(--space-6);
     background-color: var(--color-bg-secondary);
     border-radius: var(--radius-elegant);
@@ -57,6 +61,7 @@ const { servicio } = Astro.props;
 
   .servicio-entregables {
     list-style: none;
+    margin-bottom: var(--space-5);
   }
 
   .servicio-entregables li {
@@ -68,9 +73,30 @@ const { servicio } = Astro.props;
   }
 
   .servicio-entregables li::before {
-    content: "—";
+    content: "·";
     position: absolute;
     left: 0;
-    color: var(--color-text-light);
+    color: var(--color-primary);
+    font-weight: var(--font-bold);
+  }
+
+  .servicio-cta {
+    margin-top: auto;
+    align-self: flex-start;
+    display: inline-block;
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-sm);
+    text-decoration: none;
+    letter-spacing: var(--letter-spacing-wide);
+    border: 1px solid var(--color-primary);
+    border-radius: var(--radius-elegant);
+    color: var(--color-primary);
+    background-color: transparent;
+    transition: all var(--transition-elegant);
+  }
+
+  .servicio-cta:hover {
+    background-color: var(--color-primary);
+    color: #fff;
   }
 </style>
