@@ -1,6 +1,6 @@
 ---
 import Immersive from "../layouts/Immersive.astro";
-import { PERFIL, VIDEOS, SERVICIOS, PROCESO, CONTACTO } from "../data/portfolio";
+import { PERFIL, VIDEOS, PROCESO, CONTACTO } from "../data/portfolio";
 
 /* Datos de reproducción de cada video (nada se aloja aquí; se incrusta) */
 function youtubeThumb(id: string) {
@@ -77,8 +77,8 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
   <section class="s-trabajos" id="trabajos">
     <div class="trabajos-pin">
       <div class="trabajos-head">
-        <span class="eyebrow" data-reveal>01 / Trabajos</span>
-        <h2 class="trabajos-title" data-reveal>Videos UGC</h2>
+        <span class="eyebrow" data-reveal data-speed="0.5">01 / Trabajos</span>
+        <h2 class="trabajos-title" data-reveal data-speed="0.2">Videos UGC</h2>
       </div>
 
       <div class="trabajos-viewport">
@@ -127,40 +127,15 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
     </div>
   </section>
 
-  <!-- ===================== SERVICIOS ===================== -->
-  <section class="s-servicios" id="servicios">
-    <div class="wrap">
-      <span class="eyebrow" data-reveal>02 / Servicios</span>
-      <h2 class="s-title" data-reveal>Cómo trabajamos</h2>
-      <div class="servicios-grid">
-        {
-          SERVICIOS.map((s) => (
-            <article class="scard" data-reveal>
-              <div class="scard-top">
-                <h3>{s.titulo}</h3>
-                <span class="scard-precio">{s.precio}</span>
-              </div>
-              <p class="scard-desc">{s.descripcion}</p>
-              <ul class="scard-list">
-                {s.entregables.map((i) => <li>{i}</li>)}
-              </ul>
-              <a class="scard-cta" href="#contacto" data-scroll>Pedir cotización</a>
-            </article>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
   <!-- ===================== PROCESO ===================== -->
   <section class="s-proceso">
     <div class="wrap">
-      <span class="eyebrow" data-reveal>03 / Proceso</span>
-      <h2 class="s-title" data-reveal>De la idea a la entrega</h2>
+      <span class="eyebrow" data-reveal data-speed="0.5">02 / Proceso</span>
+      <h2 class="s-title" data-reveal data-speed="0.2">De la idea a la entrega</h2>
       <ol class="proceso">
         {
           PROCESO.map((p, i) => (
-            <li class="paso" data-reveal>
+            <li class="paso" data-reveal data-speed={String(0.12 + i * 0.06)}>
               <span class="paso-num">{String(i + 1).padStart(2, "0")}</span>
               <div class="paso-body">
                 <h3>{p.titulo}</h3>
@@ -174,9 +149,9 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
   </section>
 
   <!-- ===================== SOBRE MÍ ===================== -->
-  <section class="s-sobre">
+  <section class="s-sobre" id="sobre">
     <div class="wrap wrap--narrow">
-      <span class="eyebrow" data-reveal>04 / Sobre mí</span>
+      <span class="eyebrow" data-reveal data-speed="0.5">03 / Sobre mí</span>
       <div class="sobre-text">
         {PERFIL.sobre_mi.map((p) => <p data-reveal>{p}</p>)}
       </div>
@@ -186,8 +161,8 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
   <!-- ===================== CONTACTO ===================== -->
   <section class="s-contacto" id="contacto">
     <div class="wrap">
-      <span class="eyebrow" data-reveal>05 / Contacto</span>
-      <h2 class="contacto-big" data-reveal>{CONTACTO.cierre}</h2>
+      <span class="eyebrow" data-reveal data-speed="0.5">04 / Contacto</span>
+      <h2 class="contacto-big" data-reveal data-speed="0.15">{CONTACTO.cierre}</h2>
       <div class="contacto-grid">
         <a class="contacto-mail" href={`mailto:${CONTACTO.email}`} data-reveal>{CONTACTO.email}</a>
         <ul class="contacto-redes" data-reveal>
@@ -210,10 +185,9 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
 
     .eyebrow {
       display: inline-block;
-      font-family: var(--font-display);
-      font-weight: var(--w-bold);
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
+      font-family: var(--font-mono);
+      font-weight: 500;
+      letter-spacing: 0.12em;
       font-size: 0.72rem;
       color: var(--accent);
       margin-bottom: 1.5rem;
@@ -247,12 +221,11 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
     }
     .tag {
-      font-family: var(--font-display);
-      font-weight: var(--w-bold);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      font-family: var(--font-mono);
+      font-weight: 500;
+      letter-spacing: 0.03em;
       font-size: 0.72rem;
-      padding: 0.4em 0.7em;
+      padding: 0.45em 0.75em;
       border: 1px solid var(--line);
       color: var(--fg);
     }
@@ -323,7 +296,7 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
     .s-word {
       display: inline-block;
       margin-right: 0.25em;
-      color: rgba(244, 244, 240, 0.16);
+      color: rgba(22, 21, 27, 0.16);
       transition: none;
     }
 
@@ -375,12 +348,16 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       width: 100%;
       aspect-ratio: 9 / 16;
       overflow: hidden;
-      background: #101013;
+      background: var(--bg-2);
       border: 1px solid var(--line);
       cursor: pointer;
       padding: 0;
       color: inherit;
       text-decoration: none;
+      transition: border-color 0.3s ease;
+    }
+    .vmedia:hover {
+      border-color: var(--fg);
     }
     .vmedia img {
       position: absolute;
@@ -400,8 +377,8 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       background:
         repeating-linear-gradient(
           45deg,
-          #0e0e11 0 12px,
-          #131317 12px 24px
+          #dcd8cf 0 12px,
+          #d2cec4 12px 24px
         );
     }
     .vplay {
@@ -433,10 +410,9 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       color: var(--accent);
     }
     .vsoon {
-      font-family: var(--font-display);
-      font-weight: var(--w-bold);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
+      font-family: var(--font-mono);
+      font-weight: 500;
+      letter-spacing: 0.08em;
       font-size: 0.72rem;
       color: var(--muted);
     }
@@ -454,10 +430,9 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       gap: 0.4rem;
     }
     .vcat {
-      font-family: var(--font-display);
-      font-weight: var(--w-bold);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      font-family: var(--font-mono);
+      font-weight: 500;
+      letter-spacing: 0.04em;
       font-size: 0.68rem;
       color: var(--accent);
     }
@@ -466,95 +441,6 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       text-transform: none;
       letter-spacing: -0.01em;
       line-height: 1.1;
-    }
-
-    /* ---------- SERVICIOS ---------- */
-    .s-servicios {
-      padding-block: clamp(6rem, 14vh, 11rem);
-    }
-    .servicios-grid {
-      display: grid;
-      gap: 1.25rem;
-    }
-    .scard {
-      border: 1px solid var(--line);
-      padding: clamp(1.5rem, 3vw, 2.5rem);
-      display: flex;
-      flex-direction: column;
-      background: rgba(8, 8, 12, 0.5);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      transition: border-color 0.3s ease, background 0.3s ease;
-    }
-    .scard:hover {
-      border-color: rgba(244, 244, 240, 0.35);
-      background: rgba(8, 8, 12, 0.62);
-    }
-    .scard-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    .scard-top h3 {
-      font-size: clamp(1.4rem, 2.5vw, 2rem);
-    }
-    .scard-precio {
-      font-family: var(--font-display);
-      font-weight: var(--w-bold);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      font-size: 0.68rem;
-      color: var(--accent);
-      white-space: nowrap;
-    }
-    .scard-desc {
-      color: var(--muted);
-      font-size: 0.95rem;
-      line-height: 1.5;
-      margin-bottom: 1.5rem;
-      max-width: 46ch;
-    }
-    .scard-list {
-      list-style: none;
-      margin-bottom: 2rem;
-      display: grid;
-      gap: 0.6rem;
-    }
-    .scard-list li {
-      position: relative;
-      padding-left: 1.4rem;
-      font-size: 0.92rem;
-      color: var(--fg);
-    }
-    .scard-list li::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0.55em;
-      width: 8px;
-      height: 8px;
-      background: var(--accent);
-    }
-    .scard-cta {
-      margin-top: auto;
-      align-self: flex-start;
-      font-family: var(--font-display);
-      font-weight: var(--w-bold);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      font-size: 0.78rem;
-      text-decoration: none;
-      color: var(--fg);
-      padding: 0.8em 1.4em;
-      border: 1px solid var(--fg);
-      transition: background 0.25s ease, color 0.25s ease;
-    }
-    .scard-cta:hover {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
     }
 
     /* ---------- PROCESO ---------- */
@@ -658,11 +544,10 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       align-items: baseline;
     }
     .contacto-redes span {
-      font-family: var(--font-display);
-      font-weight: var(--w-bold);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      font-size: 0.62rem;
+      font-family: var(--font-mono);
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      font-size: 0.66rem;
       color: var(--muted);
       min-width: 8ch;
     }
@@ -675,16 +560,10 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
       color: var(--accent);
     }
 
-    @media (min-width: 720px) {
-      .servicios-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    /* Escritorio: scroll horizontal controlado por GSAP (pin) */
+    /* Escritorio: el carrusel se desliza con el scroll (GSAP scrub) */
     @media (min-width: 768px) {
       .trabajos-viewport {
-        overflow: visible;
+        overflow: hidden;
       }
       .vcard {
         width: 340px;
@@ -761,18 +640,19 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
             float diff = clamp(dot(N, L), 0.0, 1.0);
             vec3 V = normalize(uCam - vWorld);
             float fres = pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 2.2);
-            vec3 col = uColor * (0.26 + 0.8 * diff);
-            col += vec3(1.0) * fres * 0.32;
-            // Niebla por profundidad: las figuras lejanas se funden con el fondo
+            vec3 col = uColor * (0.42 + 0.72 * diff);
+            col += vec3(1.0) * fres * 0.18;
+            // Niebla por profundidad: las figuras lejanas se funden con el papel
             float dist = length(uCam - vWorld);
-            float fog = clamp(1.0 - exp(-0.055 * max(dist - 6.0, 0.0)), 0.0, 0.9);
-            col = mix(col, vec3(0.03, 0.03, 0.04), fog);
+            float fog = clamp(1.0 - exp(-0.055 * max(dist - 6.0, 0.0)), 0.0, 0.92);
+            col = mix(col, vec3(0.906, 0.894, 0.867), fog);
             gl_FragColor = vec4(col, 1.0);
           }
         `;
 
-        // Paleta creativa (no "terror"): rojo, crema, azul eléctrico, violeta
-        const palette = ["#ff2d1a", "#f2efe6", "#2f6bff", "#7c4dff", "#ff8a1f"];
+        // Paleta techie/creativa para fondo claro: tonos medios que
+        // contrastan tanto con el papel como con el texto oscuro.
+        const palette = ["#2438d1", "#ff5a1f", "#38445a", "#a8a294", "#c4462a"];
         const light = new Vec3(2.5, 4.0, 3.0);
 
         type Shape = { mesh: Mesh; rot: Vec3; spin: number; baseY: number; depth: number };
@@ -917,11 +797,11 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
         });
         tl.from("[data-hero]", { y: 24, opacity: 0, duration: 0.8, stagger: 0.12, ease: "power3.out" }, "-=0.7");
 
-        // Statement: palabras se "encienden" a blanco al pasar
+        // Statement: las palabras se "encienden" a tinta conforme pasan
         const sWords = gsap.utils.toArray<HTMLElement>("[data-statement]");
         if (sWords.length) {
           gsap.to(sWords, {
-            color: "rgba(244,244,240,1)",
+            color: "rgba(22,21,27,1)",
             stagger: 0.08,
             ease: "none",
             scrollTrigger: {
@@ -933,47 +813,71 @@ const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
           });
         }
 
-        // Reveals genéricos
-        gsap.set("[data-reveal]", { y: 42, opacity: 0 });
+        // Reveals: solo fundido de opacidad (el movimiento lo da el parallax)
+        gsap.set("[data-reveal]", { opacity: 0 });
         ScrollTrigger.batch("[data-reveal]", {
-          start: "top 88%",
+          start: "top 90%",
           onEnter: (els) =>
             gsap.to(els, {
-              y: 0,
               opacity: 1,
               duration: 0.9,
-              ease: "power3.out",
-              stagger: 0.09,
-              overwrite: true,
+              ease: "power2.out",
+              stagger: 0.08,
+              overwrite: "auto",
             }),
         });
 
-        // Trabajos: scroll horizontal con pin (solo escritorio)
+        // Parallax continuo: cada elemento con data-speed se desplaza en
+        // vertical de forma sutil mientras se scrollea (no solo al aparecer).
+        gsap.utils.toArray<HTMLElement>("[data-speed]").forEach((el) => {
+          const speed = parseFloat(el.dataset.speed || "0");
+          gsap.fromTo(
+            el,
+            { y: speed * 70 },
+            {
+              y: -speed * 70,
+              ease: "none",
+              scrollTrigger: {
+                trigger: el,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true,
+              },
+            }
+          );
+        });
+
+        // Hero: el contenido se aleja (parallax + fade) al empezar a bajar
+        gsap.to(".hero-inner", {
+          yPercent: -14,
+          opacity: 0.12,
+          ease: "none",
+          scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true },
+        });
+
+        // Trabajos: el carrusel se DESLIZA en horizontal conforme bajas
+        // (ligado al scroll, sin pin, para que se sienta continuo).
         const mm = gsap.matchMedia();
         mm.add("(min-width: 768px)", () => {
           const track = document.getElementById("trabajos-track");
-          const section = document.querySelector<HTMLElement>(".s-trabajos");
-          if (!track || !section) return;
-
-          const distance = () => Math.max(0, track.scrollWidth - window.innerWidth + 80);
-
-          // Solo pinneamos si hay recorrido horizontal real (evita un pin
-          // "pegajoso" cuando hay pocas tarjetas).
-          if (distance() < 120) return;
-
-          gsap.to(track, {
-            x: () => -distance(),
-            ease: "none",
-            scrollTrigger: {
-              trigger: section,
-              start: "top top",
-              end: () => "+=" + distance(),
-              pin: true,
-              scrub: 1,
-              invalidateOnRefresh: true,
-              anticipatePin: 1,
-            },
-          });
+          const viewport = document.querySelector<HTMLElement>(".trabajos-viewport");
+          if (!track || !viewport) return;
+          const overflow = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
+          gsap.fromTo(
+            track,
+            { x: 0 },
+            {
+              x: () => -overflow(),
+              ease: "none",
+              scrollTrigger: {
+                trigger: ".s-trabajos",
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 0.6,
+                invalidateOnRefresh: true,
+              },
+            }
+          );
         });
       }
 

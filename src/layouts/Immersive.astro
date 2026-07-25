@@ -55,7 +55,7 @@ const currentYear = new Date().getFullYear();
       <a href="#top" class="nav-logo" data-scroll>{PERFIL.nombre}</a>
       <nav class="nav-links">
         <a href="#trabajos" data-scroll>Trabajos</a>
-        <a href="#servicios" data-scroll>Servicios</a>
+        <a href="#sobre" data-scroll>Sobre mí</a>
         <a href="#contacto" data-scroll>Contacto</a>
       </nav>
     </header>
@@ -78,13 +78,16 @@ const currentYear = new Date().getFullYear();
       :root {
         --font-display: "Helvetica Neue", Helvetica, Arial, "Arial Black", sans-serif;
         --font-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
 
-        --bg: #08080a;
-        --fg: #f4f4f0;
-        --muted: #86867e;
-        --line: rgba(244, 244, 240, 0.14);
-        --accent: #ff2d1a;
-        --accent-2: #ffe500;
+        /* Tema claro (piedra/papel), no blanco puro. Profesional + techie. */
+        --bg: #e7e4dd;
+        --bg-2: #ddd9d0;
+        --fg: #16151b;
+        --muted: #6b6860;
+        --line: rgba(22, 21, 27, 0.16);
+        --accent: #2438d1; /* cobalto techie */
+        --accent-2: #ff5a1f; /* naranja creativo */
 
         --maxw: 1360px;
         --pad: clamp(1.25rem, 4vw, 3.5rem);
@@ -156,13 +159,14 @@ const currentYear = new Date().getFullYear();
         display: block;
       }
 
-      /* Grano sutil encima del canvas */
+      /* Grano sutil (textura de papel) encima del canvas */
       .grain {
         position: fixed;
         inset: 0;
         z-index: -1;
         pointer-events: none;
-        opacity: 0.05;
+        opacity: 0.08;
+        mix-blend-mode: multiply;
         background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       }
 
@@ -196,8 +200,7 @@ const currentYear = new Date().getFullYear();
         align-items: center;
         justify-content: space-between;
         padding: clamp(1rem, 2.5vw, 1.5rem) var(--pad);
-        mix-blend-mode: difference;
-        color: #fff;
+        color: var(--fg);
       }
       .nav-logo {
         font-family: var(--font-display);
@@ -206,25 +209,25 @@ const currentYear = new Date().getFullYear();
         letter-spacing: -0.03em;
         font-size: 1.1rem;
         text-decoration: none;
+        color: var(--fg);
       }
       .nav-links {
         display: flex;
         gap: clamp(1rem, 3vw, 2.5rem);
       }
       .nav-links a {
-        font-family: var(--font-display);
-        font-weight: var(--w-bold);
-        text-transform: uppercase;
-        letter-spacing: 0.02em;
+        font-family: var(--font-mono);
+        font-weight: 500;
+        letter-spacing: 0.04em;
         font-size: 0.72rem;
         text-decoration: none;
-        opacity: 0.9;
+        color: var(--fg);
+        opacity: 0.75;
+        transition: opacity 0.2s ease, color 0.2s ease;
       }
       .nav-links a:hover {
         opacity: 1;
-        text-decoration: underline;
-        text-decoration-thickness: 2px;
-        text-underline-offset: 4px;
+        color: var(--accent);
       }
       @media (max-width: 560px) {
         .nav-links a:first-child {
@@ -251,9 +254,8 @@ const currentYear = new Date().getFullYear();
       }
       .footer-inner p,
       .footer-links a {
-        font-family: var(--font-display);
-        font-weight: var(--w-bold);
-        text-transform: uppercase;
+        font-family: var(--font-mono);
+        font-weight: 500;
         letter-spacing: 0.03em;
         font-size: 0.72rem;
       }
