@@ -1,5 +1,7 @@
 ---
 import Layout from "../components/Layout.astro";
+import Section from "../components/layout/Section.astro";
+import Container from "../components/layout/Container.astro";
 import VideoCard from "../components/VideoCard.astro";
 import ServiceCard from "../components/ServiceCard.astro";
 import {
@@ -16,164 +18,183 @@ import {
 
 <Layout>
   <!-- Hero -->
-  <section class="hero">
-    <div class="hero-encabezado">
-      <div>
-        <h1 class="hero-nombre">{PERFIL.nombre}</h1>
-        <p class="hero-rol">{PERFIL.rol}</p>
+  <Section>
+    <Container>
+      <div class="hero">
+        <div class="hero-encabezado">
+          <div>
+            <h1 class="hero-nombre">{PERFIL.nombre}</h1>
+            <p class="hero-rol">{PERFIL.rol}</p>
+          </div>
+          <div class="hero-detalles">
+            <p>{PERFIL.ubicacion}</p>
+            <p class="hero-disponibilidad">{PERFIL.disponibilidad}</p>
+          </div>
+        </div>
+
+        <div class="hero-titular">
+          <h2>{PERFIL.titular}</h2>
+          <p>{PERFIL.subtitular}</p>
+        </div>
+
+        <div class="hero-acciones">
+          <a class="boton" href={`mailto:${CONTACTO.email}`}>Trabajemos juntos</a>
+          <a class="boton boton--secundario" href="#trabajos">Ver trabajos</a>
+        </div>
+
+        <ul class="metricas">
+          {
+            METRICAS.map((metrica) => (
+              <li class="metrica">
+                <span class="metrica-valor">{metrica.valor}</span>
+                <span class="metrica-etiqueta">{metrica.etiqueta}</span>
+              </li>
+            ))
+          }
+        </ul>
       </div>
-      <div class="hero-detalles">
-        <p>{PERFIL.ubicacion}</p>
-        <p class="hero-disponibilidad">{PERFIL.disponibilidad}</p>
+    </Container>
+  </Section>
+
+  <!-- Trabajos (carrusel) -->
+  <Section id="trabajos">
+    <Container>
+      <h2 class="section-title">Trabajos</h2>
+      <div class="carousel" style="--cols: 3">
+        {VIDEOS.map((video) => <VideoCard video={video} />)}
       </div>
-    </div>
-
-    <div class="hero-titular">
-      <h2>{PERFIL.titular}</h2>
-      <p>{PERFIL.subtitular}</p>
-    </div>
-
-    <div class="hero-acciones">
-      <a class="boton" href={`mailto:${CONTACTO.email}`}>Trabajemos juntos</a>
-      <a class="boton boton--secundario" href="#trabajos">Ver trabajos</a>
-    </div>
-
-    <ul class="metricas">
-      {
-        METRICAS.map((metrica) => (
-          <li class="metrica">
-            <span class="metrica-valor">{metrica.valor}</span>
-            <span class="metrica-etiqueta">{metrica.etiqueta}</span>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
-
-  <!-- Trabajos -->
-  <section id="trabajos" class="seccion">
-    <h2 class="seccion-titulo">Trabajos</h2>
-    <div class="videos-grid">
-      {VIDEOS.map((video) => <VideoCard video={video} />)}
-    </div>
-  </section>
+    </Container>
+  </Section>
 
   <!-- Marcas -->
-  <section class="seccion">
-    <h2 class="seccion-titulo">Marcas</h2>
-    <ul class="marcas">
-      {
-        MARCAS.map((marca) => (
-          <li class="marca">
-            <span class="marca-nombre">{marca.nombre}</span>
-            <span class="marca-categoria">{marca.categoria}</span>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
+  <Section id="marcas">
+    <Container>
+      <h2 class="section-title">Marcas</h2>
+      <ul class="marcas">
+        {
+          MARCAS.map((marca) => (
+            <li class="marca">
+              <span class="marca-nombre">{marca.nombre}</span>
+              <span class="marca-categoria">{marca.categoria}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </Container>
+  </Section>
 
   <!-- Servicios -->
-  <section id="servicios" class="seccion">
-    <h2 class="seccion-titulo">Servicios</h2>
-    <div class="servicios">
-      {SERVICIOS.map((servicio) => <ServiceCard servicio={servicio} />)}
-    </div>
-  </section>
+  <Section id="servicios">
+    <Container>
+      <h2 class="section-title">Servicios</h2>
+      <div class="servicios">
+        {SERVICIOS.map((servicio) => <ServiceCard servicio={servicio} />)}
+      </div>
+    </Container>
+  </Section>
 
   <!-- Proceso -->
-  <section class="seccion">
-    <h2 class="seccion-titulo">Cómo trabajo</h2>
-    <ol class="proceso">
-      {
-        PROCESO.map((paso, indice) => (
-          <li class="paso">
-            <span class="paso-numero">{String(indice + 1).padStart(2, "0")}</span>
-            <div>
-              <h3 class="paso-titulo">{paso.titulo}</h3>
-              <p class="paso-descripcion">{paso.descripcion}</p>
-            </div>
-          </li>
-        ))
-      }
-    </ol>
-  </section>
+  <Section id="proceso">
+    <Container>
+      <h2 class="section-title">Cómo trabajo</h2>
+      <ol class="proceso">
+        {
+          PROCESO.map((paso, indice) => (
+            <li class="paso">
+              <span class="paso-numero">{String(indice + 1).padStart(2, "0")}</span>
+              <div>
+                <h3 class="paso-titulo">{paso.titulo}</h3>
+                <p class="paso-descripcion">{paso.descripcion}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </Container>
+  </Section>
 
   <!-- Sobre mí -->
-  <section class="seccion">
-    <h2 class="seccion-titulo">Sobre mí</h2>
-    <p class="sobre-mi">{PERFIL.sobre_mi}</p>
-  </section>
+  <Section id="sobre-mi">
+    <Container>
+      <h2 class="section-title">Sobre mí</h2>
+      <p class="sobre-mi">{PERFIL.sobre_mi}</p>
+    </Container>
+  </Section>
 
-  <!-- Testimonios -->
-  <section class="seccion">
-    <h2 class="seccion-titulo">Lo que dicen</h2>
-    <div class="testimonios">
-      {
-        TESTIMONIOS.map((testimonio) => (
-          <blockquote class="testimonio">
-            <p class="testimonio-texto">{testimonio.texto}</p>
-            <footer class="testimonio-autor">
-              {testimonio.autor} <span>· {testimonio.cargo}</span>
-            </footer>
-          </blockquote>
-        ))
-      }
-    </div>
-  </section>
+  <!-- Testimonios (carrusel) -->
+  <Section id="testimonios">
+    <Container>
+      <h2 class="section-title">Lo que dicen</h2>
+      <div class="carousel testimonios" style="--cols: 2; --card: 85%">
+        {
+          TESTIMONIOS.map((testimonio) => (
+            <blockquote class="testimonio">
+              <p class="testimonio-texto">{testimonio.texto}</p>
+              <footer class="testimonio-autor">
+                {testimonio.autor} <span>· {testimonio.cargo}</span>
+              </footer>
+            </blockquote>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
 
   <!-- Contacto -->
-  <section id="contacto" class="seccion">
-    <h2 class="seccion-titulo">Contacto</h2>
-    <p class="contacto-cierre">{CONTACTO.cierre}</p>
-    <ul class="contacto-lista">
-      <li>
-        <span class="contacto-etiqueta">Email</span>
-        <a href={`mailto:${CONTACTO.email}`}>{CONTACTO.email}</a>
-      </li>
-      <li>
-        <span class="contacto-etiqueta">Instagram</span>
-        <a href={CONTACTO.instagram.url} target="_blank" rel="noopener">
-          {CONTACTO.instagram.usuario}
-        </a>
-      </li>
-      <li>
-        <span class="contacto-etiqueta">TikTok</span>
-        <a href={CONTACTO.tiktok.url} target="_blank" rel="noopener">
-          {CONTACTO.tiktok.usuario}
-        </a>
-      </li>
-      {
-        CONTACTO.whatsapp && (
-          <li>
-            <span class="contacto-etiqueta">WhatsApp</span>
-            <a
-              href={`https://wa.me/${CONTACTO.whatsapp.replace(/\D/g, "")}`}
-              target="_blank"
-              rel="noopener"
-            >
-              {CONTACTO.whatsapp}
-            </a>
-          </li>
-        )
-      }
-    </ul>
-  </section>
+  <Section id="contacto" fondo="suave">
+    <Container>
+      <h2 class="section-title">Contacto</h2>
+      <p class="contacto-cierre">{CONTACTO.cierre}</p>
+      <ul class="contacto-lista">
+        <li>
+          <span class="contacto-etiqueta">Email</span>
+          <a href={`mailto:${CONTACTO.email}`}>{CONTACTO.email}</a>
+        </li>
+        <li>
+          <span class="contacto-etiqueta">Instagram</span>
+          <a href={CONTACTO.instagram.url} target="_blank" rel="noopener">
+            {CONTACTO.instagram.usuario}
+          </a>
+        </li>
+        <li>
+          <span class="contacto-etiqueta">TikTok</span>
+          <a href={CONTACTO.tiktok.url} target="_blank" rel="noopener">
+            {CONTACTO.tiktok.usuario}
+          </a>
+        </li>
+        {
+          CONTACTO.whatsapp && (
+            <li>
+              <span class="contacto-etiqueta">WhatsApp</span>
+              <a
+                href={`https://wa.me/${CONTACTO.whatsapp.replace(/\D/g, "")}`}
+                target="_blank"
+                rel="noopener"
+              >
+                {CONTACTO.whatsapp}
+              </a>
+            </li>
+          )
+        }
+      </ul>
+    </Container>
+  </Section>
 </Layout>
 
 <style>
-  /* Hero */
+  /* ------------------------------------------------------------------ */
+  /* Hero                                                                */
+  /* ------------------------------------------------------------------ */
   .hero {
-    margin-bottom: var(--space-12);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
   }
 
   .hero-encabezado {
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
-    padding-bottom: var(--space-4);
-    border-bottom: 1px solid var(--color-border-light);
-    margin-bottom: var(--space-6);
   }
 
   .hero-nombre {
@@ -213,7 +234,6 @@ import {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
-    margin-top: var(--space-6);
   }
 
   .boton {
@@ -223,6 +243,7 @@ import {
     text-decoration: none;
     letter-spacing: var(--letter-spacing-wide);
     border: 1px solid var(--color-primary);
+    border-radius: var(--radius-elegant);
     background-color: var(--color-primary);
     color: #fff;
     transition: all var(--transition-elegant);
@@ -250,10 +271,8 @@ import {
     list-style: none;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-4);
-    margin-top: var(--space-8);
-    padding-top: var(--space-6);
-    border-top: 1px solid var(--color-border-subtle);
+    gap: var(--space-5) var(--space-4);
+    margin-top: var(--space-2);
   }
 
   .metrica {
@@ -275,28 +294,9 @@ import {
     letter-spacing: var(--letter-spacing-wide);
   }
 
-  /* Secciones */
-  .seccion {
-    margin-bottom: var(--space-12);
-    scroll-margin-top: var(--space-8);
-  }
-
-  .seccion-titulo {
-    font-size: var(--text-lg);
-    font-weight: var(--font-bold);
-    padding-bottom: var(--space-2);
-    border-bottom: 1px solid var(--color-border-light);
-    margin-bottom: var(--space-6);
-  }
-
-  /* Trabajos */
-  .videos-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-6) var(--space-4);
-  }
-
-  /* Marcas */
+  /* ------------------------------------------------------------------ */
+  /* Marcas                                                             */
+  /* ------------------------------------------------------------------ */
   .marcas {
     list-style: none;
     display: grid;
@@ -307,8 +307,7 @@ import {
   .marca {
     display: flex;
     flex-direction: column;
-    padding-bottom: var(--space-2);
-    border-bottom: 1px solid var(--color-border-subtle);
+    gap: 2px;
   }
 
   .marca-nombre {
@@ -323,13 +322,17 @@ import {
     color: var(--color-text-muted);
   }
 
-  /* Servicios */
+  /* ------------------------------------------------------------------ */
+  /* Servicios                                                          */
+  /* ------------------------------------------------------------------ */
   .servicios {
     display: grid;
-    gap: var(--space-8);
+    gap: var(--space-4);
   }
 
-  /* Proceso */
+  /* ------------------------------------------------------------------ */
+  /* Proceso                                                            */
+  /* ------------------------------------------------------------------ */
   .proceso {
     list-style: none;
     display: grid;
@@ -362,19 +365,18 @@ import {
     color: var(--color-text-secondary);
   }
 
-  /* Sobre mí */
+  /* ------------------------------------------------------------------ */
+  /* Sobre mí                                                           */
+  /* ------------------------------------------------------------------ */
   .sobre-mi {
     font-size: var(--text-base);
     color: var(--color-text-body);
     max-width: 65ch;
   }
 
-  /* Testimonios */
-  .testimonios {
-    display: grid;
-    gap: var(--space-6);
-  }
-
+  /* ------------------------------------------------------------------ */
+  /* Testimonios                                                        */
+  /* ------------------------------------------------------------------ */
   .testimonio {
     border-left: 2px solid var(--color-primary);
     padding-left: var(--space-4);
@@ -398,7 +400,9 @@ import {
     font-weight: var(--font-normal);
   }
 
-  /* Contacto */
+  /* ------------------------------------------------------------------ */
+  /* Contacto                                                           */
+  /* ------------------------------------------------------------------ */
   .contacto-cierre {
     font-size: var(--text-base);
     color: var(--color-text-secondary);
@@ -409,15 +413,13 @@ import {
   .contacto-lista {
     list-style: none;
     display: grid;
-    gap: var(--space-3);
+    gap: var(--space-4);
   }
 
   .contacto-lista li {
     display: flex;
     align-items: baseline;
     gap: var(--space-4);
-    padding-bottom: var(--space-2);
-    border-bottom: 1px solid var(--color-border-subtle);
   }
 
   .contacto-etiqueta {
@@ -433,7 +435,7 @@ import {
     color: var(--color-text-primary);
     text-decoration: none;
     border-bottom: 1px solid var(--color-border-light);
-    transition: color var(--transition-elegant);
+    transition: color var(--transition-elegant), border-color var(--transition-elegant);
   }
 
   .contacto-lista a:hover {
@@ -441,7 +443,9 @@ import {
     border-color: var(--color-primary);
   }
 
-  /* Responsive */
+  /* ------------------------------------------------------------------ */
+  /* Responsive                                                         */
+  /* ------------------------------------------------------------------ */
   @media (min-width: 481px) {
     .hero-encabezado {
       flex-direction: row;
@@ -470,9 +474,10 @@ import {
     }
   }
 
-  @media (min-width: 769px) {
-    .videos-grid {
+  @media (min-width: 640px) {
+    .servicios {
       grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-5);
     }
   }
 </style>

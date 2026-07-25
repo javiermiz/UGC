@@ -6,21 +6,66 @@ interface Props {
 }
 
 const { video } = Astro.props;
-const has_link = video.url !== "#" && video.url !== "";
-const Tag = has_link ? "a" : "div";
+
+/* Los videos se incrustan desde su plataforma; nada se aloja en este sitio. */
+function youtubeThumb(id: string) {
+  return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+}
+
+let thumb = video.thumbnail ?? "";
+let embed = ""; // src del iframe para reproducir en línea
+let enlace = ""; // URL para abrir la publicación en otra plataforma
+
+if (video.fuente === "youtube") {
+  thumb = video.thumbnail ?? youtubeThumb(video.videoId);
+  embed = `https://www.youtube-nocookie.com/embed/${video.videoId}?autoplay=1&rel=0&playsinline=1`;
+  enlace = `https://youtu.be/${video.videoId}`;
+} else if (video.fuente === "vimeo") {
+  embed = `https://player.vimeo.com/video/${video.videoId}?autoplay=1`;
+  enlace = `https://vimeo.com/${video.videoId}`;
+} else {
+  // instagram / tiktok: se abre la publicación original
+  enlace = video.videoId;
+}
+
+const puedeIncrustar = embed !== "";
 ---
 
-<Tag
-  class:list={["video-card", !has_link && "video-card--sin-link"]}
-  {...has_link ? { href: video.url, target: "_blank", rel: "noopener" } : {}}
->
-  <div class="video-thumb">
-    <img src={video.thumbnail} alt={`Miniatura de ${video.titulo}`} loading="lazy" />
-    {video.metrica && <span class="video-metrica">{video.metrica}</span>}
-    <span class="video-play" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
-    </span>
-  </div>
+<article class="video-card">
+  {
+    puedeIncrustar ? (
+      <button
+        type="button"
+        class="video-media"
+        data-embed={embed}
+        aria-label={`Reproducir: ${video.titulo}`}
+      >
+        <img src={thumb} alt={`Miniatura de ${video.titulo}`} loading="lazy" />
+        {video.metrica && <span class="video-metrica">{video.metrica}</span>}
+        <span class="video-play" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </span>
+      </button>
+    ) : (
+      <a
+        class="video-media"
+        href={enlace}
+        target="_blank"
+        rel="noopener"
+        aria-label={`Ver en ${video.fuente}: ${video.titulo}`}
+      >
+        <img src={thumb} alt={`Miniatura de ${video.titulo}`} loading="lazy" />
+        {video.metrica && <span class="video-metrica">{video.metrica}</span>}
+        <span class="video-play" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </span>
+      </a>
+    )
+  }
 
   <div class="video-info">
     <div class="video-meta">
@@ -31,42 +76,62 @@ const Tag = has_link ? "a" : "div";
     <p class="video-marca">{video.marca}</p>
     <p class="video-descripcion">{video.descripcion}</p>
   </div>
-</Tag>
+</article>
+
+<script>
+  // Facade: al hacer clic, sustituye la miniatura por el reproductor
+  // incrustado. Así no se cargan iframes de terceros hasta que hacen falta.
+  document.addEventListener("click", (event) => {
+    const target = event.target as HTMLElement;
+    const media = target.closest<HTMLElement>(".video-media[data-embed]");
+    if (!media) return;
+
+    const src = media.getAttribute("data-embed");
+    if (!src) return;
+
+    const iframe = document.createElement("iframe");
+    iframe.src = src;
+    iframe.className = "video-iframe";
+    iframe.setAttribute("allow", "autoplay; encrypted-media; picture-in-picture");
+    iframe.setAttribute("allowfullscreen", "");
+    iframe.setAttribute("title", media.getAttribute("aria-label") ?? "Video");
+
+    media.replaceWith(iframe);
+  });
+</script>
 
 <style>
   .video-card {
     display: block;
-    color: inherit;
-    text-decoration: none;
-    transition: transform var(--transition-elegant);
   }
 
-  .video-card:hover {
-    transform: translateY(-3px);
-  }
-
-  .video-card--sin-link:hover {
-    transform: none;
-  }
-
-  .video-thumb {
+  .video-media {
     position: relative;
+    display: block;
+    width: 100%;
     aspect-ratio: 9 / 16;
     overflow: hidden;
+    border-radius: var(--radius-elegant);
     background-color: var(--color-bg-tertiary);
-    border: 1px solid var(--color-border-medium);
+    cursor: pointer;
+    /* reset de <button> */
+    padding: 0;
+    border: 0;
+    color: inherit;
+    text-decoration: none;
   }
 
-  .video-thumb img {
+  .video-media img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: filter var(--transition-elegant);
+    transition: transform var(--transition-elegant), filter var(--transition-elegant);
   }
 
-  .video-card:hover .video-thumb img {
-    filter: brightness(0.92);
+  .video-media:hover img {
+    transform: scale(1.03);
+    filter: brightness(0.95);
   }
 
   .video-metrica {
@@ -79,33 +144,43 @@ const Tag = has_link ? "a" : "div";
     letter-spacing: var(--letter-spacing-wider);
     text-transform: uppercase;
     padding: 2px var(--space-2);
-    border: 1px solid var(--color-border-medium);
+    border-radius: 999px;
   }
 
   .video-play {
     position: absolute;
     bottom: var(--space-2);
     right: var(--space-2);
-    width: 30px;
-    height: 30px;
+    width: 38px;
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
     background: var(--color-primary);
     color: #fff;
-    opacity: 0;
-    transition: opacity var(--transition-elegant);
+    box-shadow: var(--shadow-subtle);
+    transition: transform var(--transition-elegant), opacity var(--transition-elegant);
   }
 
-  .video-card:not(.video-card--sin-link):hover .video-play {
-    opacity: 1;
+  .video-media:hover .video-play {
+    transform: scale(1.08);
   }
 
   .video-play svg {
-    width: 16px;
-    height: 16px;
-    margin-left: 1px;
+    width: 18px;
+    height: 18px;
+    margin-left: 2px;
+  }
+
+  /* Reproductor incrustado que reemplaza la miniatura */
+  :global(.video-iframe) {
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    border: 0;
+    border-radius: var(--radius-elegant);
+    display: block;
+    background: #000;
   }
 
   .video-info {

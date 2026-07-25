@@ -159,6 +159,10 @@ const currentYear = new Date().getFullYear();
     --content-spacing-md: var(--space-8);
     --content-spacing-lg: var(--space-12);
 
+    /* Layout system (Section / Container) */
+    --container-pad: var(--space-5);
+    --section-space: var(--space-12);
+
     --shadow-subtle: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
     --shadow-elegant: 0 8px 30px rgba(0, 0, 0, 0.06);
 
@@ -232,7 +236,7 @@ const currentYear = new Date().getFullYear();
   .header-content {
     max-width: var(--max-width-content);
     margin: 0 auto;
-    padding: 0 var(--space-4);
+    padding: 0 var(--container-pad);
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -269,14 +273,71 @@ const currentYear = new Date().getFullYear();
     color: var(--color-primary);
   }
 
-  /* Main */
+  /* Main — solo maneja el ritmo vertical entre secciones.
+     El ancho y el padding lateral los ponen los <Container>. */
   .main-content {
     flex: 1;
-    max-width: var(--max-width-content);
-    margin: 0 auto;
-    padding: var(--space-10) var(--space-4);
     width: 100%;
     min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    gap: var(--section-space);
+    padding-block: var(--section-space);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Primitivas del sistema de diseño                                   */
+  /* ------------------------------------------------------------------ */
+
+  /* Título de sección: sin bordes, solo ritmo */
+  .section-title {
+    font-size: var(--text-lg);
+    font-weight: var(--font-bold);
+    margin-bottom: var(--space-6);
+  }
+
+  /* Carrusel: scroll horizontal en móvil, grid en pantallas grandes.
+     En móvil sangra hasta el borde de la pantalla (full-bleed) para que
+     se note que hay más contenido a los lados. */
+  .carousel {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: var(--card, 74%);
+    gap: var(--space-4);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    margin-inline: calc(-1 * var(--container-pad));
+    padding-inline: var(--container-pad);
+    padding-bottom: var(--space-2);
+    scrollbar-width: none;
+  }
+
+  .carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carousel > * {
+    scroll-snap-align: start;
+  }
+
+  @media (min-width: 640px) {
+    .carousel {
+      grid-auto-flow: row;
+      grid-auto-columns: auto;
+      grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+      overflow: visible;
+      margin-inline: 0;
+      padding-inline: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .carousel {
+      scroll-behavior: auto;
+    }
   }
 
   /* Footer */
@@ -289,7 +350,7 @@ const currentYear = new Date().getFullYear();
   .footer-content {
     max-width: var(--max-width-content);
     margin: 0 auto;
-    padding: 0 var(--space-3);
+    padding: 0 var(--container-pad);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -319,6 +380,18 @@ const currentYear = new Date().getFullYear();
     color: var(--color-primary);
   }
 
+  @media (min-width: 640px) {
+    :root {
+      --container-pad: var(--space-6);
+      --section-space: var(--space-16);
+    }
+
+    .section-title {
+      font-size: var(--text-xl);
+      margin-bottom: var(--space-8);
+    }
+  }
+
   @media (min-width: 481px) {
     .site-header {
       padding: var(--content-spacing-xs) 0;
@@ -338,10 +411,6 @@ const currentYear = new Date().getFullYear();
 
     .site-footer {
       padding: var(--content-spacing-md) 0;
-    }
-
-    .footer-content {
-      padding: 0 var(--content-spacing-sm);
     }
 
     .footer-content p,

@@ -1,0 +1,42 @@
+---
+/**
+ * SECTION — bloque de nivel superior (metodología tipo Elementor).
+ * ------------------------------------------------------------------
+ * Layout → SECTION → Container → Elements.
+ *
+ * Una Section es una franja horizontal completa que solo se encarga de:
+ *   - el ritmo vertical (espaciado entre bloques)
+ *   - un fondo opcional
+ *   - el ancla de scroll (#id)
+ *
+ * NO define ancho ni padding lateral: de eso se encarga <Container>.
+ */
+interface Props {
+  id?: string;
+  /** Fondo de la franja completa */
+  fondo?: "base" | "suave";
+  class?: string;
+}
+
+const { id, fondo = "base", class: className } = Astro.props;
+---
+
+<section
+  class:list={["section", fondo === "suave" && "section--suave", className]}
+  id={id}
+>
+  <slot />
+</section>
+
+<style>
+  .section {
+    scroll-margin-top: var(--space-8);
+  }
+
+  /* Una franja con fondo necesita su propio aire vertical para que el
+     color se lea como un bloque intencional. */
+  .section--suave {
+    background-color: var(--color-bg-secondary);
+    padding-block: var(--section-space);
+  }
+</style>

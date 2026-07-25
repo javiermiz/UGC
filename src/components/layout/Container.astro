@@ -1,0 +1,36 @@
+---
+/**
+ * CONTAINER — contenedor centrado (metodología tipo Elementor).
+ * ------------------------------------------------------------------
+ * Layout → Section → CONTAINER → Elements.
+ *
+ * Limita el ancho del contenido y aplica el padding lateral estándar.
+ * Todo lo que va "dentro" de una sección debería vivir en un Container.
+ */
+interface Props {
+  /** Ancho máximo del contenido */
+  ancho?: "contenido" | "amplio";
+  class?: string;
+}
+
+const { ancho = "contenido", class: className } = Astro.props;
+---
+
+<div
+  class:list={["container", ancho === "amplio" && "container--amplio", className]}
+>
+  <slot />
+</div>
+
+<style>
+  .container {
+    width: 100%;
+    max-width: var(--max-width-content);
+    margin-inline: auto;
+    padding-inline: var(--container-pad);
+  }
+
+  .container--amplio {
+    max-width: var(--max-width-wide);
+  }
+</style>

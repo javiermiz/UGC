@@ -9,6 +9,15 @@
  *    antes de compartir el sitio con nadie.
  */
 
+/**
+ * De dónde sale el video. Los videos NO se alojan en este sitio: se
+ * incrustan desde la plataforma original.
+ *   - "youtube" / "vimeo": se reproducen en línea al hacer clic (embed).
+ *   - "instagram" / "tiktok": abren la publicación en una pestaña nueva
+ *     (sus embeds requieren scripts externos poco fiables).
+ */
+export type VideoFuente = "youtube" | "vimeo" | "instagram" | "tiktok";
+
 export interface Video {
   /** Título corto del video, se muestra debajo de la miniatura */
   titulo: string;
@@ -18,12 +27,22 @@ export interface Video {
   categoria: string;
   /** Formato del entregable */
   formato: string;
-  /** Link público al video (TikTok, Reel, Short…). "#" si aún no hay link */
-  url: string;
-  /** Ruta a la miniatura vertical 9:16 dentro de /public/thumbnails */
-  thumbnail: string;
+  /** Plataforma de origen del video */
+  fuente: VideoFuente;
+  /**
+   * Identificador del video en la plataforma:
+   *   - youtube: el ID del video (lo que va después de `v=` o `youtu.be/`)
+   *   - vimeo:   el ID numérico
+   *   - instagram / tiktok: la URL completa de la publicación
+   */
+  videoId: string;
   /** Una línea sobre el objetivo del video o el resultado */
   descripcion: string;
+  /**
+   * Miniatura vertical 9:16 en /public/thumbnails. Opcional para YouTube
+   * (se genera sola desde el ID); obligatoria para instagram / tiktok.
+   */
+  thumbnail?: string;
   /** Métrica destacada opcional: "1.2M vistas", "8% CTR"… */
   metrica?: string;
 }
@@ -126,16 +145,22 @@ export const SERVICIOS: Servicio[] = [
 /* ------------------------------------------------------------------ */
 /* Trabajos                                                            */
 /* ------------------------------------------------------------------ */
-/* Para añadir un video: duplica un bloque, cambia los datos y pon la
-   miniatura en /public/thumbnails (formato vertical 9:16, JPG o WEBP). */
+/* Para añadir un video: duplica un bloque y cambia los datos.
+   Los videos NO se suben aquí: se incrustan desde YouTube, Vimeo,
+   Instagram o TikTok mediante `fuente` + `videoId` (ver interfaz Video).
+
+   ⚠️ Los `videoId` de abajo son de ejemplo. Cámbialos por los de tus
+      videos reales. Para YouTube basta el ID; la miniatura se genera sola
+      si no pones `thumbnail`. */
 
 export const VIDEOS: Video[] = [
   {
     titulo: "Unboxing con hook de 3 segundos",
     marca: "Nombre de la marca",
     categoria: "Skincare",
-    formato: "TikTok orgánico",
-    url: "#",
+    formato: "YouTube Short",
+    fuente: "youtube",
+    videoId: "YT_VIDEO_ID_1", // PLACEHOLDER — ID del Short/Reel en YouTube
     thumbnail: "/thumbnails/placeholder-01.svg",
     descripcion:
       "PLACEHOLDER — Describe en una línea el objetivo del video y qué resultado tuvo.",
@@ -145,8 +170,9 @@ export const VIDEOS: Video[] = [
     titulo: "Testimonial en cámara",
     marca: "Nombre de la marca",
     categoria: "Fitness",
-    formato: "Meta Ads",
-    url: "#",
+    formato: "YouTube",
+    fuente: "youtube",
+    videoId: "YT_VIDEO_ID_2", // PLACEHOLDER
     thumbnail: "/thumbnails/placeholder-02.svg",
     descripcion:
       "PLACEHOLDER — Describe en una línea el objetivo del video y qué resultado tuvo.",
@@ -156,8 +182,9 @@ export const VIDEOS: Video[] = [
     titulo: "Demostración de producto paso a paso",
     marca: "Nombre de la marca",
     categoria: "Tecnología",
-    formato: "Reels",
-    url: "#",
+    formato: "Vimeo",
+    fuente: "vimeo",
+    videoId: "76979871", // PLACEHOLDER — ID numérico del video en Vimeo
     thumbnail: "/thumbnails/placeholder-03.svg",
     descripcion:
       "PLACEHOLDER — Describe en una línea el objetivo del video y qué resultado tuvo.",
@@ -166,8 +193,9 @@ export const VIDEOS: Video[] = [
     titulo: "Antes y después",
     marca: "Nombre de la marca",
     categoria: "Hogar",
-    formato: "TikTok Ads",
-    url: "#",
+    formato: "Reel de Instagram",
+    fuente: "instagram",
+    videoId: "https://www.instagram.com/reel/PLACEHOLDER/", // PLACEHOLDER — URL del Reel
     thumbnail: "/thumbnails/placeholder-04.svg",
     descripcion:
       "PLACEHOLDER — Describe en una línea el objetivo del video y qué resultado tuvo.",
@@ -177,8 +205,9 @@ export const VIDEOS: Video[] = [
     titulo: "Respuesta a comentario",
     marca: "Nombre de la marca",
     categoria: "App / SaaS",
-    formato: "Reels",
-    url: "#",
+    formato: "TikTok",
+    fuente: "tiktok",
+    videoId: "https://www.tiktok.com/@usuario/video/PLACEHOLDER", // PLACEHOLDER — URL del TikTok
     thumbnail: "/thumbnails/placeholder-05.svg",
     descripcion:
       "PLACEHOLDER — Describe en una línea el objetivo del video y qué resultado tuvo.",
@@ -187,8 +216,9 @@ export const VIDEOS: Video[] = [
     titulo: "Rutina diaria con el producto",
     marca: "Nombre de la marca",
     categoria: "Alimentación",
-    formato: "TikTok orgánico",
-    url: "#",
+    formato: "YouTube Short",
+    fuente: "youtube",
+    videoId: "YT_VIDEO_ID_3", // PLACEHOLDER
     thumbnail: "/thumbnails/placeholder-06.svg",
     descripcion:
       "PLACEHOLDER — Describe en una línea el objetivo del video y qué resultado tuvo.",
