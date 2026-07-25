@@ -19,25 +19,28 @@
 export type VideoFuente = "youtube" | "vimeo" | "instagram" | "tiktok";
 
 export interface Video {
-  /** Título corto del video, se muestra debajo de la miniatura */
-  titulo: string;
-  /** Marca o cliente para el que se hizo. Usa "Proyecto propio" si es spec work */
-  marca: string;
-  /** Categoría / nicho: skincare, fitness, tech, food */
-  categoria: string;
-  /** Formato del entregable */
-  formato: string;
-  /** Plataforma de origen del video */
-  fuente: VideoFuente;
+  /**
+   * Plataforma de origen del video. Si falta (junto con videoId), la
+   * tarjeta se muestra como un slot "Próximamente" para ir llenando.
+   */
+  fuente?: VideoFuente;
   /**
    * Identificador del video en la plataforma:
    *   - youtube: el ID del video (lo que va después de `v=` o `youtu.be/`)
    *   - vimeo:   el ID numérico
    *   - instagram / tiktok: la URL completa de la publicación
    */
-  videoId: string;
+  videoId?: string;
+  /** Título corto del video, se muestra debajo de la miniatura */
+  titulo?: string;
+  /** Marca o cliente para el que se hizo. Usa "Proyecto propio" si es spec work */
+  marca?: string;
+  /** Categoría / nicho: tecnología, gadgets, app, producto */
+  categoria?: string;
+  /** Formato del entregable (ej: YouTube Short, Reel) */
+  formato?: string;
   /** Una línea sobre el objetivo que buscaba la marca con el video */
-  descripcion: string;
+  descripcion?: string;
   /**
    * Miniatura vertical 9:16 en /public/thumbnails. Opcional para YouTube
    * (se genera sola desde el ID); obligatoria para instagram / tiktok.
@@ -112,14 +115,23 @@ export const SERVICIOS: Servicio[] = [
 /* ------------------------------------------------------------------ */
 /* Trabajos                                                            */
 /* ------------------------------------------------------------------ */
-/* Vacío por ahora: la sección de Trabajos está oculta en
-   src/pages/index.astro hasta tener 2-3 videos reales. Cuando los
-   tengas, añade objetos Video reales aquí (link real al video,
-   descripción enfocada en el objetivo de la marca, sin métricas
-   inventadas) y reactiva la sección siguiendo las instrucciones del
-   comentario en index.astro. */
+/* El carrusel se va llenando aquí. Cada objeto es una tarjeta:
+     - Con `fuente` + `videoId` = video real (su miniatura y reproductor
+       salen de la plataforma; nada se aloja en este sitio).
+     - Sin ellos = slot "Próximamente" (marca de posición para ir llenando).
 
-export const VIDEOS: Video[] = [];
+   Ejemplo de video real de YouTube (descomenta y pon tu ID):
+     { fuente: "youtube", videoId: "TU_ID", titulo: "...", categoria: "Tecnología",
+       formato: "YouTube Short", marca: "Nombre real", descripcion: "Qué buscaba la marca" }
+
+   Al añadir videos reales, ve quitando los slots "Próximamente" de abajo. */
+
+export const VIDEOS: Video[] = [
+  { categoria: "Tecnología" },
+  { categoria: "Gadgets" },
+  { categoria: "App / SaaS" },
+  { categoria: "Producto" },
+];
 
 /* ------------------------------------------------------------------ */
 /* Proceso                                                             */

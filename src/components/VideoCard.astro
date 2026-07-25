@@ -12,20 +12,26 @@ function youtubeThumb(id: string) {
   return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 }
 
+const esReal = Boolean(video.fuente && video.videoId);
+const titulo = video.titulo ?? "";
+
 let thumb = video.thumbnail ?? "";
 let embed = ""; // src del iframe para reproducir en línea
 let enlace = ""; // URL para abrir la publicación en otra plataforma
 
-if (video.fuente === "youtube") {
-  thumb = video.thumbnail ?? youtubeThumb(video.videoId);
-  embed = `https://www.youtube-nocookie.com/embed/${video.videoId}?autoplay=1&rel=0&playsinline=1`;
-  enlace = `https://youtu.be/${video.videoId}`;
-} else if (video.fuente === "vimeo") {
-  embed = `https://player.vimeo.com/video/${video.videoId}?autoplay=1`;
-  enlace = `https://vimeo.com/${video.videoId}`;
-} else {
-  // instagram / tiktok: se abre la publicación original
-  enlace = video.videoId;
+if (esReal) {
+  const id = video.videoId as string;
+  if (video.fuente === "youtube") {
+    thumb = video.thumbnail ?? youtubeThumb(id);
+    embed = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1`;
+    enlace = `https://youtu.be/${id}`;
+  } else if (video.fuente === "vimeo") {
+    embed = `https://player.vimeo.com/video/${id}?autoplay=1`;
+    enlace = `https://vimeo.com/${id}`;
+  } else {
+    // instagram / tiktok: se abre la publicación original
+    enlace = id;
+  }
 }
 
 const puedeIncrustar = embed !== "";
@@ -33,14 +39,23 @@ const puedeIncrustar = embed !== "";
 
 <article class="video-card">
   {
-    puedeIncrustar ? (
+    !esReal ? (
+      <div class="video-media video-media--proximo">
+        <span class="video-proximo-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </span>
+        <span class="video-proximo-label">Próximamente</span>
+      </div>
+    ) : puedeIncrustar ? (
       <button
         type="button"
         class="video-media"
         data-embed={embed}
-        aria-label={`Reproducir: ${video.titulo}`}
+        aria-label={`Reproducir: ${titulo}`}
       >
-        <img src={thumb} alt={`Miniatura de ${video.titulo}`} loading="lazy" />
+        <img src={thumb} alt={`Miniatura de ${titulo}`} loading="lazy" />
         <span class="video-play" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M8 5v14l11-7z" />
@@ -53,9 +68,9 @@ const puedeIncrustar = embed !== "";
         href={enlace}
         target="_blank"
         rel="noopener"
-        aria-label={`Ver en ${video.fuente}: ${video.titulo}`}
+        aria-label={`Ver en ${video.fuente}: ${titulo}`}
       >
-        <img src={thumb} alt={`Miniatura de ${video.titulo}`} loading="lazy" />
+        <img src={thumb} alt={`Miniatura de ${titulo}`} loading="lazy" />
         <span class="video-play" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M8 5v14l11-7z" />
@@ -67,12 +82,12 @@ const puedeIncrustar = embed !== "";
 
   <div class="video-info">
     <div class="video-meta">
-      <span class="video-categoria">{video.categoria}</span>
-      <span class="video-formato">{video.formato}</span>
+      {video.categoria && <span class="video-categoria">{video.categoria}</span>}
+      {video.formato && <span class="video-formato">{video.formato}</span>}
     </div>
-    <h3 class="video-titulo">{video.titulo}</h3>
-    <p class="video-marca">{video.marca}</p>
-    <p class="video-descripcion">{video.descripcion}</p>
+    {titulo && <h3 class="video-titulo">{titulo}</h3>}
+    {video.marca && <p class="video-marca">{video.marca}</p>}
+    {video.descripcion && <p class="video-descripcion">{video.descripcion}</p>}
   </div>
 </article>
 
@@ -125,6 +140,55 @@ const puedeIncrustar = embed !== "";
     box-shadow: 3px 3px 0 var(--color-border);
   }
 
+  /* Slot "Próximamente": marca de posición para ir llenando el carrusel */
+  .video-media--proximo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    cursor: default;
+    color: var(--color-text-primary);
+    background: repeating-linear-gradient(
+      45deg,
+      var(--color-bg-secondary) 0 14px,
+      var(--color-bg-tertiary) 14px 28px
+    );
+  }
+
+  .video-media--proximo:hover {
+    transform: none;
+    box-shadow: var(--shadow-hard);
+  }
+
+  .video-proximo-icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-primary);
+    color: #fff;
+    border: var(--border-thin) solid var(--color-border);
+  }
+
+  .video-proximo-icon svg {
+    width: 26px;
+    height: 26px;
+    margin-left: 3px;
+  }
+
+  .video-proximo-label {
+    font-size: var(--text-xs);
+    font-weight: var(--font-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    color: #fff;
+    background: var(--color-text-primary);
+    padding: 2px var(--space-2);
+    border: var(--border-thin) solid var(--color-border);
+  }
+
   .video-media img {
     width: 100%;
     height: 100%;
@@ -136,19 +200,6 @@ const puedeIncrustar = embed !== "";
   .video-media:hover img {
     transform: scale(1.03);
     filter: brightness(0.95);
-  }
-
-  .video-metrica {
-    position: absolute;
-    top: var(--space-2);
-    left: var(--space-2);
-    background: rgba(250, 248, 243, 0.92);
-    color: var(--color-text-primary);
-    font-size: var(--text-2xs);
-    letter-spacing: var(--letter-spacing-wider);
-    text-transform: uppercase;
-    padding: 2px var(--space-2);
-    border-radius: 999px;
   }
 
   .video-play {
