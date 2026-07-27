@@ -116,21 +116,52 @@ export const SERVICIOS: Servicio[] = [
 /* Trabajos                                                            */
 /* ------------------------------------------------------------------ */
 /* El carrusel se va llenando aquí. Cada objeto es una tarjeta:
-     - Con `fuente` + `videoId` = video real (su miniatura y reproductor
-       salen de la plataforma; nada se aloja en este sitio).
+     - Con `fuente` + `videoId` = video real (su reproductor sale de la
+       plataforma; nada se aloja en este sitio).
      - Sin ellos = slot "Próximamente" (marca de posición para ir llenando).
 
    Ejemplo de video real de YouTube (descomenta y pon tu ID):
      { fuente: "youtube", videoId: "TU_ID", titulo: "...", categoria: "Tecnología",
        formato: "YouTube Short", marca: "Nombre real", descripcion: "Qué buscaba la marca" }
 
-   Al añadir videos reales, ve quitando los slots "Próximamente" de abajo. */
+   Los reels de Instagram no exponen miniatura enlazable, así que cada uno
+   apunta a una portada propia en /public/thumbnails. Para cambiarla por un
+   fotograma real del video, exporta el frame en 9:16 (1080x1920) y
+   sustituye el archivo manteniendo la ruta. */
 
 export const VIDEOS: Video[] = [
-  { categoria: "Tecnología" },
-  { categoria: "Gadgets" },
-  { categoria: "App / SaaS" },
-  { categoria: "Producto" },
+  {
+    fuente: "instagram",
+    videoId: "https://www.instagram.com/reel/DalV7ouxV4j/",
+    titulo: "Mouse vertical",
+    categoria: "Gadgets",
+    formato: "Reel",
+    thumbnail: "/thumbnails/mouse-vertical.svg",
+  },
+  {
+    fuente: "instagram",
+    videoId: "https://www.instagram.com/reel/DabFyAWR5AM/",
+    titulo: "Robot aspiradora Xiaomi",
+    categoria: "Tecnología",
+    formato: "Reel",
+    thumbnail: "/thumbnails/robot-aspiradora-xiaomi.svg",
+  },
+  {
+    fuente: "instagram",
+    videoId: "https://www.instagram.com/reel/DXU-zLuEVmP/",
+    titulo: "Mic MAONO",
+    categoria: "Audio",
+    formato: "Reel",
+    thumbnail: "/thumbnails/mic-maono.svg",
+  },
+  {
+    fuente: "instagram",
+    videoId: "https://www.instagram.com/reel/DU6rv2sEVtU/",
+    titulo: "Xiaomi Smart Band 10",
+    categoria: "Wearables",
+    formato: "Reel",
+    thumbnail: "/thumbnails/xiaomi-smart-band-10.svg",
+  },
 ];
 
 /* ------------------------------------------------------------------ */
