@@ -74,11 +74,32 @@ export const PERFIL = {
   titular: "Contenido que parece de un amigo, no de un anuncio.",
   subtitular:
     "Videos verticales para marcas que quieren vender sin sonar a marca: guion, grabación, edición y entrega lista para publicar o pautar.",
-  /** Cada string es un párrafo. */
+  /** Título de la sección "Sobre mí". */
+  sobre_titulo: "Del código a la cámara",
+  /**
+   * Cada string es un párrafo. El primero se muestra grande (es el que
+   * engancha), el resto en cuerpo de lectura. Párrafos cortos: un bloque
+   * largo se ve como un muro y nadie lo lee.
+   */
   sobre_mi: [
-    "Vengo del desarrollo de software. Eso significa que entiendo un producto rápido y lo explico sin tecnicismos, justo lo que necesita un video para no sentirse forzado. Estoy empezando en UGC, pero llevo tiempo grabando y editando contenido por mi cuenta, así que no vas a lidiar con la curva de aprendizaje de alguien que nunca ha estado frente a cámara. Me interesa sobre todo tecnología y gadgets, y me enfoco en que el video se sienta como la recomendación real de alguien que sabe usar el producto, no como un comercial genérico.",
-    "Si tu producto es una app o una herramienta, mi background técnico te ahorra tener que explicarme cómo funciona antes de grabar.",
+    "Vengo del desarrollo de software. Eso significa que entiendo un producto rápido y lo explico sin tecnicismos, justo lo que necesita un video para no sentirse forzado.",
+    "Estoy empezando en UGC, pero llevo tiempo grabando y editando contenido por mi cuenta, así que no vas a lidiar con la curva de aprendizaje de alguien que nunca ha estado frente a cámara.",
+    "Me interesa sobre todo tecnología y gadgets, y me enfoco en que el video se sienta como la recomendación real de alguien que sabe usar el producto, no como un comercial genérico.",
   ],
+  /**
+   * Ficha rápida al lado del texto: lo esencial para quien no va a leer los
+   * párrafos. Solo datos reales; deja el array vacío para ocultarla.
+   */
+  sobre_datos: [
+    { clave: "Vengo de", valor: "Desarrollo de software" },
+    { clave: "Nicho", valor: "Tecnología y gadgets" },
+    { clave: "Formato", valor: "Vertical 9:16" },
+    { clave: "Hago", valor: "Guion, grabación y edición" },
+  ],
+  /** Etiqueta y texto del recuadro destacado. Deja `nota` en "" para ocultarlo. */
+  sobre_nota_etiqueta: "Si vendes software",
+  sobre_nota:
+    "Si tu producto es una app o una herramienta, mi background técnico te ahorra tener que explicarme cómo funciona antes de grabar.",
 };
 
 /* ------------------------------------------------------------------ */

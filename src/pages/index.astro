@@ -232,15 +232,52 @@ const TICKER = [
 
   <!-- ===================== SOBRE MÍ ===================== -->
   <section class="s-sobre" id="sobre">
-    <div class="wrap wrap--narrow">
-      <span class="eyebrow" data-reveal>03 / Sobre mí</span>
-      <div class="sobre-text">
+    <div class="wrap sobre-grid">
+      <div class="sobre-aside">
+        <div class="sobre-sticky">
+          <span class="eyebrow" data-reveal>03 / Sobre mí</span>
+          <h2 class="s-title" data-reveal>{PERFIL.sobre_titulo}</h2>
+          {
+            PERFIL.sobre_datos.length > 0 && (
+              <ul class="sobre-datos" data-reveal>
+                {PERFIL.sobre_datos.map((d) => (
+                  <li class="dato">
+                    <span class="dato-k">{d.clave}</span>
+                    <span class="dato-v">{d.valor}</span>
+                  </li>
+                ))}
+              </ul>
+            )
+          }
+          {
+            PERFIL.disponibilidad && (
+              <p class="sobre-estado" data-reveal>
+                <i class="estado-punto" aria-hidden="true" />
+                {PERFIL.disponibilidad}
+              </p>
+            )
+          }
+        </div>
+      </div>
+
+      <div class="sobre-col">
+        <div class="sobre-text">
+          {
+            PERFIL.sobre_mi.map((p, i) => (
+              <p class={i === 0 ? "line sobre-lead" : "line sobre-p"}>
+                <span class="line-inner">{p}</span>
+              </p>
+            ))
+          }
+        </div>
+
         {
-          PERFIL.sobre_mi.map((p) => (
-            <p class="line">
-              <span class="line-inner">{p}</span>
-            </p>
-          ))
+          PERFIL.sobre_nota && (
+            <aside class="sobre-nota" data-reveal>
+              <span class="sobre-nota-k">{PERFIL.sobre_nota_etiqueta}</span>
+              <p>{PERFIL.sobre_nota}</p>
+            </aside>
+          )
         }
       </div>
     </div>
@@ -278,9 +315,6 @@ const TICKER = [
       max-width: var(--maxw);
       margin: 0 auto;
       padding-inline: var(--pad);
-    }
-    .wrap--narrow {
-      max-width: 820px;
     }
 
     /* Ritmo de encabezado idéntico en todas las secciones:
@@ -751,19 +785,116 @@ const TICKER = [
     .s-sobre {
       padding-block: var(--section-y);
     }
-    .sobre-text p {
-      font-size: clamp(1.15rem, 2.1vw, 1.65rem);
+    /* Misma retícula que el proceso: encabezado a un lado, contenido al otro.
+       Antes era un bloque centrado de texto a un solo tamaño, sin título de
+       sección ni jerarquía, y quedaba como un muro de letra. */
+    .sobre-grid {
+      display: grid;
+      gap: var(--gap-head);
+    }
+    .sobre-sticky {
+      position: static;
+    }
+    /* El título manda menos que el de Trabajos o Proceso: aquí la voz la
+       lleva el párrafo grande de al lado, no el encabezado. */
+    .sobre-aside .s-title {
+      font-size: clamp(2rem, 4.6vw, 3.25rem);
+      margin-bottom: var(--sp-l);
+    }
+
+    /* Ficha rápida: da textura al lateral y resume el perfil para quien
+       escanea la página sin leer los párrafos. */
+    .sobre-datos {
+      list-style: none;
+      border-top: 1px solid var(--line);
+    }
+    .dato {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--sp-s);
+      padding-block: 0.7rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .dato-k {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .dato-v {
       font-weight: var(--w-med);
-      line-height: 1.45;
-      letter-spacing: -0.01em;
+      font-size: 0.92rem;
+      text-align: right;
+      text-wrap: balance;
+    }
+
+    /* Cierra la ficha y evita que el lateral quede en blanco bajo la lista */
+    .sobre-estado {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2xs);
+      margin-top: var(--sp-m);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+    .estado-punto {
+      width: 7px;
+      height: 7px;
+      flex: none;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    /* Una entrada grande y el resto en cuerpo de lectura: la jerarquía es
+       lo que hace que el bloque se lea en vez de saltarse. */
+    .sobre-lead {
+      /* Grande, pero no tanto como para volver a ser un muro: por encima de
+         esto la entradilla cae en siete líneas y pierde el golpe. */
+      font-size: clamp(1.3rem, 2.3vw, 1.8rem);
+      font-weight: var(--w-bold);
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      margin-bottom: var(--sp-l);
+      max-width: 28ch;
+    }
+    .sobre-p {
+      font-size: clamp(1rem, 1.5vw, 1.12rem);
+      line-height: 1.65;
+      color: var(--muted);
+      max-width: 54ch;
       margin-bottom: var(--sp-m);
     }
-    .sobre-text p:last-child {
+    .sobre-p:last-child {
       margin-bottom: 0;
-      color: var(--muted);
-      font-size: clamp(1rem, 1.6vw, 1.2rem);
+    }
+
+    /* Recuadro aparte: es un argumento de venta, no parte del relato, así
+       que se separa del texto en vez de ir con un filete fino. */
+    .sobre-nota {
+      margin-top: var(--gap-head);
+      padding: var(--sp-m);
+      background: var(--bg-2);
       border-left: 2px solid var(--accent);
-      padding-left: 1.15rem;
+      max-width: 54ch;
+    }
+    .sobre-nota-k {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: var(--sp-2xs);
+    }
+    .sobre-nota p {
+      font-size: 1rem;
+      line-height: 1.6;
+      font-weight: var(--w-med);
     }
 
     /* ---------- CONTACTO ---------- */
@@ -881,6 +1012,17 @@ const TICKER = [
       /* Con riel y contador acompañando, el contraste puede ser más marcado */
       body:not(.no-anim) .paso {
         opacity: 0.3;
+      }
+
+      .sobre-grid {
+        grid-template-columns: 0.85fr 1.15fr;
+        column-gap: clamp(2.5rem, 6vw, 5rem);
+      }
+      /* El texto es más alto que el lateral: que el título acompañe la
+         lectura en lugar de quedarse arriba del todo. */
+      .sobre-sticky {
+        position: sticky;
+        top: calc(var(--nav-h) + var(--sp-m));
       }
     }
 
