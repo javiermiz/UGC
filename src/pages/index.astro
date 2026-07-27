@@ -3,18 +3,27 @@ import Immersive from "../layouts/Immersive.astro";
 import { PERFIL, VIDEOS, PROCESO, CONTACTO } from "../data/portfolio";
 
 /* Datos de reproducción de cada video (nada se aloja aquí; se incrusta) */
+/* `oardefault` conserva la proporción original del video, que en un Short es
+   9:16 y encaja con la tarjeta sin recortes. No existe para todos los videos,
+   así que `hqdefault` (4:3, siempre disponible) queda de red: el <img> cambia
+   a la de reserva si la primera falla. */
 function youtubeThumb(id: string) {
+  return `https://i.ytimg.com/vi/${id}/oardefault.jpg`;
+}
+function youtubeThumbReserva(id: string) {
   return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 }
 const videos = VIDEOS.map((v) => {
   const esReal = Boolean(v.fuente && v.videoId);
   let thumb = v.thumbnail ?? "";
+  let thumbReserva = "";
   let embed = "";
   let enlace = "";
   if (esReal) {
     const id = v.videoId as string;
     if (v.fuente === "youtube") {
       thumb = v.thumbnail ?? youtubeThumb(id);
+      thumbReserva = v.thumbnail ? "" : youtubeThumbReserva(id);
       embed = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1`;
       enlace = `https://youtu.be/${id}`;
     } else if (v.fuente === "vimeo") {
@@ -24,7 +33,7 @@ const videos = VIDEOS.map((v) => {
       enlace = id;
     }
   }
-  return { ...v, esReal, thumb, embed, enlace, puedeIncrustar: embed !== "" };
+  return { ...v, esReal, thumb, thumbReserva, embed, enlace, puedeIncrustar: embed !== "" };
 });
 
 const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
@@ -131,7 +140,12 @@ const TICKER = [
                     data-embed={v.embed}
                     aria-label={`Reproducir: ${v.titulo ?? "video"}`}
                   >
-                    <img src={v.thumb} alt={`Miniatura de ${v.titulo ?? "video"}`} loading="lazy" />
+                    <img
+                      src={v.thumb}
+                      alt={`Miniatura de ${v.titulo ?? "video"}`}
+                      loading="lazy"
+                      data-reserva={v.thumbReserva}
+                    />
                     <span class="vplay" aria-hidden="true">
                       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
                     </span>
@@ -1070,6 +1084,21 @@ const TICKER = [
           media.replaceWith(iframe);
           ScrollTrigger.refresh();
         });
+
+        // Miniatura de reserva: si la de proporción original no existe para
+        // ese video, se pide la 4:3. El evento `error` no burbujea, de ahí
+        // la fase de captura.
+        document.addEventListener(
+          "error",
+          (event) => {
+            const img = event.target as HTMLElement;
+            if (!(img instanceof HTMLImageElement)) return;
+            const reserva = img.dataset.reserva;
+            if (!reserva || img.src === reserva) return;
+            img.src = reserva;
+          },
+          true,
+        );
       }
 
       /* ============================================================

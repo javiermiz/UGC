@@ -124,43 +124,39 @@ export const SERVICIOS: Servicio[] = [
      { fuente: "youtube", videoId: "TU_ID", titulo: "...", categoria: "Tecnología",
        formato: "YouTube Short", marca: "Nombre real", descripcion: "Qué buscaba la marca" }
 
-   Los reels de Instagram no exponen miniatura enlazable, así que cada uno
-   apunta a una portada propia en /public/thumbnails. Para cambiarla por un
-   fotograma real del video, exporta el frame en 9:16 (1080x1920) y
-   sustituye el archivo manteniendo la ruta. */
+   Estos cuatro están en YouTube: la miniatura sale sola del ID y el video se
+   reproduce dentro de la web, así que no hay ningún archivo que mantener.
+   Solo pon `thumbnail` si quieres forzar una portada distinta a la del
+   fotograma que eligió YouTube. */
 
 export const VIDEOS: Video[] = [
   {
-    fuente: "instagram",
-    videoId: "https://www.instagram.com/reel/DalV7ouxV4j/",
+    fuente: "youtube",
+    videoId: "xD-dg67e0Pg",
     titulo: "Mouse vertical",
     categoria: "Gadgets",
-    formato: "Reel",
-    thumbnail: "/thumbnails/mouse-vertical.svg",
+    formato: "YouTube Short",
   },
   {
-    fuente: "instagram",
-    videoId: "https://www.instagram.com/reel/DabFyAWR5AM/",
+    fuente: "youtube",
+    videoId: "r615VCi1nGs",
     titulo: "Robot aspiradora Xiaomi",
     categoria: "Tecnología",
-    formato: "Reel",
-    thumbnail: "/thumbnails/robot-aspiradora-xiaomi.svg",
+    formato: "YouTube Short",
   },
   {
-    fuente: "instagram",
-    videoId: "https://www.instagram.com/reel/DXU-zLuEVmP/",
+    fuente: "youtube",
+    videoId: "e-_0wLopvLs",
     titulo: "Mic MAONO",
     categoria: "Audio",
-    formato: "Reel",
-    thumbnail: "/thumbnails/mic-maono.svg",
+    formato: "YouTube Short",
   },
   {
-    fuente: "instagram",
-    videoId: "https://www.instagram.com/reel/DU6rv2sEVtU/",
+    fuente: "youtube",
+    videoId: "bZrPE0tMHVs",
     titulo: "Xiaomi Smart Band 10",
     categoria: "Wearables",
-    formato: "Reel",
-    thumbnail: "/thumbnails/xiaomi-smart-band-10.svg",
+    formato: "YouTube Short",
   },
 ];
 

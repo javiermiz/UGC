@@ -8,7 +8,13 @@ interface Props {
 const { video } = Astro.props;
 
 /* Los videos se incrustan desde su plataforma; nada se aloja en este sitio. */
+/* `oardefault` conserva la proporción original del video (9:16 en un Short).
+   No existe para todos, así que `hqdefault` (4:3, siempre disponible) queda
+   de red: el <img> cambia a la de reserva si la primera falla. */
 function youtubeThumb(id: string) {
+  return `https://i.ytimg.com/vi/${id}/oardefault.jpg`;
+}
+function youtubeThumbReserva(id: string) {
   return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 }
 
@@ -16,6 +22,7 @@ const esReal = Boolean(video.fuente && video.videoId);
 const titulo = video.titulo ?? "";
 
 let thumb = video.thumbnail ?? "";
+let thumbReserva = "";
 let embed = ""; // src del iframe para reproducir en línea
 let enlace = ""; // URL para abrir la publicación en otra plataforma
 
@@ -23,6 +30,7 @@ if (esReal) {
   const id = video.videoId as string;
   if (video.fuente === "youtube") {
     thumb = video.thumbnail ?? youtubeThumb(id);
+    thumbReserva = video.thumbnail ? "" : youtubeThumbReserva(id);
     embed = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1`;
     enlace = `https://youtu.be/${id}`;
   } else if (video.fuente === "vimeo") {
@@ -55,7 +63,12 @@ const puedeIncrustar = embed !== "";
         data-embed={embed}
         aria-label={`Reproducir: ${titulo}`}
       >
-        <img src={thumb} alt={`Miniatura de ${titulo}`} loading="lazy" />
+        <img
+          src={thumb}
+          alt={`Miniatura de ${titulo}`}
+          loading="lazy"
+          data-reserva={thumbReserva}
+        />
         <span class="video-play" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M8 5v14l11-7z" />
@@ -111,6 +124,20 @@ const puedeIncrustar = embed !== "";
 
     media.replaceWith(iframe);
   });
+
+  // Miniatura de reserva: si la de proporción original no existe para ese
+  // video, se pide la 4:3. El evento `error` no burbujea, de ahí la captura.
+  document.addEventListener(
+    "error",
+    (event) => {
+      const img = event.target as HTMLElement;
+      if (!(img instanceof HTMLImageElement)) return;
+      const reserva = img.dataset.reserva;
+      if (!reserva || img.src === reserva) return;
+      img.src = reserva;
+    },
+    true,
+  );
 </script>
 
 <style>

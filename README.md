@@ -54,23 +54,17 @@ Los videos no se suben a este sitio: se incrustan desde su plataforma con
 3. Al hacer clic, YouTube y Vimeo se reproducen en línea; Instagram y TikTok
    abren la publicación original en otra pestaña.
 
-### Portadas de los reels de Instagram
+### Miniatura de los YouTube Shorts
 
-Instagram no expone una miniatura que se pueda enlazar desde fuera (la URL de
-su CDN caduca), así que cada reel usa una portada propia en
-`public/thumbnails/`: fondo, categoría y título en el mismo lenguaje visual del
-sitio.
+Se pide primero `oardefault.jpg`, que conserva la proporción original del video
+(9:16 en un Short) y llena la tarjeta sin recortes. Esa variante no existe para
+todos los videos, así que el `<img>` cae a `hqdefault.jpg` (4:3, siempre
+disponible) si la primera falla; en ese caso la tarjeta recorta los lados.
 
-Para cambiar una portada por un fotograma real del video, exporta el frame en
-**1080 x 1920** y sustituye el archivo manteniendo el nombre, o apunta
-`thumbnail` al archivo nuevo:
-
-| Video | Portada |
-| --- | --- |
-| Mouse vertical | `public/thumbnails/mouse-vertical.svg` |
-| Robot aspiradora Xiaomi | `public/thumbnails/robot-aspiradora-xiaomi.svg` |
-| Mic MAONO | `public/thumbnails/mic-maono.svg` |
-| Xiaomi Smart Band 10 | `public/thumbnails/xiaomi-smart-band-10.svg` |
+Si un fotograma no te convence, lo más limpio es cambiarlo en YouTube (Editar
+video → Miniatura). Como alternativa, exporta una imagen 9:16 a
+`public/thumbnails/` y ponla en `thumbnail`: ese campo tiene prioridad sobre
+las dos automáticas.
 
 ## Quitar una sección
 
