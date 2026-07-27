@@ -206,20 +206,27 @@ const TICKER = [
         </div>
       </div>
 
-      <ol class="proceso">
-        {
-          PROCESO.map((p, i) => (
-            <li class="paso" data-paso={String(i + 1).padStart(2, "0")}>
-              <span class="paso-rule" aria-hidden="true" />
-              <div class="paso-body">
-                <span class="paso-num">{String(i + 1).padStart(2, "0")}</span>
-                <h3 class="line"><span class="line-inner">{p.titulo}</span></h3>
-                <p class="line"><span class="line-inner">{p.descripcion}</span></p>
-              </div>
-            </li>
-          ))
-        }
-      </ol>
+      <div class="proceso-col">
+        {/* Riel de progreso: se rellena con el scroll y marca el paso activo */}
+        <span class="proceso-rail" aria-hidden="true">
+          <i class="proceso-rail-fill"></i>
+        </span>
+        <ol class="proceso">
+          {
+            PROCESO.map((p, i) => (
+              <li class="paso" data-paso={String(i + 1).padStart(2, "0")}>
+                <span class="paso-rule" aria-hidden="true" />
+                <span class="paso-dot" aria-hidden="true" />
+                <div class="paso-body">
+                  <span class="paso-num">{String(i + 1).padStart(2, "0")}</span>
+                  <h3 class="line"><span class="line-inner">{p.titulo}</span></h3>
+                  <p class="line"><span class="line-inner">{p.descripcion}</span></p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
     </div>
   </section>
 
@@ -651,12 +658,64 @@ const TICKER = [
       font-size: 0.85rem;
       color: var(--muted);
     }
+    .proceso-col {
+      position: relative;
+    }
+    /* Riel y puntos solo en escritorio: en una columna estrecha se comen
+       ancho de texto sin aportar. Se activan en el @media de abajo. */
+    .proceso-rail {
+      display: none;
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--line);
+    }
+    .proceso-rail-fill {
+      display: block;
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      transform: scaleY(0);
+      transform-origin: 50% 0;
+    }
     .proceso {
       list-style: none;
     }
     .paso {
       position: relative;
       padding-block: var(--sp-l);
+      transition: opacity 0.45s ease;
+    }
+    /* Atenuar los inactivos es lo que hace visible el avance; en móvil, donde
+       no hay riel ni contador a la vista, es la única señal, así que se queda
+       más suave para no estorbar la lectura. Sin animaciones, todo a plena
+       opacidad. */
+    body:not(.no-anim) .paso {
+      opacity: 0.45;
+    }
+    body:not(.no-anim) .paso.is-activo {
+      opacity: 1;
+    }
+    .paso-dot {
+      display: none;
+      position: absolute;
+      top: calc(var(--sp-l) + 0.35em);
+      left: calc(var(--rail-gap) * -1 + 1px);
+      width: 11px;
+      height: 11px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--line);
+      transition: background-color 0.45s ease, border-color 0.45s ease,
+        transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+    .paso.is-activo .paso-dot {
+      background: var(--accent);
+      border-color: var(--accent);
+      transform: translateX(-50%) scale(1.35);
     }
     .paso-rule {
       position: absolute;
@@ -802,6 +861,26 @@ const TICKER = [
       .proceso-sticky {
         position: sticky;
         top: calc(var(--nav-h) + var(--sp-m));
+      }
+      .proceso-col {
+        --rail-gap: clamp(1.75rem, 3.2vw, 3rem);
+      }
+      .proceso-rail,
+      .paso-dot {
+        display: block;
+      }
+      .proceso {
+        padding-left: var(--rail-gap);
+      }
+      /* Los cuatro pasos cabían en una pantalla: sin altura no hay scroll que
+         animar y la sección se veía quieta. Con este aire la lista supera el
+         viewport y el riel, el contador y el paso activo tienen recorrido. */
+      .paso {
+        padding-block: clamp(2.5rem, 5.5vh, 4.25rem);
+      }
+      /* Con riel y contador acompañando, el contraste puede ser más marcado */
+      body:not(.no-anim) .paso {
+        opacity: 0.3;
       }
     }
 
@@ -991,20 +1070,18 @@ const TICKER = [
           );
         });
 
-        /* ---------- PROCESO: reglas que se dibujan, líneas que suben
-                       y contador pegajoso que cambia por paso ---------- */
+        /* ---------- PROCESO: reglas que se dibujan y líneas que suben ---------- */
         const pasos = gsap.utils.toArray<HTMLElement>(".paso");
         const numEl = document.getElementById("proceso-num");
         pasos.forEach((paso) => {
           const rule = paso.querySelector(".paso-rule");
           const lines = paso.querySelectorAll(".line-inner");
-          const num = paso.dataset.paso || "01";
 
           gsap.set(lines, { yPercent: 105, opacity: 0 });
 
           ScrollTrigger.create({
             trigger: paso,
-            start: "top 85%",
+            start: "top 88%",
             once: true,
             onEnter: () => {
               if (rule) gsap.to(rule, { scaleX: 1, duration: 1, ease: "power3.out" });
@@ -1017,26 +1094,55 @@ const TICKER = [
               });
             },
           });
+        });
 
-          // Contador que sigue al paso activo
-          if (numEl) {
-            ScrollTrigger.create({
-              trigger: paso,
-              start: "top 55%",
-              end: "bottom 55%",
-              onToggle: (self) => {
-                if (!self.isActive) return;
-                if (numEl.textContent === num) return;
-                gsap.fromTo(
-                  numEl,
-                  { yPercent: 45, opacity: 0 },
-                  { yPercent: 0, opacity: 1, duration: 0.45, ease: "power3.out" }
-                );
-                numEl.textContent = num;
-              },
+        /* ---------- PROCESO: riel que se rellena y paso activo ----------
+           Un único trigger sobre la columna gobierna riel, punto y contador.
+           Antes cada paso llevaba el suyo y, como los cuatro entraban a la vez
+           en pantalla, todo se disparaba junto y la sección quedaba quieta. */
+        const proceso = document.querySelector<HTMLElement>(".proceso-col");
+        const rellenoRiel = document.querySelector<HTMLElement>(".proceso-rail-fill");
+        if (proceso && pasos.length) {
+          const INICIO = "top 62%";
+          const FIN = "bottom 65%";
+          let activo = -1;
+
+          const marcarActivo = (i: number) => {
+            if (i === activo) return;
+            activo = i;
+            pasos.forEach((paso, n) => paso.classList.toggle("is-activo", n === i));
+            const num = pasos[i]?.dataset.paso;
+            if (numEl && num && numEl.textContent !== num) {
+              gsap.fromTo(
+                numEl,
+                { yPercent: 45, opacity: 0 },
+                { yPercent: 0, opacity: 1, duration: 0.45, ease: "power3.out" }
+              );
+              numEl.textContent = num;
+            }
+          };
+
+          if (rellenoRiel) {
+            gsap.to(rellenoRiel, {
+              scaleY: 1,
+              ease: "none",
+              scrollTrigger: { trigger: proceso, start: INICIO, end: FIN, scrub: 0.5 },
             });
           }
-        });
+
+          ScrollTrigger.create({
+            trigger: proceso,
+            start: INICIO,
+            end: FIN,
+            // El primer paso queda activo antes de entrar y el último al salir:
+            // así nunca se ven los cuatro atenuados a la vez.
+            onUpdate: (self) =>
+              marcarActivo(Math.min(pasos.length - 1, Math.floor(self.progress * pasos.length))),
+            onLeaveBack: () => marcarActivo(0),
+          });
+
+          marcarActivo(0);
+        }
 
         /* ---------- SOBRE MÍ: párrafos que suben por máscara ---------- */
         const sobreLines = gsap.utils.toArray<HTMLElement>(".s-sobre .line-inner");
