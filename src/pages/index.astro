@@ -712,8 +712,14 @@ const TICKER = [
       padding-block: var(--section-y);
     }
     .contacto-big {
-      font-size: clamp(2rem, 5.5vw, 4.5rem);
-      max-width: 18ch;
+      /* Es el único titular de varias líneas: 18ch lo partía en seis líneas de
+         tres palabras y dejaba media sección vacía a la derecha. Con más ancho
+         y algo menos de cuerpo cae en tres o cuatro líneas y se lee de corrido. */
+      font-size: clamp(1.75rem, 4.4vw, 3.75rem);
+      max-width: 26ch;
+      /* El 0.94 global junta demasiado las líneas y las tildes de QUÉ o
+         ESCRÍBEME chocan con la línea de arriba. */
+      line-height: 1.02;
       margin-bottom: var(--gap-head);
     }
     .contacto-grid {

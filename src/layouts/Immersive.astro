@@ -1,5 +1,5 @@
 ---
-import { PERFIL, CONTACTO } from "../data/portfolio";
+import { PERFIL } from "../data/portfolio";
 
 interface Props {
   title?: string;
@@ -66,9 +66,11 @@ const currentYear = new Date().getFullYear();
     <footer class="site-footer">
       <div class="footer-inner">
         <p>&copy; {currentYear} {PERFIL.nombre}</p>
+        {/* Las redes ya están en la sección de contacto, justo encima: aquí
+            solo repetían. En su lugar, una salida del scroll, que la página
+            es larga. */}
         <div class="footer-links">
-          <a href={CONTACTO.instagram.url} target="_blank" rel="noopener">Instagram</a>
-          <a href={CONTACTO.tiktok.url} target="_blank" rel="noopener">TikTok</a>
+          <a href="#top" data-scroll>Volver arriba</a>
         </div>
       </div>
     </footer>
