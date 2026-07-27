@@ -70,7 +70,8 @@ export const PERFIL = {
   rol: "Creador de contenido UGC",
   /** Solo la ciudad, sin país. Déjalo en "" para ocultar la línea. */
   ubicacion: "",
-  disponibilidad: "Disponible para colaboraciones",
+  /* "Colaboraciones" suena a intercambio por producto; esto es trabajo. */
+  disponibilidad: "Disponible para nuevos proyectos",
   titular: "Contenido que parece de un amigo, no de un anuncio.",
   subtitular:
     "Videos verticales para marcas que quieren vender sin sonar a marca: guion, grabación, edición y entrega lista para publicar o pautar.",
@@ -82,9 +83,9 @@ export const PERFIL = {
    * largo se ve como un muro y nadie lo lee.
    */
   sobre_mi: [
-    "Vengo del desarrollo de software. Eso significa que entiendo un producto rápido y lo explico sin tecnicismos, justo lo que necesita un video para no sentirse forzado.",
-    "Estoy empezando en UGC, pero llevo tiempo grabando y editando contenido por mi cuenta, así que no vas a lidiar con la curva de aprendizaje de alguien que nunca ha estado frente a cámara.",
-    "Me interesa sobre todo tecnología y gadgets, y me enfoco en que el video se sienta como la recomendación real de alguien que sabe usar el producto, no como un comercial genérico.",
+    "Entiendo un producto técnico rápido y lo cuento sin tecnicismos. Ahí está la diferencia entre un video que suena a persona y uno que suena a guion leído.",
+    "En UGC estoy empezando, y prefiero decirlo. Delante de la cámara no: llevo tiempo grabando y editando lo mío, así que la curva de aprendizaje no la pagas tú.",
+    "Grabo sobre todo tecnología y gadgets, que es lo que uso y lo que sé explicar. El objetivo siempre es el mismo: que parezca la recomendación de alguien que de verdad tiene el producto en casa.",
   ],
   /**
    * Ficha rápida al lado del texto: lo esencial para quien no va a leer los
@@ -99,7 +100,7 @@ export const PERFIL = {
   /** Etiqueta y texto del recuadro destacado. Deja `nota` en "" para ocultarlo. */
   sobre_nota_etiqueta: "Si vendes software",
   sobre_nota:
-    "Si tu producto es una app o una herramienta, mi background técnico te ahorra tener que explicarme cómo funciona antes de grabar.",
+    "No hace falta que me expliques cómo funciona tu app: la instalo, la uso y te digo qué merece la pena enseñar en cámara.",
 };
 
 /* ------------------------------------------------------------------ */
@@ -189,22 +190,22 @@ export const PROCESO: PasoProceso[] = [
   {
     titulo: "Briefing",
     descripcion:
-      "Me cuentas el producto, el público y qué quieres que pase después de ver el video. Si ya tienes ads corriendo, miro cuáles funcionan.",
+      "Me cuentas el producto, a quién le hablas y qué quieres que pase después del video. Si ya tienes anuncios corriendo, miro cuáles funcionan.",
   },
   {
     titulo: "Guion y hooks",
     descripcion:
-      "Te mando dos o tres opciones de guion con distintos ángulos. Nada se graba hasta que apruebas uno.",
+      "Te mando dos o tres guiones con ángulos distintos. Nada se graba hasta que apruebas uno.",
   },
   {
     titulo: "Grabación",
     descripcion:
-      "Grabo en vertical con luz natural o de estudio según el producto. Audio limpio, sin cortes raros.",
+      "Grabo en vertical con luz natural o de estudio, según el producto. Audio limpio y encuadre estable.",
   },
   {
     titulo: "Entrega",
     descripcion:
-      "Recibes los archivos finales más los crudos si los necesitas, listos para publicar o subir al administrador de anuncios.",
+      "Recibes los archivos finales y los crudos si los quieres, listos para publicar o subir al gestor de anuncios.",
   },
 ];
 
@@ -225,5 +226,5 @@ export const CONTACTO = {
   /** Deja en null si prefieres no mostrar WhatsApp */
   whatsapp: null as string | null,
   cierre:
-    "¿Tienes un producto y no sabes qué contenido necesita? Escríbeme y lo vemos.",
+    "¿Tienes un producto y no sabes qué video necesita? Escríbeme y te digo qué grabaría.",
 };
