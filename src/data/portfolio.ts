@@ -48,14 +48,6 @@ export interface Video {
   thumbnail?: string;
 }
 
-export interface Servicio {
-  titulo: string;
-  descripcion: string;
-  entregables: string[];
-  /** Etiqueta de precio que se muestra en la tarjeta */
-  precio: string;
-}
-
 export interface PasoProceso {
   titulo: string;
   descripcion: string;
@@ -72,9 +64,11 @@ export const PERFIL = {
   ubicacion: "",
   /* "Colaboraciones" suena a intercambio por producto; esto es trabajo. */
   disponibilidad: "Disponible para nuevos proyectos",
-  titular: "Contenido que parece de un amigo, no de un anuncio.",
+  /* Dice qué hace y para quién. Sin metáforas: el titular no es el sitio
+     para lucirse, es donde el visitante decide si esto le sirve. */
+  titular: "Videos UGC para marcas de tecnología.",
   subtitular:
-    "Videos verticales para marcas que quieren vender sin sonar a marca: guion, grabación, edición y entrega lista para publicar o pautar.",
+    "Escribo, grabo y edito videos verticales para Reels, TikTok y Shorts. Listos para publicar o pautar.",
   /** Título de la sección "Sobre mí". */
   sobre_titulo: "Del código a la cámara",
   /**
@@ -84,18 +78,19 @@ export const PERFIL = {
    */
   sobre_mi: [
     "Entiendo un producto técnico rápido y lo cuento sin tecnicismos. Ahí está la diferencia entre un video que suena a persona y uno que suena a guion leído.",
-    "En UGC estoy empezando, y prefiero decirlo. Delante de la cámara no: llevo tiempo grabando y editando lo mío, así que la curva de aprendizaje no la pagas tú.",
-    "Grabo sobre todo tecnología y gadgets, que es lo que uso y lo que sé explicar. El objetivo siempre es el mismo: que parezca la recomendación de alguien que de verdad tiene el producto en casa.",
+    "Escribo, grabo y edito yo. Trabajas conmigo directamente, sin intermediarios.",
   ],
   /**
    * Ficha rápida al lado del texto: lo esencial para quien no va a leer los
    * párrafos. Solo datos reales; deja el array vacío para ocultarla.
+   * "Base" e "Idioma" importan más de lo que parece: el UGC se contrata en
+   * remoto y la marca necesita saber a quién le manda el producto.
    */
   sobre_datos: [
-    { clave: "Vengo de", valor: "Desarrollo de software" },
+    { clave: "Perfil", valor: "Desarrollo de software" },
     { clave: "Nicho", valor: "Tecnología y gadgets" },
-    { clave: "Formato", valor: "Vertical 9:16" },
-    { clave: "Hago", valor: "Guion, grabación y edición" },
+    { clave: "Base", valor: "México" },
+    { clave: "Idioma", valor: "Español" },
   ],
   /** Etiqueta y texto del recuadro destacado. Deja `nota` en "" para ocultarlo. */
   sobre_nota_etiqueta: "Si vendes software",
@@ -104,34 +99,21 @@ export const PERFIL = {
 };
 
 /* ------------------------------------------------------------------ */
-/* Servicios                                                           */
+/* Qué recibe el cliente                                               */
 /* ------------------------------------------------------------------ */
+/* Responde a la duda que trae quien llega: qué compro exactamente.
+   Sin precios y sin cerrar duraciones: cada producto pide lo suyo y no
+   tiene sentido atarse a un número en la web. Lo único cerrado es el
+   plazo, porque un plazo concreto tranquiliza y se puede cumplir. */
 
-export const SERVICIOS: Servicio[] = [
-  {
-    titulo: "Video UGC individual",
-    descripcion:
-      "Un video vertical de 15 a 45 segundos, con guion propio, grabado y editado por mí. Pensado para feed orgánico o para pautar.",
-    entregables: [
-      "1 video en 9:16 (1080x1920)",
-      "Guion y hook aprobados antes de grabar",
-      "Subtítulos quemados y música libre de derechos",
-      "1 ronda de cambios incluida",
-    ],
-    precio: "Cotización personalizada",
-  },
-  {
-    titulo: "Pack de 3 videos",
-    descripcion:
-      "Tres ángulos distintos del mismo producto para testear qué hook rinde mejor antes de escalar la inversión.",
-    entregables: [
-      "3 videos en 9:16 con hooks diferentes",
-      "Variantes de los primeros 3 segundos",
-      "Versiones con y sin subtítulos",
-      "Licencia de uso para pauta (whitelisting opcional)",
-    ],
-    precio: "Cotización personalizada",
-  },
+export const INCLUYE: string[] = [
+  "Video vertical 9:16 para Reels, TikTok o Shorts, con la duración que pida el producto: desde 15 segundos hasta más de un minuto.",
+  "Guion y hook acordados antes de grabar. Nada se graba sin tu visto bueno.",
+  "Subtítulos y música libre de derechos.",
+  "Una ronda de cambios sobre el video montado.",
+  "Entrega en 5 a 7 días hábiles desde que apruebas el guion.",
+  "Archivos finales y los crudos si los quieres.",
+  "Derechos para pauta pagada: se acuerdan aparte, según dónde y cuánto tiempo se use.",
 ];
 
 /* ------------------------------------------------------------------ */
@@ -227,4 +209,7 @@ export const CONTACTO = {
   whatsapp: null as string | null,
   cierre:
     "¿Tienes un producto y no sabes qué video necesita? Escríbeme y te digo qué grabaría.",
+  /* Lo que un formulario preguntaría, dicho en una línea: llegan correos
+     que se pueden contestar sin tres idas y venidas. */
+  instrucciones: "Cuéntame qué producto es, qué necesitas y para cuándo.",
 };

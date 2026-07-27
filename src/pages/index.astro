@@ -1,6 +1,6 @@
 ---
 import Immersive from "../layouts/Immersive.astro";
-import { PERFIL, VIDEOS, PROCESO, CONTACTO } from "../data/portfolio";
+import { PERFIL, VIDEOS, INCLUYE, PROCESO, CONTACTO } from "../data/portfolio";
 
 /* Datos de reproducción de cada video (nada se aloja aquí; se incrusta) */
 /* `oardefault` conserva la proporción original del video, que en un Short es
@@ -37,7 +37,6 @@ const videos = VIDEOS.map((v) => {
 });
 
 const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
-const STATEMENT = "No hago anuncios. Hago videos que la gente termina de ver.";
 const TICKER = [
   "Video UGC",
   "Reels",
@@ -70,18 +69,15 @@ const TICKER = [
 
       <div class="hero-foot">
         <p class="hero-sub" data-hero>{PERFIL.subtitular}</p>
-        <a class="hero-cta" href="#contacto" data-scroll data-hero>
-          <span>Trabajemos juntos</span>
+        {/* Al correo directo, sin pasar por la sección de contacto: quien ya
+            está convencido no tiene por qué recorrer la página entera. */}
+        <a class="hero-cta" href={`mailto:${CONTACTO.email}`} data-hero>
+          <span>Escríbeme</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="M5 12h14M13 6l6 6-6 6" />
           </svg>
         </a>
       </div>
-    </div>
-
-    <div class="hero-scroll" data-hero>
-      <span>Scroll</span>
-      <span class="hero-scroll-line"></span>
     </div>
   </section>
 
@@ -103,27 +99,12 @@ const TICKER = [
     </div>
   </section>
 
-  <!-- ===================== STATEMENT ===================== -->
-  <section class="statement">
-    <div class="wrap">
-      <p class="statement-text">
-        {
-          STATEMENT.split(" ").map((w) => (
-            <span class="s-word" data-statement>
-              {w}{" "}
-            </span>
-          ))
-        }
-      </p>
-    </div>
-  </section>
-
   <!-- ===================== TRABAJOS ===================== -->
   <section class="s-trabajos" id="trabajos">
     <div class="wrap">
       <div class="head">
         <span class="eyebrow" data-reveal>01 / Trabajos</span>
-        <h2 class="s-title" data-reveal data-speed="0.16">Grabado y editado por mí</h2>
+        <h2 class="s-title" data-reveal data-speed="0.16">Videos recientes</h2>
       </div>
     </div>
 
@@ -192,12 +173,32 @@ const TICKER = [
     </div>
   </section>
 
+  <!-- ===================== QUÉ RECIBES ===================== -->
+  <section class="s-incluye">
+    <div class="wrap incluye-grid">
+      <div class="incluye-head">
+        <span class="eyebrow" data-reveal>02 / Qué recibes</span>
+        <h2 class="s-title" data-reveal>Qué incluye un video</h2>
+      </div>
+      <ul class="incluye-lista">
+        {
+          INCLUYE.map((punto, i) => (
+            <li class="incluye-item" data-reveal>
+              <span class="incluye-num">{String(i + 1).padStart(2, "0")}</span>
+              <span class="incluye-texto">{punto}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
   <!-- ===================== PROCESO ===================== -->
   <section class="s-proceso">
     <div class="wrap proceso-grid">
       <div class="proceso-aside">
         <div class="proceso-sticky">
-          <span class="eyebrow" data-reveal>02 / Proceso</span>
+          <span class="eyebrow" data-reveal>03 / Proceso</span>
           <h2 class="s-title" data-reveal>De la idea a la entrega</h2>
           <div class="proceso-counter" aria-hidden="true">
             <span id="proceso-num">01</span>
@@ -235,7 +236,7 @@ const TICKER = [
     <div class="wrap sobre-grid">
       <div class="sobre-aside">
         <div class="sobre-sticky">
-          <span class="eyebrow" data-reveal>03 / Sobre mí</span>
+          <span class="eyebrow" data-reveal>04 / Sobre mí</span>
           <h2 class="s-title" data-reveal>{PERFIL.sobre_titulo}</h2>
           {
             PERFIL.sobre_datos.length > 0 && (
@@ -286,7 +287,7 @@ const TICKER = [
   <!-- ===================== CONTACTO ===================== -->
   <section class="s-contacto" id="contacto">
     <div class="wrap">
-      <span class="eyebrow" data-reveal>04 / Contacto</span>
+      <span class="eyebrow" data-reveal>05 / Contacto</span>
       <h2 class="contacto-big">
         {
           CONTACTO.cierre.split(" ").map((w) => (
@@ -296,6 +297,12 @@ const TICKER = [
           ))
         }
       </h2>
+
+      {
+        CONTACTO.instrucciones && (
+          <p class="contacto-nota" data-reveal>{CONTACTO.instrucciones}</p>
+        )
+      }
 
       <div class="contacto-grid" data-reveal>
         <a class="contacto-mail" href={`mailto:${CONTACTO.email}`}>
@@ -371,14 +378,18 @@ const TICKER = [
     }
 
     /* ---------- HERO ---------- */
+    /* A media pantalla, no completa: en un portfolio los videos son el
+       argumento de venta, así que tienen que asomar sin hacer scroll.
+       Un hero de 100svh los esconde y obliga a un acto de fe. */
     .hero {
       position: relative;
-      min-height: 100svh;
+      min-height: 58svh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       padding: var(--pad);
       padding-top: calc(var(--nav-h) + var(--sp-l));
+      padding-bottom: var(--sp-l);
     }
     .hero-inner {
       max-width: var(--maxw);
@@ -405,11 +416,15 @@ const TICKER = [
       border-color: var(--accent);
       color: #fff;
     }
+    /* Más contenido y menos alto que antes: con el hero a media pantalla,
+       un cuerpo de 7rem se comía el fold entero y los videos no asomaban. */
     .hero-title {
-      font-size: clamp(2.5rem, 8vw, 7rem);
-      line-height: 0.92;
-      letter-spacing: -0.04em;
-      max-width: 15ch;
+      font-size: clamp(2rem, 5.4vw, 4.5rem);
+      line-height: 0.96;
+      letter-spacing: -0.035em;
+      /* 26ch lo deja en dos líneas en escritorio; con 20ch caía en tres y
+         empujaba las tarjetas fuera de la pantalla. */
+      max-width: 26ch;
     }
     .hero-foot {
       display: flex;
@@ -451,25 +466,6 @@ const TICKER = [
     .hero-cta:hover svg {
       transform: translateX(5px);
     }
-    .hero-scroll {
-      position: absolute;
-      bottom: 1.4rem;
-      left: var(--pad);
-      display: flex;
-      align-items: center;
-      gap: var(--sp-xs);
-      font-family: var(--font-mono);
-      letter-spacing: 0.18em;
-      font-size: 0.6rem;
-      color: var(--muted);
-    }
-    .hero-scroll-line {
-      width: 54px;
-      height: 1px;
-      background: var(--muted);
-      transform-origin: 0 50%;
-    }
-
     /* ---------- TICKER ---------- */
     .ticker {
       border-block: 1px solid var(--line);
@@ -506,28 +502,15 @@ const TICKER = [
       flex: 0 0 auto;
     }
 
-    /* ---------- STATEMENT ---------- */
-    .statement {
-      padding-block: var(--section-y);
-    }
-    .statement-text {
-      font-family: var(--font-display);
-      font-weight: var(--w-black);
-      text-transform: uppercase;
-      font-size: clamp(1.75rem, 5vw, 4rem);
-      line-height: 1.04;
-      letter-spacing: -0.03em;
-      max-width: 22ch;
-    }
-    .s-word {
-      display: inline-block;
-      margin-right: 0.25em;
-      color: rgba(20, 19, 26, 0.18);
-    }
-
     /* ---------- TRABAJOS ---------- */
+    /* Arriba respira menos que el resto de secciones a propósito: es lo que
+       hace que las tarjetas asomen bajo el hero sin tener que scrollear. */
     .s-trabajos {
-      padding-block: var(--section-y);
+      padding-top: var(--sp-l);
+      padding-bottom: var(--section-y);
+    }
+    .s-trabajos .head {
+      margin-bottom: var(--sp-l);
     }
     .trabajos-viewport {
       overflow-x: auto;
@@ -659,6 +642,42 @@ const TICKER = [
       text-transform: none;
       letter-spacing: -0.01em;
       line-height: 1.15;
+    }
+
+    /* ---------- QUÉ RECIBES ---------- */
+    .s-incluye {
+      padding-block: var(--section-y);
+      border-top: 1px solid var(--line);
+    }
+    .incluye-grid {
+      display: grid;
+      gap: var(--gap-head);
+    }
+    .incluye-lista {
+      list-style: none;
+      border-top: 1px solid var(--line);
+    }
+    /* Lista con filete, no tarjetas: son condiciones que se leen de un
+       vistazo, no piezas que compiten entre sí. */
+    .incluye-item {
+      display: flex;
+      gap: var(--sp-m);
+      align-items: baseline;
+      padding-block: var(--sp-m);
+      border-bottom: 1px solid var(--line);
+    }
+    .incluye-num {
+      flex: none;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+    }
+    .incluye-texto {
+      font-size: clamp(1rem, 1.6vw, 1.15rem);
+      line-height: 1.5;
+      font-weight: var(--w-med);
+      max-width: 52ch;
     }
 
     /* ---------- PROCESO ---------- */
@@ -910,6 +929,14 @@ const TICKER = [
       /* El 0.94 global junta demasiado las líneas y las tildes de QUÉ o
          ESCRÍBEME chocan con la línea de arriba. */
       line-height: 1.02;
+      margin-bottom: var(--sp-m);
+    }
+    /* Hace el trabajo de un formulario sin poner uno: el correo llega ya
+       con lo que hace falta para poder contestarlo. */
+    .contacto-nota {
+      color: var(--muted);
+      font-size: clamp(1rem, 1.5vw, 1.15rem);
+      max-width: 46ch;
       margin-bottom: var(--gap-head);
     }
     .contacto-grid {
@@ -1014,6 +1041,14 @@ const TICKER = [
         opacity: 0.3;
       }
 
+      /* A dos columnas: son siete líneas cortas y en una sola columna
+         dejaban media sección en blanco a la derecha. */
+      .incluye-lista {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: clamp(2.5rem, 6vw, 5rem);
+      }
+
       .sobre-grid {
         grid-template-columns: 0.85fr 1.15fr;
         column-gap: clamp(2.5rem, 6vw, 5rem);
@@ -1107,7 +1142,6 @@ const TICKER = [
           { y: 20, opacity: 0, duration: 0.75, stagger: 0.1, ease: "power3.out" },
           "-=0.65"
         );
-        intro.from(".hero-scroll-line", { scaleX: 0, duration: 0.7, ease: "power2.out" }, "-=0.4");
 
         // Hero: se aleja al scrollear
         gsap.to(".hero-inner", {
@@ -1140,22 +1174,6 @@ const TICKER = [
               },
             });
           }
-        }
-
-        /* ---------- STATEMENT: palabras entintándose ---------- */
-        const sWords = gsap.utils.toArray<HTMLElement>("[data-statement]");
-        if (sWords.length) {
-          gsap.to(sWords, {
-            color: "rgba(20,19,26,1)",
-            stagger: 0.08,
-            ease: "none",
-            scrollTrigger: {
-              trigger: ".statement",
-              start: "top 78%",
-              end: "bottom 62%",
-              scrub: true,
-            },
-          });
         }
 
         /* ---------- Reveals genéricos (solo opacidad) ---------- */
