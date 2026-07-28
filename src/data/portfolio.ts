@@ -18,6 +18,38 @@
  */
 export type VideoFuente = "youtube" | "vimeo" | "instagram" | "tiktok";
 
+/**
+ * FORMATOS DE GUION
+ * ------------------------------------------------------------------
+ * Cómo está armado el video, que es distinto del nicho (`categoria`) y de
+ * dónde se publica. Una marca que ya sabe qué quiere rodar busca justo esto:
+ * si nunca has hecho un antes/después, no te lo va a encargar.
+ *
+ * La clave es la que se escribe en los datos; el valor es lo que se lee en
+ * la tarjeta. Al ser un objeto cerrado, una clave mal escrita rompe el build
+ * en vez de colarse a producción.
+ *
+ * Para añadir un formato nuevo: una línea aquí y ya se puede usar.
+ */
+export const FORMATOS = {
+  "problema-solucion": "Problema / solución",
+  unboxing: "Unboxing",
+  demo: "Demo de producto",
+  review: "Reseña",
+  testimonial: "Testimonial",
+  "antes-despues": "Antes y después",
+  comparativa: "Comparativa",
+  tutorial: "Tutorial",
+  lista: "Lista / top",
+  storytime: "Storytime",
+  "a-camara": "Hablando a cámara",
+  "voz-en-off": "Voz en off",
+  "dia-en-la-vida": "Día en la vida",
+  asmr: "ASMR",
+} as const;
+
+export type FormatoGuion = keyof typeof FORMATOS;
+
 export interface Video {
   /**
    * Plataforma de origen del video. Si falta (junto con videoId), la
@@ -37,8 +69,13 @@ export interface Video {
   marca?: string;
   /** Categoría / nicho: tecnología, gadgets, app, producto */
   categoria?: string;
-  /** Formato del entregable (ej: YouTube Short, Reel) */
-  formato?: string;
+  /**
+   * Cómo está armado el video. Claves de `FORMATOS`; un video puede tener
+   * más de una (un unboxing que además compara, por ejemplo). Se muestran
+   * como etiquetas en la tarjeta y se resumen en el encabezado de la
+   * sección, así que déjalo vacío antes que poner uno que no es.
+   */
+  formatos?: FormatoGuion[];
   /** Una línea sobre el objetivo que buscaba la marca con el video */
   descripcion?: string;
   /**
@@ -46,6 +83,24 @@ export interface Video {
    * (se genera sola desde el ID); obligatoria para instagram / tiktok.
    */
   thumbnail?: string;
+}
+
+/**
+ * Un carrusel de videos con su encabezado. Hay dos tipos de trabajo y no se
+ * mezclan: el UGC es material que la marca publica como suyo, la reseña va
+ * firmada en mi perfil. Quien contrata busca una cosa o la otra, así que van
+ * en secciones separadas y cada una dice qué es, incluido si está pagada.
+ */
+export interface SeccionVideos {
+  /** Ancla de la sección y del enlace del menú */
+  id: string;
+  /** Texto corto del menú de navegación */
+  menu: string;
+  /** Título de la sección */
+  titulo: string;
+  /** Una o dos frases explicando en qué se diferencia de la otra sección */
+  descripcion: string;
+  videos: Video[];
 }
 
 export interface PasoProceso {
@@ -119,50 +174,104 @@ export const INCLUYE: string[] = [
 /* ------------------------------------------------------------------ */
 /* Trabajos                                                            */
 /* ------------------------------------------------------------------ */
-/* El carrusel se va llenando aquí. Cada objeto es una tarjeta:
+/* Cada carrusel se va llenando aquí. Cada objeto de `videos` es una tarjeta:
      - Con `fuente` + `videoId` = video real (su reproductor sale de la
        plataforma; nada se aloja en este sitio).
      - Sin ellos = slot "Próximamente" (marca de posición para ir llenando).
 
    Ejemplo de video real de YouTube (descomenta y pon tu ID):
      { fuente: "youtube", videoId: "TU_ID", titulo: "...", categoria: "Tecnología",
-       formato: "YouTube Short", marca: "Nombre real", descripcion: "Qué buscaba la marca" }
+       formatos: ["problema-solucion"], marca: "Nombre real" }
 
-   Estos cuatro están en YouTube: la miniatura sale sola del ID y el video se
+   Todos están en YouTube: la miniatura sale sola del ID y el video se
    reproduce dentro de la web, así que no hay ningún archivo que mantener.
    Solo pon `thumbnail` si quieres forzar una portada distinta a la del
-   fotograma que eligió YouTube. */
+   fotograma que eligió YouTube.
 
-export const VIDEOS: Video[] = [
-  {
-    fuente: "youtube",
-    videoId: "xD-dg67e0Pg",
-    titulo: "Mouse vertical",
-    categoria: "Gadgets",
-    formato: "YouTube Short",
-  },
-  {
-    fuente: "youtube",
-    videoId: "r615VCi1nGs",
-    titulo: "Robot aspiradora Xiaomi",
-    categoria: "Tecnología",
-    formato: "YouTube Short",
-  },
-  {
-    fuente: "youtube",
-    videoId: "e-_0wLopvLs",
-    titulo: "Mic MAONO",
-    categoria: "Audio",
-    formato: "YouTube Short",
-  },
-  {
-    fuente: "youtube",
-    videoId: "bZrPE0tMHVs",
-    titulo: "Xiaomi Smart Band 10",
-    categoria: "Wearables",
-    formato: "YouTube Short",
-  },
-];
+   Un mismo producto puede salir en las dos secciones: el corte UGC y la
+   reseña larga son videos distintos con IDs distintos. */
+
+/* Va primero porque es lo que se contrata: material que la marca publica
+   como suyo. */
+export const UGC: SeccionVideos = {
+  id: "ugc",
+  menu: "UGC",
+  titulo: "Videos UGC",
+  descripcion:
+    "Cortos y al grano, del tipo que la marca publica como suyo o mete en pauta. Hook, producto y motivo para comprarlo.",
+  videos: [
+    {
+      fuente: "youtube",
+      videoId: "EGeCuEDAhlA",
+      titulo: "Mouse vertical SOLAKAKA E9 Pro",
+      categoria: "Gadgets",
+    },
+    {
+      fuente: "youtube",
+      videoId: "YCSrZDNaIvU",
+      titulo: "Xiaomi Smart Band 10",
+      categoria: "Wearables",
+    },
+  ],
+};
+
+/* Estos van en mi perfil y llevan mi criterio: no son entregables, son
+   reseñas. Se muestran porque enseñan cómo hablo de un producto en cámara.
+
+   Ninguna está pagada: son el ejemplo de cómo sería la colaboración. Por eso
+   el título dice dónde viven y la descripción dice "como en una colaboración
+   pagada", sin afirmar que ya la hubo. */
+export const RESENAS: SeccionVideos = {
+  id: "resenas",
+  menu: "Reseñas",
+  titulo: "Reseñas en mi perfil",
+  descripcion:
+    "Contadas como en una colaboración pagada, después de usar el producto de verdad: lo bueno y también lo que no convence.",
+  videos: [
+    {
+      fuente: "youtube",
+      videoId: "xD-dg67e0Pg",
+      titulo: "Mouse vertical",
+      categoria: "Gadgets",
+    },
+    {
+      fuente: "youtube",
+      videoId: "BvcDmpTDxc8",
+      titulo: "Robot aspiradora Xiaomi",
+      categoria: "Tecnología",
+    },
+    {
+      fuente: "youtube",
+      videoId: "e-_0wLopvLs",
+      titulo: "Mic MAONO",
+      categoria: "Audio",
+    },
+    {
+      fuente: "youtube",
+      videoId: "bZrPE0tMHVs",
+      titulo: "Xiaomi Smart Band 10",
+      categoria: "Wearables",
+    },
+    {
+      fuente: "youtube",
+      videoId: "JP8NGN0pj1I",
+      titulo: "Logitech G502 Lightspeed",
+      categoria: "Gadgets",
+    },
+    /* El único de software del portfolio. Va etiquetado como tal a
+       propósito: es la prueba de lo que promete el recuadro "Si vendes
+       software" de la sección Sobre mí. */
+    {
+      fuente: "youtube",
+      videoId: "gm6-T64sp_k",
+      titulo: "Samsung DeX",
+      categoria: "Software",
+    },
+  ],
+};
+
+/** Las dos secciones de video, en el orden en que salen en la página. */
+export const SECCIONES_VIDEO: SeccionVideos[] = [UGC, RESENAS];
 
 /* ------------------------------------------------------------------ */
 /* Proceso                                                             */
