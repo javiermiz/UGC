@@ -1,5 +1,5 @@
 ---
-import { PERFIL } from "../data/portfolio";
+import { PERFIL, SECCIONES_VIDEO } from "../data/portfolio";
 
 interface Props {
   title?: string;
@@ -52,8 +52,12 @@ const currentYear = new Date().getFullYear();
 
     <header class="nav" id="nav">
       <a href="#top" class="nav-logo" data-scroll>{PERFIL.nombre}</a>
+      {/* Las secciones de video salen del contenido: si mañana hay otra
+          categoría, aparece en el menú sola. */}
       <nav class="nav-links">
-        <a href="#trabajos" data-scroll>Trabajos</a>
+        {SECCIONES_VIDEO.map((s) => (
+          <a href={`#${s.id}`} data-scroll>{s.menu}</a>
+        ))}
         <a href="#sobre" data-scroll>Sobre mí</a>
         <a href="#contacto" data-scroll>Contacto</a>
       </nav>
@@ -294,17 +298,40 @@ const currentYear = new Date().getFullYear();
       }
       /* En pantallas estrechas el logo y el menú se apretaban: se reduce
          el menú para que nada quede pegado ni se corte. */
-      @media (max-width: 600px) {
+      @media (max-width: 780px) {
         .nav-logo {
           font-size: 0.95rem;
         }
         .nav-links {
-          gap: 1.1rem;
+          gap: 1rem;
         }
         .nav-links a {
           font-size: 0.68rem;
         }
-        .nav-links a:first-child {
+      }
+      /* Por debajo de esto las cuatro entradas ya no caben junto al logo.
+         Cae "Sobre mí": es la que menos decide una contratación y además
+         queda de paso al bajar. Contacto se queda, que es a donde se va. */
+      @media (max-width: 470px) {
+        /* Sin el nowrap el nombre parte en dos líneas y engorda el nav */
+        .nav-logo {
+          font-size: 0.88rem;
+          white-space: nowrap;
+        }
+        .nav-links {
+          gap: 0.85rem;
+        }
+        .nav-links a {
+          font-size: 0.64rem;
+        }
+        .nav-links a[href="#sobre"] {
+          display: none;
+        }
+      }
+      /* Pantallas de 320: solo las dos categorías de trabajo. A contacto se
+         llega por el botón del hero y por el cierre de la página. */
+      @media (max-width: 359px) {
+        .nav-links a[href="#contacto"] {
           display: none;
         }
       }

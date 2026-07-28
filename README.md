@@ -21,7 +21,8 @@ Casi todo vive en un solo archivo: **`src/data/portfolio.ts`**.
 | Qué cambiar | Dónde |
 | --- | --- |
 | Nombre, rol, titular, ciudad, texto de "Sobre mí" | `PERFIL` |
-| Videos del portfolio | `VIDEOS` |
+| Videos UGC (entregables para la marca) | `UGC` |
+| Colaboraciones pagadas (reseñas en mi perfil) | `COLABORACIONES` |
 | Paquetes y precios | `SERVICIOS` |
 | Pasos de "Cómo trabajo" | `PROCESO` |
 | Email y redes | `CONTACTO` |
@@ -40,14 +41,32 @@ La estructura sigue el patrón **Layout, Section, Container, Elements**:
   el padding lateral.
 - Los "elements" son las tarjetas y bloques de contenido dentro del Container.
 
+## Las dos secciones de video
+
+Los trabajos van en dos carruseles separados porque no son lo mismo:
+
+- **`UGC`**: entregables para la marca. Cortos y al grano, para que los publique
+  ella o los use en pauta.
+- **`COLABORACIONES`**: reseñas pagadas en el perfil propio, después de probar el
+  producto, con lo bueno y lo malo.
+
+Cada una es un objeto `SeccionVideos` con `id` (ancla y enlace del menú), `menu`,
+`titulo`, `descripcion` y su array `videos`. Salen en la página en el orden de
+`SECCIONES_VIDEO`, que también alimenta el menú y la numeración de las secciones
+(`01 / …`, `02 / …`): al añadir o quitar una, el resto se renumera solo.
+
+Un mismo producto puede aparecer en las dos: el corte UGC y la reseña son videos
+distintos, con IDs distintos.
+
 ## Videos (desde fuente externa, no alojados)
 
 Los videos no se suben a este sitio: se incrustan desde su plataforma con
 `fuente` (`youtube`, `vimeo`, `instagram` o `tiktok`) más `videoId`.
 
-1. Añade un objeto en `VIDEOS` dentro de `src/data/portfolio.ts` con `fuente` y
-   `videoId` reales. Para YouTube basta el ID del video; para Vimeo el ID
-   numérico; para Instagram o TikTok, la URL completa de la publicación.
+1. Añade un objeto al array `videos` de `UGC` o de `COLABORACIONES` dentro de
+   `src/data/portfolio.ts`, con `fuente` y `videoId` reales. Para YouTube basta
+   el ID del video; para Vimeo el ID numérico; para Instagram o TikTok, la URL
+   completa de la publicación.
 2. La miniatura de YouTube se genera sola desde el ID. Para las demás fuentes,
    exporta una miniatura vertical **9:16** a `public/thumbnails/` y ponla en
    `thumbnail`.

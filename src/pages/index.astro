@@ -1,6 +1,7 @@
 ---
 import Immersive from "../layouts/Immersive.astro";
-import { PERFIL, VIDEOS, INCLUYE, PROCESO, CONTACTO } from "../data/portfolio";
+import { PERFIL, SECCIONES_VIDEO, INCLUYE, PROCESO, CONTACTO } from "../data/portfolio";
+import type { Video } from "../data/portfolio";
 
 /* Datos de reproducción de cada video (nada se aloja aquí; se incrusta) */
 /* `oardefault` conserva la proporción original del video, que en un Short es
@@ -13,7 +14,7 @@ function youtubeThumb(id: string) {
 function youtubeThumbReserva(id: string) {
   return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 }
-const videos = VIDEOS.map((v) => {
+function prepararVideo(v: Video) {
   const esReal = Boolean(v.fuente && v.videoId);
   let thumb = v.thumbnail ?? "";
   let thumbReserva = "";
@@ -34,7 +35,21 @@ const videos = VIDEOS.map((v) => {
     }
   }
   return { ...v, esReal, thumb, thumbReserva, embed, enlace, puedeIncrustar: embed !== "" };
-});
+}
+
+/* Las dos secciones de video se pintan con el mismo bloque de markup: cambian
+   el encabezado y las tarjetas, no la mecánica del carrusel. La numeración de
+   los eyebrows sale de aquí para que no haya que renumerar a mano al añadir
+   o quitar una sección. */
+const secciones = SECCIONES_VIDEO.map((s, i) => ({
+  ...s,
+  numero: String(i + 1).padStart(2, "0"),
+  videos: s.videos.map(prepararVideo),
+}));
+
+/* El resto de secciones continúan la cuenta */
+const numeroTras = (offset: number) =>
+  String(SECCIONES_VIDEO.length + offset).padStart(2, "0");
 
 const tituloPalabras = PERFIL.titular.replace(/\.$/, "").split(" ");
 const TICKER = [
@@ -100,84 +115,91 @@ const TICKER = [
   </section>
 
   <!-- ===================== TRABAJOS ===================== -->
-  <section class="s-trabajos" id="trabajos">
-    <div class="wrap">
-      <div class="head">
-        <span class="eyebrow" data-reveal>01 / Trabajos</span>
-        <h2 class="s-title" data-reveal data-speed="0.16">Videos de producto</h2>
-      </div>
-    </div>
+  {
+    secciones.map((sec, s) => (
+      <section class={s === 0 ? "s-trabajos s-trabajos--primera" : "s-trabajos"} id={sec.id}>
+        <div class="wrap">
+          <div class="head trabajos-head">
+            <div class="trabajos-head-titulo">
+              <span class="eyebrow" data-reveal>{sec.numero} / {sec.menu}</span>
+              <h2 class="s-title" data-reveal data-speed="0.16">{sec.titulo}</h2>
+            </div>
+            <p class="trabajos-desc" data-reveal>{sec.descripcion}</p>
+          </div>
+        </div>
 
-    <div class="trabajos-viewport">
-      <div class="trabajos-track" id="trabajos-track">
-        {
-          videos.map((v, i) => (
-            <article class="vcard" data-card data-speed={String(i % 2 === 0 ? 0.1 : 0.22)}>
-              {v.esReal ? (
-                v.puedeIncrustar ? (
-                  <button
-                    type="button"
-                    class="vmedia"
-                    data-embed={v.embed}
-                    aria-label={`Reproducir: ${v.titulo ?? "video"}`}
-                  >
-                    <img
-                      src={v.thumb}
-                      alt={`Miniatura de ${v.titulo ?? "video"}`}
-                      loading="lazy"
-                      data-reserva={v.thumbReserva}
-                    />
-                    <span class="vplay" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                    </span>
-                  </button>
-                ) : (
-                  <a
-                    class="vmedia"
-                    href={v.enlace}
-                    target="_blank"
-                    rel="noopener"
-                    aria-label={`Ver en ${v.fuente === "tiktok" ? "TikTok" : "Instagram"}: ${v.titulo ?? "video"}`}
-                  >
-                    <img src={v.thumb} alt={`Portada de ${v.titulo ?? "video"}`} loading="lazy" />
-                    <span class={v.fuente === "instagram" ? "vplay vplay--ig" : "vplay"} aria-hidden="true">
-                      {v.fuente === "instagram" ? (
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <rect x="3" y="3" width="18" height="18" rx="5" />
-                          <circle cx="12" cy="12" r="4" />
-                          <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-                        </svg>
-                      ) : (
+        <div class="trabajos-viewport">
+          <div class="trabajos-track">
+            {
+              sec.videos.map((v, i) => (
+                <article class="vcard" data-card data-speed={String(i % 2 === 0 ? 0.1 : 0.22)}>
+                  {v.esReal ? (
+                    v.puedeIncrustar ? (
+                      <button
+                        type="button"
+                        class="vmedia"
+                        data-embed={v.embed}
+                        aria-label={`Reproducir: ${v.titulo ?? "video"}`}
+                      >
+                        <img
+                          src={v.thumb}
+                          alt={`Miniatura de ${v.titulo ?? "video"}`}
+                          loading="lazy"
+                          data-reserva={v.thumbReserva}
+                        />
+                        <span class="vplay" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                        </span>
+                      </button>
+                    ) : (
+                      <a
+                        class="vmedia"
+                        href={v.enlace}
+                        target="_blank"
+                        rel="noopener"
+                        aria-label={`Ver en ${v.fuente === "tiktok" ? "TikTok" : "Instagram"}: ${v.titulo ?? "video"}`}
+                      >
+                        <img src={v.thumb} alt={`Portada de ${v.titulo ?? "video"}`} loading="lazy" />
+                        <span class={v.fuente === "instagram" ? "vplay vplay--ig" : "vplay"} aria-hidden="true">
+                          {v.fuente === "instagram" ? (
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <rect x="3" y="3" width="18" height="18" rx="5" />
+                              <circle cx="12" cy="12" r="4" />
+                              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                            </svg>
+                          ) : (
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                          )}
+                        </span>
+                      </a>
+                    )
+                  ) : (
+                    <div class="vmedia vmedia--soon">
+                      <span class="vplay vplay--ghost" aria-hidden="true">
                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                      )}
-                    </span>
-                  </a>
-                )
-              ) : (
-                <div class="vmedia vmedia--soon">
-                  <span class="vplay vplay--ghost" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                  </span>
-                  <span class="vsoon">Próximamente</span>
-                </div>
-              )}
-              <div class="vinfo">
-                <span class="vindex">{String(i + 1).padStart(2, "0")}</span>
-                {v.categoria && <span class="vcat">{v.categoria}</span>}
-                {v.titulo && <h3 class="vtitle">{v.titulo}</h3>}
-              </div>
-            </article>
-          ))
-        }
-      </div>
-    </div>
-  </section>
+                      </span>
+                      <span class="vsoon">Próximamente</span>
+                    </div>
+                  )}
+                  <div class="vinfo">
+                    <span class="vindex">{String(i + 1).padStart(2, "0")}</span>
+                    {v.categoria && <span class="vcat">{v.categoria}</span>}
+                    {v.titulo && <h3 class="vtitle">{v.titulo}</h3>}
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+    ))
+  }
 
   <!-- ===================== QUÉ RECIBES ===================== -->
   <section class="s-incluye">
     <div class="wrap incluye-grid">
       <div class="incluye-head">
-        <span class="eyebrow" data-reveal>02 / Qué recibes</span>
+        <span class="eyebrow" data-reveal>{numeroTras(1)} / Qué recibes</span>
         <h2 class="s-title" data-reveal>Qué incluye un video</h2>
       </div>
       <ul class="incluye-lista">
@@ -198,7 +220,7 @@ const TICKER = [
     <div class="wrap proceso-grid">
       <div class="proceso-aside">
         <div class="proceso-sticky">
-          <span class="eyebrow" data-reveal>03 / Proceso</span>
+          <span class="eyebrow" data-reveal>{numeroTras(2)} / Proceso</span>
           <h2 class="s-title" data-reveal>De la idea a la entrega</h2>
           <div class="proceso-counter" aria-hidden="true">
             <span id="proceso-num">01</span>
@@ -236,7 +258,7 @@ const TICKER = [
     <div class="wrap sobre-grid">
       <div class="sobre-aside">
         <div class="sobre-sticky">
-          <span class="eyebrow" data-reveal>04 / Sobre mí</span>
+          <span class="eyebrow" data-reveal>{numeroTras(3)} / Sobre mí</span>
           <h2 class="s-title" data-reveal>{PERFIL.sobre_titulo}</h2>
           {
             PERFIL.sobre_datos.length > 0 && (
@@ -287,7 +309,7 @@ const TICKER = [
   <!-- ===================== CONTACTO ===================== -->
   <section class="s-contacto" id="contacto">
     <div class="wrap">
-      <span class="eyebrow" data-reveal>05 / Contacto</span>
+      <span class="eyebrow" data-reveal>{numeroTras(4)} / Contacto</span>
       <h2 class="contacto-big">
         {
           CONTACTO.cierre.split(" ").map((w) => (
@@ -503,14 +525,42 @@ const TICKER = [
     }
 
     /* ---------- TRABAJOS ---------- */
-    /* Arriba respira menos que el resto de secciones a propósito: es lo que
-       hace que las tarjetas asomen bajo el hero sin tener que scrollear. */
+    /* Dos carruseles seguidos: UGC y colaboraciones pagadas. Comparten
+       maquetación; lo que los separa es el encabezado, que dice qué es cada
+       cosa, y un filete entre ambos para que no se lean como uno solo. */
     .s-trabajos {
+      padding-block: var(--section-y);
+    }
+    /* La primera respira menos arriba a propósito: es lo que hace que las
+       tarjetas asomen bajo el hero sin tener que scrollear. */
+    .s-trabajos--primera {
       padding-top: var(--sp-l);
-      padding-bottom: var(--section-y);
+    }
+    .s-trabajos + .s-trabajos {
+      border-top: 1px solid var(--line);
     }
     .s-trabajos .head {
       margin-bottom: var(--sp-l);
+    }
+    .trabajos-head {
+      display: grid;
+      gap: var(--sp-m);
+    }
+    /* El título ya no cierra el encabezado: debajo va la descripción.
+       El break-word es una red: a cuerpo de titular una palabra larga se
+       sale de la pantalla en móvil en vez de partirse. */
+    .trabajos-head .s-title {
+      margin-bottom: 0;
+      overflow-wrap: break-word;
+    }
+    /* Una línea que explica en qué se diferencia de la otra sección: sin
+       ella, dos carruseles de shorts verticales parecen lo mismo. */
+    .trabajos-desc {
+      color: var(--muted);
+      font-size: clamp(0.97rem, 1.4vw, 1.08rem);
+      line-height: 1.6;
+      font-weight: var(--w-med);
+      max-width: 52ch;
     }
     .trabajos-viewport {
       overflow-x: auto;
@@ -1012,6 +1062,16 @@ const TICKER = [
     }
 
     @media (min-width: 860px) {
+      /* Título a la izquierda y la explicación alineada a su base: en una
+         sola columna el bloque de encabezado se comía la altura del fold. */
+      /* minmax(0, …) en la columna del título: sin él, una palabra larga
+         fija el ancho mínimo de la columna y desborda la retícula. */
+      .trabajos-head {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 34ch);
+        align-items: end;
+        column-gap: clamp(2.5rem, 6vw, 5rem);
+      }
+
       .proceso-grid {
         grid-template-columns: 0.85fr 1.15fr;
       }
@@ -1206,28 +1266,34 @@ const TICKER = [
           );
         });
 
-        /* ---------- TRABAJOS: carrusel que se desliza al bajar ---------- */
+        /* ---------- TRABAJOS: carrusel que se desliza al bajar ----------
+           Hay una sección por tipo de trabajo (UGC y colaboraciones), así que
+           cada una monta su propio scrub sobre su track. Si las tarjetas caben
+           enteras no hay desbordamiento y el tween se queda en cero: la
+           sección corta no se mueve sola. */
         const mm = gsap.matchMedia();
         mm.add("(min-width: 768px)", () => {
-          const cards = document.getElementById("trabajos-track");
-          const viewport = document.querySelector<HTMLElement>(".trabajos-viewport");
-          if (!cards || !viewport) return;
-          const overflow = () => Math.max(0, cards.scrollWidth - viewport.clientWidth);
-          gsap.fromTo(
-            cards,
-            { x: 0 },
-            {
-              x: () => -overflow(),
-              ease: "none",
-              scrollTrigger: {
-                trigger: ".s-trabajos",
-                start: "top bottom",
-                end: "bottom top",
-                scrub: 0.6,
-                invalidateOnRefresh: true,
-              },
-            }
-          );
+          gsap.utils.toArray<HTMLElement>(".s-trabajos").forEach((seccion) => {
+            const viewport = seccion.querySelector<HTMLElement>(".trabajos-viewport");
+            const cards = seccion.querySelector<HTMLElement>(".trabajos-track");
+            if (!cards || !viewport) return;
+            const overflow = () => Math.max(0, cards.scrollWidth - viewport.clientWidth);
+            gsap.fromTo(
+              cards,
+              { x: 0 },
+              {
+                x: () => -overflow(),
+                ease: "none",
+                scrollTrigger: {
+                  trigger: seccion,
+                  start: "top bottom",
+                  end: "bottom top",
+                  scrub: 0.6,
+                  invalidateOnRefresh: true,
+                },
+              }
+            );
+          });
         });
 
         /* ---------- PROCESO: reglas que se dibujan y líneas que suben ---------- */

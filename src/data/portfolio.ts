@@ -48,6 +48,24 @@ export interface Video {
   thumbnail?: string;
 }
 
+/**
+ * Un carrusel de videos con su encabezado. Hay dos tipos de trabajo y no se
+ * mezclan: el UGC es material que la marca publica como suyo, la colaboración
+ * es una reseña firmada en mi perfil. Quien contrata busca una cosa o la otra,
+ * así que van en secciones separadas y cada una dice qué es.
+ */
+export interface SeccionVideos {
+  /** Ancla de la sección y del enlace del menú */
+  id: string;
+  /** Texto corto del menú de navegación */
+  menu: string;
+  /** Título de la sección */
+  titulo: string;
+  /** Una o dos frases explicando en qué se diferencia de la otra sección */
+  descripcion: string;
+  videos: Video[];
+}
+
 export interface PasoProceso {
   titulo: string;
   descripcion: string;
@@ -119,7 +137,7 @@ export const INCLUYE: string[] = [
 /* ------------------------------------------------------------------ */
 /* Trabajos                                                            */
 /* ------------------------------------------------------------------ */
-/* El carrusel se va llenando aquí. Cada objeto es una tarjeta:
+/* Cada carrusel se va llenando aquí. Cada objeto de `videos` es una tarjeta:
      - Con `fuente` + `videoId` = video real (su reproductor sale de la
        plataforma; nada se aloja en este sitio).
      - Sin ellos = slot "Próximamente" (marca de posición para ir llenando).
@@ -128,41 +146,85 @@ export const INCLUYE: string[] = [
      { fuente: "youtube", videoId: "TU_ID", titulo: "...", categoria: "Tecnología",
        formato: "YouTube Short", marca: "Nombre real", descripcion: "Qué buscaba la marca" }
 
-   Estos cuatro están en YouTube: la miniatura sale sola del ID y el video se
+   Todos están en YouTube: la miniatura sale sola del ID y el video se
    reproduce dentro de la web, así que no hay ningún archivo que mantener.
    Solo pon `thumbnail` si quieres forzar una portada distinta a la del
-   fotograma que eligió YouTube. */
+   fotograma que eligió YouTube.
 
-export const VIDEOS: Video[] = [
-  {
-    fuente: "youtube",
-    videoId: "xD-dg67e0Pg",
-    titulo: "Mouse vertical",
-    categoria: "Gadgets",
-    formato: "YouTube Short",
-  },
-  {
-    fuente: "youtube",
-    videoId: "r615VCi1nGs",
-    titulo: "Robot aspiradora Xiaomi",
-    categoria: "Tecnología",
-    formato: "YouTube Short",
-  },
-  {
-    fuente: "youtube",
-    videoId: "e-_0wLopvLs",
-    titulo: "Mic MAONO",
-    categoria: "Audio",
-    formato: "YouTube Short",
-  },
-  {
-    fuente: "youtube",
-    videoId: "bZrPE0tMHVs",
-    titulo: "Xiaomi Smart Band 10",
-    categoria: "Wearables",
-    formato: "YouTube Short",
-  },
-];
+   Un mismo producto puede salir en las dos secciones: el corte UGC y la
+   reseña larga son videos distintos con IDs distintos. */
+
+/* Va primero porque es lo que se contrata: material que la marca publica
+   como suyo. */
+export const UGC: SeccionVideos = {
+  id: "ugc",
+  menu: "UGC",
+  titulo: "Videos UGC",
+  descripcion:
+    "Cortos y al grano, pensados para que los publique la marca o los meta en pauta. Hook, producto y motivo para comprarlo.",
+  videos: [
+    {
+      fuente: "youtube",
+      videoId: "EGeCuEDAhlA",
+      titulo: "SOLAKAKA E9 Pro",
+      categoria: "Audio",
+      formato: "YouTube Short",
+    },
+    {
+      fuente: "youtube",
+      videoId: "YCSrZDNaIvU",
+      titulo: "Xiaomi Smart Band 10",
+      categoria: "Wearables",
+      formato: "YouTube Short",
+    },
+  ],
+};
+
+/* Estos van en mi perfil y llevan mi criterio: no son entregables, son
+   reseñas. Se muestran porque enseñan cómo hablo de un producto en cámara. */
+export const COLABORACIONES: SeccionVideos = {
+  id: "colaboraciones",
+  menu: "Colaboraciones",
+  /* "Colaboraciones" de título no cabe: son 14 caracteres en una sola
+     palabra y a cuerpo de titular desborda la pantalla por debajo de 430px.
+     El nombre de la sección lo lleva el eyebrow; el título dice qué son. */
+  titulo: "Reseñas pagadas",
+  descripcion:
+    "Reseñas en mi propio perfil, después de usar el producto de verdad. Cuento lo que funciona y también lo que no me convence.",
+  videos: [
+    {
+      fuente: "youtube",
+      videoId: "xD-dg67e0Pg",
+      titulo: "Mouse vertical",
+      categoria: "Gadgets",
+      formato: "YouTube Short",
+    },
+    {
+      fuente: "youtube",
+      videoId: "r615VCi1nGs",
+      titulo: "Robot aspiradora Xiaomi",
+      categoria: "Tecnología",
+      formato: "YouTube Short",
+    },
+    {
+      fuente: "youtube",
+      videoId: "e-_0wLopvLs",
+      titulo: "Mic MAONO",
+      categoria: "Audio",
+      formato: "YouTube Short",
+    },
+    {
+      fuente: "youtube",
+      videoId: "bZrPE0tMHVs",
+      titulo: "Xiaomi Smart Band 10",
+      categoria: "Wearables",
+      formato: "YouTube Short",
+    },
+  ],
+};
+
+/** Las dos secciones de video, en el orden en que salen en la página. */
+export const SECCIONES_VIDEO: SeccionVideos[] = [UGC, COLABORACIONES];
 
 /* ------------------------------------------------------------------ */
 /* Proceso                                                             */
