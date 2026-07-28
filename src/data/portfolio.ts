@@ -18,6 +18,38 @@
  */
 export type VideoFuente = "youtube" | "vimeo" | "instagram" | "tiktok";
 
+/**
+ * FORMATOS DE GUION
+ * ------------------------------------------------------------------
+ * Cómo está armado el video, que es distinto del nicho (`categoria`) y de
+ * dónde se publica. Una marca que ya sabe qué quiere rodar busca justo esto:
+ * si nunca has hecho un antes/después, no te lo va a encargar.
+ *
+ * La clave es la que se escribe en los datos; el valor es lo que se lee en
+ * la tarjeta. Al ser un objeto cerrado, una clave mal escrita rompe el build
+ * en vez de colarse a producción.
+ *
+ * Para añadir un formato nuevo: una línea aquí y ya se puede usar.
+ */
+export const FORMATOS = {
+  "problema-solucion": "Problema / solución",
+  unboxing: "Unboxing",
+  demo: "Demo de producto",
+  review: "Reseña",
+  testimonial: "Testimonial",
+  "antes-despues": "Antes y después",
+  comparativa: "Comparativa",
+  tutorial: "Tutorial",
+  lista: "Lista / top",
+  storytime: "Storytime",
+  "a-camara": "Hablando a cámara",
+  "voz-en-off": "Voz en off",
+  "dia-en-la-vida": "Día en la vida",
+  asmr: "ASMR",
+} as const;
+
+export type FormatoGuion = keyof typeof FORMATOS;
+
 export interface Video {
   /**
    * Plataforma de origen del video. Si falta (junto con videoId), la
@@ -37,8 +69,13 @@ export interface Video {
   marca?: string;
   /** Categoría / nicho: tecnología, gadgets, app, producto */
   categoria?: string;
-  /** Formato del entregable (ej: YouTube Short, Reel) */
-  formato?: string;
+  /**
+   * Cómo está armado el video. Claves de `FORMATOS`; un video puede tener
+   * más de una (un unboxing que además compara, por ejemplo). Se muestran
+   * como etiquetas en la tarjeta y se resumen en el encabezado de la
+   * sección, así que déjalo vacío antes que poner uno que no es.
+   */
+  formatos?: FormatoGuion[];
   /** Una línea sobre el objetivo que buscaba la marca con el video */
   descripcion?: string;
   /**
@@ -144,7 +181,7 @@ export const INCLUYE: string[] = [
 
    Ejemplo de video real de YouTube (descomenta y pon tu ID):
      { fuente: "youtube", videoId: "TU_ID", titulo: "...", categoria: "Tecnología",
-       formato: "YouTube Short", marca: "Nombre real", descripcion: "Qué buscaba la marca" }
+       formatos: ["problema-solucion"], marca: "Nombre real" }
 
    Todos están en YouTube: la miniatura sale sola del ID y el video se
    reproduce dentro de la web, así que no hay ningún archivo que mantener.
@@ -166,16 +203,14 @@ export const UGC: SeccionVideos = {
     {
       fuente: "youtube",
       videoId: "EGeCuEDAhlA",
-      titulo: "SOLAKAKA E9 Pro",
-      categoria: "Audio",
-      formato: "YouTube Short",
+      titulo: "Mouse vertical SOLAKAKA E9 Pro",
+      categoria: "Gadgets",
     },
     {
       fuente: "youtube",
       videoId: "YCSrZDNaIvU",
       titulo: "Xiaomi Smart Band 10",
       categoria: "Wearables",
-      formato: "YouTube Short",
     },
   ],
 };
@@ -197,28 +232,24 @@ export const COLABORACIONES: SeccionVideos = {
       videoId: "xD-dg67e0Pg",
       titulo: "Mouse vertical",
       categoria: "Gadgets",
-      formato: "YouTube Short",
     },
     {
       fuente: "youtube",
       videoId: "r615VCi1nGs",
       titulo: "Robot aspiradora Xiaomi",
       categoria: "Tecnología",
-      formato: "YouTube Short",
     },
     {
       fuente: "youtube",
       videoId: "e-_0wLopvLs",
       titulo: "Mic MAONO",
       categoria: "Audio",
-      formato: "YouTube Short",
     },
     {
       fuente: "youtube",
       videoId: "bZrPE0tMHVs",
       titulo: "Xiaomi Smart Band 10",
       categoria: "Wearables",
-      formato: "YouTube Short",
     },
   ],
 };

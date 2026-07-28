@@ -1,4 +1,5 @@
 ---
+import { FORMATOS } from "../data/portfolio";
 import type { Video } from "../data/portfolio";
 
 interface Props {
@@ -96,7 +97,7 @@ const puedeIncrustar = embed !== "";
   <div class="video-info">
     <div class="video-meta">
       {video.categoria && <span class="video-categoria">{video.categoria}</span>}
-      {video.formato && <span class="video-formato">{video.formato}</span>}
+      {video.formatos?.map((f) => <span class="video-formato">{FORMATOS[f]}</span>)}
     </div>
     {titulo && <h3 class="video-titulo">{titulo}</h3>}
     {video.marca && <p class="video-marca">{video.marca}</p>}

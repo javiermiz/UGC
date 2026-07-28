@@ -58,6 +58,39 @@ Cada una es un objeto `SeccionVideos` con `id` (ancla y enlace del menú), `menu
 Un mismo producto puede aparecer en las dos: el corte UGC y la reseña son videos
 distintos, con IDs distintos.
 
+## Formatos de guion (tags)
+
+Aparte del nicho (`categoria`: Gadgets, Wearables, Audio…), cada video puede
+llevar uno o varios **formatos**: cómo está armado el guion. Es lo que mira una
+marca que ya sabe qué quiere rodar y quiere ver si lo has hecho antes.
+
+```ts
+{
+  fuente: "youtube",
+  videoId: "EGeCuEDAhlA",
+  titulo: "Mouse vertical SOLAKAKA E9 Pro",
+  categoria: "Gadgets",
+  formatos: ["problema-solucion", "demo"],
+}
+```
+
+Las claves válidas están en `FORMATOS` (`src/data/portfolio.ts`): al ser un
+objeto cerrado, una clave mal escrita rompe el build en vez de colarse a
+producción. Hoy hay `problema-solucion`, `unboxing`, `demo`, `review`,
+`testimonial`, `antes-despues`, `comparativa`, `tutorial`, `lista`, `storytime`,
+`a-camara`, `voz-en-off`, `dia-en-la-vida` y `asmr`. Para añadir uno nuevo basta
+una línea más en ese objeto.
+
+Dónde se ven:
+
+- **En la tarjeta**: los formatos de ese video, bajo el título.
+- **En el encabezado de la sección**: el resumen "Formatos rodados", sin repetir
+  y en el orden de `FORMATOS`. Se calcula solo a partir de los videos.
+
+Si un video no tiene `formatos`, no pasa nada: no se pinta ninguna etiqueta, y
+si ningún video de la sección los tiene, el resumen entero desaparece. Mejor
+dejarlo vacío que ponerle un formato que no es.
+
 ## Videos (desde fuente externa, no alojados)
 
 Los videos no se suben a este sitio: se incrustan desde su plataforma con

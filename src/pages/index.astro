@@ -1,7 +1,7 @@
 ---
 import Immersive from "../layouts/Immersive.astro";
-import { PERFIL, SECCIONES_VIDEO, INCLUYE, PROCESO, CONTACTO } from "../data/portfolio";
-import type { Video } from "../data/portfolio";
+import { PERFIL, SECCIONES_VIDEO, FORMATOS, INCLUYE, PROCESO, CONTACTO } from "../data/portfolio";
+import type { FormatoGuion, Video } from "../data/portfolio";
 
 /* Datos de reproducción de cada video (nada se aloja aquí; se incrusta) */
 /* `oardefault` conserva la proporción original del video, que en un Short es
@@ -34,7 +34,27 @@ function prepararVideo(v: Video) {
       enlace = id;
     }
   }
-  return { ...v, esReal, thumb, thumbReserva, embed, enlace, puedeIncrustar: embed !== "" };
+  return {
+    ...v,
+    esReal,
+    thumb,
+    thumbReserva,
+    embed,
+    enlace,
+    puedeIncrustar: embed !== "",
+    etiquetas: (v.formatos ?? []).map((f) => FORMATOS[f]),
+  };
+}
+
+/* Los formatos que aparecen en una sección, sin repetir y en el orden de
+   FORMATOS. Es el resumen que va bajo el título: una marca ve de un vistazo
+   qué estructuras están rodadas sin tener que abrir video por video. */
+function formatosDeSeccion(videos: Video[]) {
+  const usados = new Set<FormatoGuion>();
+  videos.forEach((v) => v.formatos?.forEach((f) => usados.add(f)));
+  return (Object.keys(FORMATOS) as FormatoGuion[])
+    .filter((f) => usados.has(f))
+    .map((f) => FORMATOS[f]);
 }
 
 /* Las dos secciones de video se pintan con el mismo bloque de markup: cambian
@@ -44,6 +64,7 @@ function prepararVideo(v: Video) {
 const secciones = SECCIONES_VIDEO.map((s, i) => ({
   ...s,
   numero: String(i + 1).padStart(2, "0"),
+  formatos: formatosDeSeccion(s.videos),
   videos: s.videos.map(prepararVideo),
 }));
 
@@ -124,7 +145,19 @@ const TICKER = [
               <span class="eyebrow" data-reveal>{sec.numero} / {sec.menu}</span>
               <h2 class="s-title" data-reveal data-speed="0.16">{sec.titulo}</h2>
             </div>
-            <p class="trabajos-desc" data-reveal>{sec.descripcion}</p>
+            <div class="trabajos-lado">
+              <p class="trabajos-desc" data-reveal>{sec.descripcion}</p>
+              {sec.formatos.length > 0 && (
+                <div class="formatos" data-reveal>
+                  <span class="formatos-k">Formatos rodados</span>
+                  <ul class="formatos-lista">
+                    {sec.formatos.map((f) => (
+                      <li class="chip">{f}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -185,6 +218,13 @@ const TICKER = [
                     <span class="vindex">{String(i + 1).padStart(2, "0")}</span>
                     {v.categoria && <span class="vcat">{v.categoria}</span>}
                     {v.titulo && <h3 class="vtitle">{v.titulo}</h3>}
+                    {v.etiquetas.length > 0 && (
+                      <ul class="vformatos">
+                        {v.etiquetas.map((f) => (
+                          <li class="chip">{f}</li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 </article>
               ))
@@ -553,6 +593,11 @@ const TICKER = [
       margin-bottom: 0;
       overflow-wrap: break-word;
     }
+    .trabajos-lado {
+      display: grid;
+      gap: var(--sp-m);
+      justify-items: start;
+    }
     /* Una línea que explica en qué se diferencia de la otra sección: sin
        ella, dos carruseles de shorts verticales parecen lo mismo. */
     .trabajos-desc {
@@ -561,6 +606,48 @@ const TICKER = [
       line-height: 1.6;
       font-weight: var(--w-med);
       max-width: 52ch;
+    }
+
+    /* Formatos de guion: el nicho ya lo dice `.vcat`, esto dice cómo está
+       armado el video. Es lo que pregunta una marca que ya sabe qué quiere
+       rodar, así que se resume arriba y se detalla en cada tarjeta. */
+    .formatos {
+      display: grid;
+      gap: var(--sp-2xs);
+    }
+    .formatos-k {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .formatos-lista,
+    .vformatos {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-2xs);
+    }
+    .vformatos {
+      flex-basis: 100%;
+      margin-top: var(--sp-2xs);
+    }
+    .chip {
+      font-family: var(--font-mono);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      font-size: 0.66rem;
+      line-height: 1.2;
+      padding: 0.4em 0.65em;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    /* En el resumen de la sección pesan más: ahí son el argumento */
+    .formatos-lista .chip {
+      border-color: var(--accent);
+      color: var(--accent);
     }
     .trabajos-viewport {
       overflow-x: auto;
@@ -1066,9 +1153,12 @@ const TICKER = [
          sola columna el bloque de encabezado se comía la altura del fold. */
       /* minmax(0, …) en la columna del título: sin él, una palabra larga
          fija el ancho mínimo de la columna y desborda la retícula. */
+      /* Alineado por arriba: con la lista de formatos debajo de la
+         descripción, un `align-items: end` empujaba el título media pantalla
+         hacia abajo para cuadrar las bases. */
       .trabajos-head {
         grid-template-columns: minmax(0, 1fr) minmax(0, 34ch);
-        align-items: end;
+        align-items: start;
         column-gap: clamp(2.5rem, 6vw, 5rem);
       }
 
