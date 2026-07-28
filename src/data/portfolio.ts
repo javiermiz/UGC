@@ -87,9 +87,9 @@ export interface Video {
 
 /**
  * Un carrusel de videos con su encabezado. Hay dos tipos de trabajo y no se
- * mezclan: el UGC es material que la marca publica como suyo, la colaboración
- * es una reseña firmada en mi perfil. Quien contrata busca una cosa o la otra,
- * así que van en secciones separadas y cada una dice qué es.
+ * mezclan: el UGC es material que la marca publica como suyo, la reseña va
+ * firmada en mi perfil. Quien contrata busca una cosa o la otra, así que van
+ * en secciones separadas y cada una dice qué es, incluido si está pagada.
  */
 export interface SeccionVideos {
   /** Ancla de la sección y del enlace del menú */
@@ -100,6 +100,19 @@ export interface SeccionVideos {
   titulo: string;
   /** Una o dos frases explicando en qué se diferencia de la otra sección */
   descripcion: string;
+  /**
+   * Aviso corto para cuando los videos de la sección no son trabajo de
+   * cliente. Se pinta destacado justo debajo de la descripción.
+   *
+   * Va aquí y no dentro de `descripcion` porque no es lo mismo describir el
+   * trabajo que declarar de dónde viene: en cuanto haya encargos reales en
+   * una sección, se borra esta línea y el resto del texto sigue valiendo.
+   *
+   * Decirlo cuesta menos que esconderlo: una marca que descubre sola que el
+   * "cliente" no existía no vuelve a escribir, y el trabajo de muestra es
+   * normal y bien visto cuando va etiquetado.
+   */
+  aviso?: string;
   videos: Video[];
 }
 
@@ -191,6 +204,13 @@ export const INCLUYE: string[] = [
    Un mismo producto puede salir en las dos secciones: el corte UGC y la
    reseña larga son videos distintos con IDs distintos. */
 
+/* Hoy todo el portfolio es trabajo de muestra: productos comprados por mí,
+   sin encargo detrás. Se declara en las dos secciones con el mismo texto,
+   así que vive en una sola constante: cuando entre el primer encargo real,
+   se quita el `aviso` de esa sección y ya. */
+const AVISO_MUESTRA =
+  "Trabajo de muestra: productos que compré y uso yo, sin encargo de marca detrás. Enseñan cómo trabajo, no una campaña contratada.";
+
 /* Va primero porque es lo que se contrata: material que la marca publica
    como suyo. */
 export const UGC: SeccionVideos = {
@@ -198,7 +218,8 @@ export const UGC: SeccionVideos = {
   menu: "UGC",
   titulo: "Videos UGC",
   descripcion:
-    "Cortos y al grano, pensados para que los publique la marca o los meta en pauta. Hook, producto y motivo para comprarlo.",
+    "Cortos y al grano, del tipo que la marca publica como suyo o mete en pauta. Hook, producto y motivo para comprarlo.",
+  aviso: AVISO_MUESTRA,
   videos: [
     {
       fuente: "youtube",
@@ -216,16 +237,18 @@ export const UGC: SeccionVideos = {
 };
 
 /* Estos van en mi perfil y llevan mi criterio: no son entregables, son
-   reseñas. Se muestran porque enseñan cómo hablo de un producto en cámara. */
-export const COLABORACIONES: SeccionVideos = {
-  id: "colaboraciones",
-  menu: "Colaboraciones",
-  /* "Colaboraciones" de título no cabe: son 14 caracteres en una sola
-     palabra y a cuerpo de titular desborda la pantalla por debajo de 430px.
-     El nombre de la sección lo lleva el eyebrow; el título dice qué son. */
-  titulo: "Reseñas pagadas",
+   reseñas. Se muestran porque enseñan cómo hablo de un producto en cámara.
+
+   IMPORTANTE: ninguna está pagada, y el `aviso` lo dice. Son el ejemplo de
+   cómo sería la colaboración. Cuando haya una pagada de verdad, se quita el
+   aviso de esta sección. */
+export const RESENAS: SeccionVideos = {
+  id: "resenas",
+  menu: "Reseñas",
+  titulo: "Reseñas en mi perfil",
   descripcion:
-    "Reseñas en mi propio perfil, después de usar el producto de verdad. Cuento lo que funciona y también lo que no me convence.",
+    "Contadas como en una colaboración pagada, después de usar el producto de verdad: lo bueno y también lo que no convence.",
+  aviso: AVISO_MUESTRA,
   videos: [
     {
       fuente: "youtube",
@@ -251,11 +274,26 @@ export const COLABORACIONES: SeccionVideos = {
       titulo: "Xiaomi Smart Band 10",
       categoria: "Wearables",
     },
+    {
+      fuente: "youtube",
+      videoId: "JP8NGN0pj1I",
+      titulo: "Logitech G502 Lightspeed",
+      categoria: "Gadgets",
+    },
+    /* El único de software del portfolio. Va etiquetado como tal a
+       propósito: es la prueba de lo que promete el recuadro "Si vendes
+       software" de la sección Sobre mí. */
+    {
+      fuente: "youtube",
+      videoId: "gm6-T64sp_k",
+      titulo: "Samsung DeX",
+      categoria: "Software",
+    },
   ],
 };
 
 /** Las dos secciones de video, en el orden en que salen en la página. */
-export const SECCIONES_VIDEO: SeccionVideos[] = [UGC, COLABORACIONES];
+export const SECCIONES_VIDEO: SeccionVideos[] = [UGC, RESENAS];
 
 /* ------------------------------------------------------------------ */
 /* Proceso                                                             */
