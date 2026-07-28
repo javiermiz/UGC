@@ -100,19 +100,6 @@ export interface SeccionVideos {
   titulo: string;
   /** Una o dos frases explicando en qué se diferencia de la otra sección */
   descripcion: string;
-  /**
-   * Aviso corto para cuando los videos de la sección no son trabajo de
-   * cliente. Se pinta destacado justo debajo de la descripción.
-   *
-   * Va aquí y no dentro de `descripcion` porque no es lo mismo describir el
-   * trabajo que declarar de dónde viene: en cuanto haya encargos reales en
-   * una sección, se borra esta línea y el resto del texto sigue valiendo.
-   *
-   * Decirlo cuesta menos que esconderlo: una marca que descubre sola que el
-   * "cliente" no existía no vuelve a escribir, y el trabajo de muestra es
-   * normal y bien visto cuando va etiquetado.
-   */
-  aviso?: string;
   videos: Video[];
 }
 
@@ -204,13 +191,6 @@ export const INCLUYE: string[] = [
    Un mismo producto puede salir en las dos secciones: el corte UGC y la
    reseña larga son videos distintos con IDs distintos. */
 
-/* Hoy todo el portfolio es trabajo de muestra: productos comprados por mí,
-   sin encargo detrás. Se declara en las dos secciones con el mismo texto,
-   así que vive en una sola constante: cuando entre el primer encargo real,
-   se quita el `aviso` de esa sección y ya. */
-const AVISO_MUESTRA =
-  "Trabajo de muestra: productos que compré y uso yo, sin encargo de marca detrás. Enseñan cómo trabajo, no una campaña contratada.";
-
 /* Va primero porque es lo que se contrata: material que la marca publica
    como suyo. */
 export const UGC: SeccionVideos = {
@@ -219,7 +199,6 @@ export const UGC: SeccionVideos = {
   titulo: "Videos UGC",
   descripcion:
     "Cortos y al grano, del tipo que la marca publica como suyo o mete en pauta. Hook, producto y motivo para comprarlo.",
-  aviso: AVISO_MUESTRA,
   videos: [
     {
       fuente: "youtube",
@@ -239,16 +218,15 @@ export const UGC: SeccionVideos = {
 /* Estos van en mi perfil y llevan mi criterio: no son entregables, son
    reseñas. Se muestran porque enseñan cómo hablo de un producto en cámara.
 
-   IMPORTANTE: ninguna está pagada, y el `aviso` lo dice. Son el ejemplo de
-   cómo sería la colaboración. Cuando haya una pagada de verdad, se quita el
-   aviso de esta sección. */
+   Ninguna está pagada: son el ejemplo de cómo sería la colaboración. Por eso
+   el título dice dónde viven y la descripción dice "como en una colaboración
+   pagada", sin afirmar que ya la hubo. */
 export const RESENAS: SeccionVideos = {
   id: "resenas",
   menu: "Reseñas",
   titulo: "Reseñas en mi perfil",
   descripcion:
     "Contadas como en una colaboración pagada, después de usar el producto de verdad: lo bueno y también lo que no convence.",
-  aviso: AVISO_MUESTRA,
   videos: [
     {
       fuente: "youtube",

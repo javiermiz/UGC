@@ -147,12 +147,6 @@ const TICKER = [
             </div>
             <div class="trabajos-lado">
               <p class="trabajos-desc" data-reveal>{sec.descripcion}</p>
-              {sec.aviso && (
-                <p class="trabajos-aviso" data-reveal>
-                  <i class="aviso-marca" aria-hidden="true" />
-                  {sec.aviso}
-                </p>
-              )}
               {sec.formatos.length > 0 && (
                 <div class="formatos" data-reveal>
                   <span class="formatos-k">Formatos rodados</span>
@@ -612,28 +606,6 @@ const TICKER = [
       line-height: 1.6;
       font-weight: var(--w-med);
       max-width: 52ch;
-    }
-
-    /* Declaración de que la sección es trabajo de muestra. Se lee, pero no
-       compite con el titular: si esto gritara más que el trabajo, la página
-       hablaría de lo que falta en vez de lo que hay. */
-    .trabajos-aviso {
-      display: flex;
-      gap: var(--sp-xs);
-      max-width: 52ch;
-      padding-left: var(--sp-s);
-      border-left: 2px solid var(--accent-2);
-      font-size: 0.85rem;
-      line-height: 1.5;
-      color: var(--muted);
-    }
-    .aviso-marca {
-      flex: none;
-      width: 7px;
-      height: 7px;
-      margin-top: 0.45em;
-      border-radius: 50%;
-      background: var(--accent-2);
     }
 
     /* Formatos de guion: el nicho ya lo dice `.vcat`, esto dice cómo está

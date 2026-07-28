@@ -22,7 +22,7 @@ Casi todo vive en un solo archivo: **`src/data/portfolio.ts`**.
 | --- | --- |
 | Nombre, rol, titular, ciudad, texto de "Sobre mí" | `PERFIL` |
 | Videos UGC (entregables para la marca) | `UGC` |
-| Reseñas de muestra (en mi perfil, sin pagar) | `RESENAS` |
+| Reseñas en mi perfil | `RESENAS` |
 | Paquetes y precios | `SERVICIOS` |
 | Pasos de "Cómo trabajo" | `PROCESO` |
 | Email y redes | `CONTACTO` |
@@ -51,27 +51,9 @@ Los trabajos van en dos carruseles separados porque no son lo mismo:
   lo bueno y lo malo.
 
 Cada una es un objeto `SeccionVideos` con `id` (ancla y enlace del menú), `menu`,
-`titulo`, `descripcion`, un `aviso` opcional y su array `videos`. Salen en la
-página en el orden de `SECCIONES_VIDEO`, que también alimenta el menú y la
-numeración de las secciones (`01 / …`, `02 / …`): al añadir o quitar una, el
-resto se renumera solo.
-
-### Trabajo de muestra: el campo `aviso`
-
-Ahora mismo **ningún video del portfolio es un encargo pagado**: son productos
-comprados y usados por mí. Las dos secciones lo declaran con el campo `aviso`,
-que se pinta destacado bajo la descripción y sale de la constante
-`AVISO_MUESTRA` para que el texto sea el mismo en las dos.
-
-Decirlo cuesta menos que esconderlo: el trabajo de muestra es normal y está bien
-visto cuando va etiquetado, y una marca que descubre sola que el "cliente" no
-existía no vuelve a escribir.
-
-**Cuando entre el primer encargo real**: quita el `aviso` de esa sección (una
-línea) y revisa su `descripcion`. El aviso desaparece solo si el campo no está.
-
-Un mismo producto puede aparecer en las dos: el corte UGC y la reseña son videos
-distintos, con IDs distintos.
+`titulo`, `descripcion` y su array `videos`. Salen en la página en el orden de
+`SECCIONES_VIDEO`, que también alimenta el menú y la numeración de las secciones
+(`01 / …`, `02 / …`): al añadir o quitar una, el resto se renumera solo.
 
 ## Formatos de guion (tags)
 
