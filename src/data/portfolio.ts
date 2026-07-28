@@ -235,7 +235,7 @@ export const COLABORACIONES: SeccionVideos = {
     },
     {
       fuente: "youtube",
-      videoId: "r615VCi1nGs",
+      videoId: "BvcDmpTDxc8",
       titulo: "Robot aspiradora Xiaomi",
       categoria: "Tecnología",
     },
