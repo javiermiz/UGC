@@ -21,8 +21,8 @@ Casi todo vive en un solo archivo: **`src/data/portfolio.ts`**.
 | Qué cambiar | Dónde |
 | --- | --- |
 | Nombre, rol, titular, ciudad, texto de "Sobre mí" | `PERFIL` |
-| Videos UGC (entregables para la marca) | `UGC` |
-| Reseñas en mi perfil | `RESENAS` |
+| Videos para la marca (los publica ella) | `UGC` |
+| Menciones en mi perfil | `MENCIONES` |
 | Paquetes y precios | `SERVICIOS` |
 | Pasos de "Cómo trabajo" | `PROCESO` |
 | Email y redes | `CONTACTO` |
@@ -45,10 +45,14 @@ La estructura sigue el patrón **Layout, Section, Container, Elements**:
 
 Los trabajos van en dos carruseles separados porque no son lo mismo:
 
-- **`UGC`**: el formato que entregas a la marca para que lo publique como suyo o
-  lo meta en pauta. Cortos y al grano.
-- **`RESENAS`**: reseñas en el perfil propio, después de probar el producto, con
-  lo bueno y lo malo.
+- **`UGC`**: "Videos para la marca". Se los entregas y los publica ella, en su
+  cuenta o en pauta, sin tu nombre encima.
+- **`MENCIONES`**: "Menciones en mi perfil". Salen en tu cuenta y las ve tu
+  audiencia, con tu criterio.
+
+Los títulos nombran el entregable a propósito: "UGC" y "colaboración" los
+distingue quien ya está en el sector, pero un cliente que llega frío no. Lo que
+de verdad las separa es **quién publica el video y ante qué audiencia sale**.
 
 Cada una es un objeto `SeccionVideos` con `id` (ancla y enlace del menú), `menu`,
 `titulo`, `descripcion` y su array `videos`. Salen en la página en el orden de
@@ -93,7 +97,7 @@ dejarlo vacío que ponerle un formato que no es.
 Los videos no se suben a este sitio: se incrustan desde su plataforma con
 `fuente` (`youtube`, `vimeo`, `instagram` o `tiktok`) más `videoId`.
 
-1. Añade un objeto al array `videos` de `UGC` o de `RESENAS` dentro de
+1. Añade un objeto al array `videos` de `UGC` o de `MENCIONES` dentro de
    `src/data/portfolio.ts`, con `fuente` y `videoId` reales. Para YouTube basta
    el ID del video; para Vimeo el ID numérico; para Instagram o TikTok, la URL
    completa de la publicación.
@@ -139,8 +143,11 @@ public/
 
 ## Publicar
 
+El sitio vive en **`https://ugc.javiermiz.com`**, y ese dominio está en `site`
+dentro de `astro.config.mjs`. De ahí salen el `<link rel="canonical">` y las
+URLs de Open Graph: si el dominio cambia, se cambia ahí y en ningún sitio más.
+Apuntarlo a otro dominio hace que Google indexe ese otro.
+
 - **Vercel / Netlify**: importa el repo, build `pnpm build`, output `dist`.
   El deploy de producción (rama de producción) es público; los previews de
   ramas pueden quedar protegidos por login según la configuración del proyecto.
-- **GitHub Pages como proyecto** (`javiermiz.github.io/UGC`): descomenta
-  `base: "/UGC"` en `astro.config.mjs` y añade un workflow con `withastro/action`.

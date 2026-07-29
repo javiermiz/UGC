@@ -87,9 +87,9 @@ export interface Video {
 
 /**
  * Un carrusel de videos con su encabezado. Hay dos tipos de trabajo y no se
- * mezclan: el UGC es material que la marca publica como suyo, la reseña va
- * firmada en mi perfil. Quien contrata busca una cosa o la otra, así que van
- * en secciones separadas y cada una dice qué es, incluido si está pagada.
+ * mezclan: unos los publica la marca en su cuenta, los otros salen en la mía.
+ * Quien contrata busca una cosa o la otra, así que van en secciones separadas
+ * y cada una se nombra por el entregable, no por la jerga del sector.
  */
 export interface SeccionVideos {
   /** Ancla de la sección y del enlace del menú */
@@ -188,45 +188,53 @@ export const INCLUYE: string[] = [
    Solo pon `thumbnail` si quieres forzar una portada distinta a la del
    fotograma que eligió YouTube.
 
-   Un mismo producto puede salir en las dos secciones: el corte UGC y la
-   reseña larga son videos distintos con IDs distintos. */
+   Un mismo producto puede salir en las dos secciones: el corte para la marca
+   y la mención en mi perfil son videos distintos con IDs distintos. */
 
-/* Va primero porque es lo que se contrata: material que la marca publica
-   como suyo. */
+/* Las dos secciones se nombran por el entregable, no por la jerga: "UGC" y
+   "colaboración" los distingue quien ya está en esto, pero el cliente que
+   llega frío no tiene por qué. Lo que de verdad las separa es quién publica
+   el video y ante qué audiencia sale, así que eso es lo que dicen el título
+   y la descripción. */
+
+/* Va primero porque es lo que se contrata. */
 export const UGC: SeccionVideos = {
-  id: "ugc",
-  menu: "UGC",
-  titulo: "Videos UGC",
+  id: "para-marcas",
+  /* Corto a propósito: el menú es lo único del sitio con el ancho contado,
+     y el título de la sección ya dice "Videos para la marca". */
+  menu: "Marcas",
+  titulo: "Videos para la marca",
   descripcion:
-    "Cortos y al grano, del tipo que la marca publica como suyo o mete en pauta. Hook, producto y motivo para comprarlo.",
+    "Los publicas tú, en tu cuenta o en pauta, sin mi nombre encima. Cortos y al grano: hook, producto y motivo para comprarlo.",
   videos: [
     {
       fuente: "youtube",
       videoId: "EGeCuEDAhlA",
       titulo: "Mouse vertical SOLAKAKA E9 Pro",
       categoria: "Gadgets",
+      formatos: ["problema-solucion"],
     },
     {
       fuente: "youtube",
       videoId: "YCSrZDNaIvU",
       titulo: "Xiaomi Smart Band 10",
       categoria: "Wearables",
+      formatos: ["problema-solucion"],
     },
   ],
 };
 
-/* Estos van en mi perfil y llevan mi criterio: no son entregables, son
-   reseñas. Se muestran porque enseñan cómo hablo de un producto en cámara.
+/* Estos van en mi cuenta y llevan mi criterio: no son entregables, son
+   menciones. Se muestran porque enseñan cómo hablo de un producto en cámara.
 
-   Ninguna está pagada: son el ejemplo de cómo sería la colaboración. Por eso
-   el título dice dónde viven y la descripción dice "como en una colaboración
-   pagada", sin afirmar que ya la hubo. */
-export const RESENAS: SeccionVideos = {
-  id: "resenas",
-  menu: "Reseñas",
-  titulo: "Reseñas en mi perfil",
+   Ninguna está pagada: son el ejemplo de cómo sería. Por eso ni el título ni
+   la descripción dicen que ya hubo cliente. */
+export const MENCIONES: SeccionVideos = {
+  id: "mi-perfil",
+  menu: "Mi perfil",
+  titulo: "Menciones en mi perfil",
   descripcion:
-    "Contadas como en una colaboración pagada, después de usar el producto de verdad: lo bueno y también lo que no convence.",
+    "Salen en mi cuenta y las ve mi audiencia. Pruebo el producto y cuento lo que funciona y también lo que no convence.",
   videos: [
     {
       fuente: "youtube",
@@ -271,7 +279,7 @@ export const RESENAS: SeccionVideos = {
 };
 
 /** Las dos secciones de video, en el orden en que salen en la página. */
-export const SECCIONES_VIDEO: SeccionVideos[] = [UGC, RESENAS];
+export const SECCIONES_VIDEO: SeccionVideos[] = [UGC, MENCIONES];
 
 /* ------------------------------------------------------------------ */
 /* Proceso                                                             */
