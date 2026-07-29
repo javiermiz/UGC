@@ -164,7 +164,7 @@ export const PERFIL = {
 export const INCLUYE: string[] = [
   "Video vertical 9:16 para Reels, TikTok o Shorts, con la duración que pida el producto: desde 15 segundos hasta más de un minuto.",
   "Guion y hook acordados antes de grabar. Nada se graba sin tu visto bueno.",
-  "Subtítulos y música libre de derechos.",
+  "Subtítulos incrustados en el video.",
   "Una ronda de cambios sobre el video montado.",
   "Entrega en 5 a 7 días hábiles desde que apruebas el guion.",
   "Archivos finales y los crudos si los quieres.",

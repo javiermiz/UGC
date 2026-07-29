@@ -82,15 +82,11 @@ producción. Hoy hay `problema-solucion`, `unboxing`, `demo`, `review`,
 `a-camara`, `voz-en-off`, `dia-en-la-vida` y `asmr`. Para añadir uno nuevo basta
 una línea más en ese objeto.
 
-Dónde se ven:
+Se ven como etiquetas en la tarjeta del video, bajo el título, y solo ahí: un
+resumen por sección crecería sin techo según se llene el portfolio.
 
-- **En la tarjeta**: los formatos de ese video, bajo el título.
-- **En el encabezado de la sección**: el resumen "Formatos rodados", sin repetir
-  y en el orden de `FORMATOS`. Se calcula solo a partir de los videos.
-
-Si un video no tiene `formatos`, no pasa nada: no se pinta ninguna etiqueta, y
-si ningún video de la sección los tiene, el resumen entero desaparece. Mejor
-dejarlo vacío que ponerle un formato que no es.
+Si un video no tiene `formatos`, no pasa nada: no se pinta ninguna etiqueta.
+Mejor dejarlo vacío que ponerle un formato que no es.
 
 ## Videos (desde fuente externa, no alojados)
 
