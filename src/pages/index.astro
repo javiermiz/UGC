@@ -612,14 +612,36 @@ const TICKER = [
       color: var(--accent);
       white-space: nowrap;
     }
+    /* La barra se ve a propósito: al arrastrarse a mano, es lo único que
+       avisa de que detrás de la última tarjeta visible siguen habiendo
+       videos. En táctil se oculta, porque ahí deslizar ya es el gesto
+       natural y la barra solo roba altura. */
     .trabajos-viewport {
       overflow-x: auto;
       overflow-y: hidden;
-      scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: var(--muted) transparent;
     }
     .trabajos-viewport::-webkit-scrollbar {
-      display: none;
+      height: 6px;
+    }
+    .trabajos-viewport::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .trabajos-viewport::-webkit-scrollbar-thumb {
+      background: var(--line);
+    }
+    .trabajos-viewport:hover::-webkit-scrollbar-thumb {
+      background: var(--muted);
+    }
+    @media (hover: none) {
+      .trabajos-viewport {
+        scrollbar-width: none;
+      }
+      .trabajos-viewport::-webkit-scrollbar {
+        display: none;
+      }
     }
     .trabajos-track {
       display: flex;
@@ -1194,19 +1216,14 @@ const TICKER = [
       }
     }
 
-    /* Escritorio: el carrusel se desliza con el scroll (GSAP scrub) */
     @media (min-width: 768px) {
-      .trabajos-viewport {
-        overflow: hidden;
-      }
       .vcard {
         width: 320px;
       }
     }
 
-    body.no-anim .trabajos-viewport {
-      overflow-x: auto !important;
-    }
+    /* (El carrusel ya no necesita excepción con `no-anim`: se arrastra a
+       mano en todos los casos.) */
     body.no-anim .paso-rule {
       transform: none !important;
     }
@@ -1339,35 +1356,11 @@ const TICKER = [
           );
         });
 
-        /* ---------- TRABAJOS: carrusel que se desliza al bajar ----------
-           Hay una sección por tipo de trabajo (UGC y colaboraciones), así que
-           cada una monta su propio scrub sobre su track. Si las tarjetas caben
-           enteras no hay desbordamiento y el tween se queda en cero: la
-           sección corta no se mueve sola. */
-        const mm = gsap.matchMedia();
-        mm.add("(min-width: 768px)", () => {
-          gsap.utils.toArray<HTMLElement>(".s-trabajos").forEach((seccion) => {
-            const viewport = seccion.querySelector<HTMLElement>(".trabajos-viewport");
-            const cards = seccion.querySelector<HTMLElement>(".trabajos-track");
-            if (!cards || !viewport) return;
-            const overflow = () => Math.max(0, cards.scrollWidth - viewport.clientWidth);
-            gsap.fromTo(
-              cards,
-              { x: 0 },
-              {
-                x: () => -overflow(),
-                ease: "none",
-                scrollTrigger: {
-                  trigger: seccion,
-                  start: "top bottom",
-                  end: "bottom top",
-                  scrub: 0.6,
-                  invalidateOnRefresh: true,
-                },
-              }
-            );
-          });
-        });
+        /* Los carruseles de trabajos no se animan: se arrastran a mano. El
+           scrub que los desplazaba al bajar la página dejaba la posición del
+           carrusel atada al punto de scroll, así que la primera tarjeta —la
+           del video de más alcance— quedaba fuera de pantalla justo cuando
+           la sección estaba centrada y a la vista. */
 
         /* ---------- PROCESO: reglas que se dibujan y líneas que suben ---------- */
         const pasos = gsap.utils.toArray<HTMLElement>(".paso");
