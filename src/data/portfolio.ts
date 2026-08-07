@@ -83,6 +83,15 @@ export interface Video {
    * (se genera sola desde el ID); obligatoria para instagram / tiktok.
    */
   thumbnail?: string;
+  /**
+   * Vistas del video, ya formateadas ("1.5M", "571K"). Se pintan sobre la
+   * miniatura como prueba de alcance.
+   *
+   * Es un dato manual y se queda congelado: no hay API detrás. Ponlo solo
+   * donde el número hable por sí solo — si todas las tarjetas llevan uno,
+   * las grandes dejan de destacar. Redondea a la baja antes que inflar.
+   */
+  vistas?: string;
 }
 
 /**
@@ -183,10 +192,14 @@ export const INCLUYE: string[] = [
      { fuente: "youtube", videoId: "TU_ID", titulo: "...", categoria: "Tecnología",
        formatos: ["problema-solucion"], marca: "Nombre real" }
 
-   Todos están en YouTube: la miniatura sale sola del ID y el video se
-   reproduce dentro de la web, así que no hay ningún archivo que mantener.
-   Solo pon `thumbnail` si quieres forzar una portada distinta a la del
-   fotograma que eligió YouTube.
+   Los de YouTube no dan trabajo: la miniatura sale sola del ID y el video se
+   reproduce dentro de la web. Solo pon `thumbnail` si quieres forzar una
+   portada distinta a la del fotograma que eligió YouTube.
+
+   Los de TikTok van así cuando el alcance está ahí y no en YouTube: se
+   abren en una pestaña nueva y necesitan su miniatura en /public/thumbnails.
+   Para generarla: añade una línea `slug|url` en scripts/videos.txt y corre
+   ./scripts/generar-miniaturas.sh, que la deja recortada a 9:16.
 
    Un mismo producto puede salir en las dos secciones: el corte para la marca
    y la mención en mi perfil son videos distintos con IDs distintos. */
@@ -235,7 +248,48 @@ export const MENCIONES: SeccionVideos = {
   titulo: "Menciones en mi perfil",
   descripcion:
     "Salen en mi cuenta y las ve mi audiencia. Pruebo el producto y cuento lo que funciona y también lo que no convence.",
+  /* Ordenados de más a menos vistas. El carrusel es una fila horizontal y
+     casi nadie la arrastra hasta el final: lo que va detrás del cuarto o
+     quinto puesto no lo ve nadie, así que ese sitio es para lo que menos
+     rindió. Al añadir un video, colócalo por vistas, no al final.
+     Vistas comprobadas el 2026-08-06. */
   videos: [
+    {
+      fuente: "tiktok",
+      videoId: "https://www.tiktok.com/@javiermiz_/video/7615327236215917845",
+      titulo: "MacBook Neo",
+      categoria: "Tecnología",
+      vistas: "1.5M",
+      thumbnail: "/thumbnails/macbook-neo.jpg",
+    },
+    /* El único de software del portfolio. Va etiquetado como tal a
+       propósito: es la prueba de lo que promete el recuadro "Si vendes
+       software" de la sección Sobre mí. */
+    {
+      fuente: "tiktok",
+      videoId: "https://www.tiktok.com/@javiermiz_/video/7517024162301447444",
+      titulo: "Samsung DeX",
+      categoria: "Software",
+      vistas: "571K",
+      thumbnail: "/thumbnails/samsung-dex.jpg",
+    },
+    {
+      fuente: "tiktok",
+      videoId: "https://www.tiktok.com/@javiermiz_/video/7515454068626640148",
+      titulo: "Bazzite: PC como consola",
+      categoria: "Gaming",
+      vistas: "63K",
+      thumbnail: "/thumbnails/bazzite-consola.jpg",
+    },
+    /* De aquí para abajo, los de YouTube: 22K el primero y por debajo de
+       1.5K el resto, así que van sin `vistas`. Al lado de 1.5M el número
+       resta en vez de sumar; el video se defiende solo. */
+    {
+      fuente: "youtube",
+      videoId: "JP8NGN0pj1I",
+      titulo: "Logitech G502 Lightspeed",
+      categoria: "Gadgets",
+    },
     {
       fuente: "youtube",
       videoId: "xD-dg67e0Pg",
@@ -259,21 +313,6 @@ export const MENCIONES: SeccionVideos = {
       videoId: "bZrPE0tMHVs",
       titulo: "Xiaomi Smart Band 10",
       categoria: "Wearables",
-    },
-    {
-      fuente: "youtube",
-      videoId: "JP8NGN0pj1I",
-      titulo: "Logitech G502 Lightspeed",
-      categoria: "Gadgets",
-    },
-    /* El único de software del portfolio. Va etiquetado como tal a
-       propósito: es la prueba de lo que promete el recuadro "Si vendes
-       software" de la sección Sobre mí. */
-    {
-      fuente: "youtube",
-      videoId: "gm6-T64sp_k",
-      titulo: "Samsung DeX",
-      categoria: "Software",
     },
   ],
 };

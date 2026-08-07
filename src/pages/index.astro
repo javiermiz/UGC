@@ -30,6 +30,14 @@ function prepararVideo(v: Video) {
     } else if (v.fuente === "vimeo") {
       embed = `https://player.vimeo.com/video/${id}?autoplay=1`;
       enlace = `https://vimeo.com/${id}`;
+    } else if (v.fuente === "tiktok") {
+      /* El embed oficial de TikTok es un iframe normal: no hace falta su
+         embed.js, que era el motivo por el que estos videos salían fuera.
+         A cambio trae su propia interfaz (autor, caption, contadores y una
+         barra promocional), así que no cabe en 9:16 — de ahí la clase
+         aparte. */
+      embed = `https://www.tiktok.com/embed/v2/${id.split("/").pop()}`;
+      enlace = id;
     } else {
       enlace = id;
     }
@@ -148,6 +156,7 @@ const TICKER = [
                         type="button"
                         class="vmedia"
                         data-embed={v.embed}
+                        data-embed-fuente={v.fuente}
                         aria-label={`Reproducir: ${v.titulo ?? "video"}`}
                       >
                         <img
@@ -156,6 +165,7 @@ const TICKER = [
                           loading="lazy"
                           data-reserva={v.thumbReserva}
                         />
+                        {v.vistas && <span class="vviews">{v.vistas} vistas</span>}
                         <span class="vplay" aria-hidden="true">
                           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
                         </span>
@@ -169,6 +179,7 @@ const TICKER = [
                         aria-label={`Ver en ${v.fuente === "tiktok" ? "TikTok" : "Instagram"}: ${v.titulo ?? "video"}`}
                       >
                         <img src={v.thumb} alt={`Portada de ${v.titulo ?? "video"}`} loading="lazy" />
+                        {v.vistas && <span class="vviews">{v.vistas} vistas</span>}
                         <span class={v.fuente === "instagram" ? "vplay vplay--ig" : "vplay"} aria-hidden="true">
                           {v.fuente === "instagram" ? (
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -685,6 +696,22 @@ const TICKER = [
       height: 19px;
       margin-left: 0;
     }
+    /* Las vistas van sobre la miniatura, no en la ficha de abajo: es el dato
+       que decide si merece la pena mirar el video, y ahí se lee antes que el
+       título. Fondo sólido porque debajo puede haber cualquier fotograma. */
+    .vviews {
+      position: absolute;
+      top: 0.9rem;
+      left: 0.9rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      font-size: 0.68rem;
+      line-height: 1;
+      padding: 0.45em 0.6em;
+      background: var(--fg);
+      color: var(--bg);
+    }
     .vplay--ghost {
       position: static;
       background: transparent;
@@ -704,6 +731,13 @@ const TICKER = [
       border: 1px solid var(--line);
       display: block;
       background: #000;
+    }
+    /* El embed de TikTok apila video + barra promocional + autor y caption.
+       Medido sobre la tarjeta: le hace falta este alto para que no le salga
+       barra de scroll interna. */
+    :global(.vmedia-iframe--tiktok) {
+      aspect-ratio: 9 / 20;
+      background: var(--bg);
     }
     .vinfo {
       padding-top: var(--sp-s);
@@ -1455,6 +1489,11 @@ const TICKER = [
           const iframe = document.createElement("iframe");
           iframe.src = src;
           iframe.className = "vmedia-iframe";
+          /* El reproductor de TikTok no cabe en 9:16: lleva su propia
+             interfaz debajo del video. */
+          if (media.dataset.embedFuente === "tiktok") {
+            iframe.classList.add("vmedia-iframe--tiktok");
+          }
           iframe.setAttribute("allow", "autoplay; encrypted-media; picture-in-picture");
           iframe.setAttribute("allowfullscreen", "");
           iframe.setAttribute("title", media.getAttribute("aria-label") ?? "Video");
