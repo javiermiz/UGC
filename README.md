@@ -97,11 +97,40 @@ Los videos no se suben a este sitio: se incrustan desde su plataforma con
    `src/data/portfolio.ts`, con `fuente` y `videoId` reales. Para YouTube basta
    el ID del video; para Vimeo el ID numérico; para Instagram o TikTok, la URL
    completa de la publicación.
-2. La miniatura de YouTube se genera sola desde el ID. Para las demás fuentes,
-   exporta una miniatura vertical **9:16** a `public/thumbnails/` y ponla en
-   `thumbnail`.
+2. La miniatura de YouTube se genera sola desde el ID. Para TikTok la baja
+   `pnpm thumbs` (ver abajo). Para Vimeo o Instagram, exporta una miniatura
+   vertical **9:16** a `public/thumbnails/` y ponla en `thumbnail`.
 3. Al hacer clic, YouTube y Vimeo se reproducen en línea; Instagram y TikTok
    abren la publicación original en otra pestaña.
+
+### Miniaturas de TikTok (`pnpm thumbs`)
+
+TikTok no genera la miniatura desde el ID, así que hay que tenerla en local.
+En vez de exportar el fotograma a mano, `scripts/thumbnails.mjs` la baja del
+oEmbed público de TikTok:
+
+```bash
+pnpm thumbs           # descarga las que falten
+pnpm thumbs --force   # vuelve a bajarlas todas
+```
+
+El script lee las URLs de TikTok directamente de `portfolio.ts` y guarda cada
+imagen como `public/thumbnails/tiktok-<id>.jpg`, donde `<id>` es el número
+final de la URL del video. Ese es el nombre que hay que poner en `thumbnail`.
+
+**Las miniaturas se comitean.** El build no llama a TikTok a propósito: sus
+URLs de CDN van firmadas y caducan, así que depender de ellas en cada deploy
+sería romper el sitio a plazo. Después de añadir un video de TikTok:
+
+```bash
+pnpm thumbs && git add public/thumbnails
+```
+
+Si TikTok bloquea la petición, el script lo dice y falla con código 1: en ese
+caso exporta el fotograma 9:16 a mano y guárdalo con ese mismo nombre.
+
+Instagram queda fuera del script porque su oEmbed exige un token de app de
+Meta; esas miniaturas siguen siendo manuales.
 
 ### Miniatura de los YouTube Shorts
 

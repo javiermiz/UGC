@@ -236,6 +236,16 @@ export const MENCIONES: SeccionVideos = {
   descripcion:
     "Salen en mi cuenta y las ve mi audiencia. Pruebo el producto y cuento lo que funciona y también lo que no convence.",
   videos: [
+    /* Va primero porque es el de más alcance del portfolio: es lo que ve
+       una marca que entra a mirar si esto llega a alguien. */
+    {
+      fuente: "tiktok",
+      videoId: "https://www.tiktok.com/@javiermiz_/video/7615327236215917845",
+      titulo: "MacBook NEO",
+      categoria: "Tecnología",
+      formatos: ["review", "a-camara"],
+      thumbnail: "/thumbnails/tiktok-7615327236215917845.jpg",
+    },
     {
       fuente: "youtube",
       videoId: "xD-dg67e0Pg",
@@ -266,14 +276,22 @@ export const MENCIONES: SeccionVideos = {
       titulo: "Logitech G502 Lightspeed",
       categoria: "Gadgets",
     },
-    /* El único de software del portfolio. Va etiquetado como tal a
-       propósito: es la prueba de lo que promete el recuadro "Si vendes
-       software" de la sección Sobre mí. */
+    /* Los dos de software van etiquetados como tal a propósito: son la
+       prueba de lo que promete el recuadro "Si vendes software" de la
+       sección Sobre mí. */
     {
       fuente: "youtube",
       videoId: "gm6-T64sp_k",
       titulo: "Samsung DeX",
       categoria: "Software",
+    },
+    {
+      fuente: "tiktok",
+      videoId: "https://www.tiktok.com/@javiermiz_/video/7515454068626640148",
+      titulo: "De Windows a Bazzite",
+      categoria: "Software",
+      formatos: ["tutorial", "antes-despues"],
+      thumbnail: "/thumbnails/tiktok-7515454068626640148.jpg",
     },
   ],
 };
