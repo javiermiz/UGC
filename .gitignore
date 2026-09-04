@@ -17,3 +17,16 @@ pnpm-debug.log*
 
 # macOS
 .DS_Store
+
+# brainrot: material pesado y renders, no van al repo
+out/
+brainrot/assets/
+brainrot/fuente/
+*.mp4
+*.mov
+*.mp3
+*.wav
+
+# python
+__pycache__/
+*.pyc
